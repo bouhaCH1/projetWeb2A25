@@ -1,46 +1,74 @@
 <?php
 // Controller/UserController.php
 
+// On a besoin de la classe User (le Modèle) pour que le contrôleur puisse parler à la BDD
 require_once __DIR__ . '/../Model/User.php';
 
 class UserController {
 
     // ════════════════════════════════════════════════════════════════════
-    //  FRONT OFFICE
+    //  FRONT OFFICE (Interface Publique)
     // ════════════════════════════════════════════════════════════════════
 
-    // ── Show Register page ───────────────────────────────────────────────
+    // ── Afficher la page d'inscription ──────────────────────────────────
     public function showRegister(): void {
         require_once __DIR__ . '/../View/user/register.php';
     }
 
-    // ── Handle Register submission ───────────────────────────────────────
+    // ── Gérer le formulaire d'inscription quand on clique sur "Submit" ──
     public function register(): void {
+        // Rediriger si on essaie d'accéder sans envoyer de formulaire POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=register');
             exit;
         }
 
-        $first_name       = trim($_POST['first_name']   ?? '');
-        $last_name        = trim($_POST['last_name']    ?? '');
-        $email            = trim($_POST['email']        ?? '');
-        $phone            = trim($_POST['phone']        ?? '');
-        $role             = trim($_POST['role']         ?? '');
-        $password         = $_POST['password']          ?? '';
-        $confirm_password = $_POST['confirm_password']  ?? '';
+        // Récupération classique des données du formulaire POST
+        $first_name = '';
+        if (isset($_POST['first_name'])) { $first_name = trim($_POST['first_name']); }
 
+        $last_name = '';
+        if (isset($_POST['last_name'])) { $last_name = trim($_POST['last_name']); }
+
+        $email = '';
+        if (isset($_POST['email'])) { $email = trim($_POST['email']); }
+
+        $phone = '';
+        if (isset($_POST['phone'])) { $phone = trim($_POST['phone']); }
+
+        $role = '';
+        if (isset($_POST['role'])) { $role = trim($_POST['role']); }
+
+        $password = '';
+        if (isset($_POST['password'])) { $password = $_POST['password']; }
+
+        $confirm_password = '';
+        if (isset($_POST['confirm_password'])) { $confirm_password = $_POST['confirm_password']; }
+
+        // Appel de la méthode de sécurité pour vérifier que tout soit propre
         $errors = $this->validateRegister(
             $first_name, $last_name, $email, $phone, $role, $password, $confirm_password
         );
 
+        // S'il y a des erreurs, on les sauvegarde en session et on retourne en arrière
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
-            $_SESSION['old']    = compact('first_name','last_name','email','phone','role');
+            
+            // Sauvegarder les valeurs pour éviter que l'utilisateur doive tout retaper
+            $_SESSION['old'] = array(
+                'first_name' => $first_name,
+                'last_name'  => $last_name,
+                'email'      => $email,
+                'phone'      => $phone,
+                'role'       => $role
+            );
+            
             header('Location: index.php?action=register');
             exit;
         }
 
-        $user             = new User();
+        // Configuration de l'entité User (le modèle)
+        $user = new User();
         $user->first_name = htmlspecialchars($first_name);
         $user->last_name  = htmlspecialchars($last_name);
         $user->email      = $email;
@@ -48,36 +76,40 @@ class UserController {
         $user->role       = $role;
         $user->password   = $password;
 
+        // On ordonne au Modèle de sauvegarder dans MySQL
         $result = $user->register();
 
-        if ($result['success']) {
+        if ($result['success'] == true) {
             $_SESSION['success'] = $result['message'];
             header('Location: index.php?action=login');
         } else {
-            $_SESSION['errors'] = [$result['message']];
+            $_SESSION['errors'] = array($result['message']);
             header('Location: index.php?action=register');
         }
         exit;
     }
 
-    // ── Show Login page ──────────────────────────────────────────────────
+    // ── Afficher la page de connexion ───────────────────────────────────
     public function showLogin(): void {
         require_once __DIR__ . '/../View/user/login.php';
     }
 
-    // ── Handle Login submission ──────────────────────────────────────────
+    // ── Gérer le fonctionnement de la connexion ─────────────────────────
     public function login(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=login');
             exit;
         }
 
-        $email    = trim($_POST['email']    ?? '');
-        $password = $_POST['password']      ?? '';
+        $email = '';
+        if (isset($_POST['email'])) { $email = trim($_POST['email']); }
+
+        $password = '';
+        if (isset($_POST['password'])) { $password = $_POST['password']; }
 
         $errors = [];
-        if (empty($email))    $errors[] = 'Email is required.';
-        if (empty($password)) $errors[] = 'Password is required.';
+        if (empty($email)) { $errors[] = 'Email is required.'; }
+        if (empty($password)) { $errors[] = 'Password is required.'; }
 
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
@@ -85,29 +117,35 @@ class UserController {
             exit;
         }
 
-        $user           = new User();
-        $user->email    = $email;
+        $user = new User();
+        $user->email = $email;
         $user->password = $password;
-        $result         = $user->login();
+        
+        // On demande au modèle si le compte est valide
+        $result = $user->login();
 
-        if ($result['success']) {
+        if ($result['success'] == true) {
+            // Création des variables de session pour retenir l'utilisateur
             $_SESSION['user_id']         = $user->id;
             $_SESSION['user_first_name'] = $user->first_name;
             $_SESSION['user_last_name']  = $user->last_name;
             $_SESSION['user_role']       = $user->role;
             $_SESSION['user_pic']        = $user->profile_pic;
 
-            header($user->role === 'employer'
-                ? 'Location: index.php?action=dashboard_employer'
-                : 'Location: index.php?action=dashboard_seeker');
+            // Redirection vers le bon tableau de bord
+            if ($user->role === 'employer') {
+                header('Location: index.php?action=dashboard_employer');
+            } else {
+                header('Location: index.php?action=dashboard_seeker');
+            }
         } else {
-            $_SESSION['errors'] = [$result['message']];
+            $_SESSION['errors'] = array($result['message']);
             header('Location: index.php?action=login');
         }
         exit;
     }
 
-    // ── Show Profile page ─────────────────────────────────────────────────
+    // ── Afficher la page du Profil ───────────────────────────────────
     public function showProfile(): void {
         $this->requireLogin();
         $user = new User();
@@ -115,19 +153,24 @@ class UserController {
         require_once __DIR__ . '/../View/user/profile.php';
     }
 
-    // ── Handle Profile update ─────────────────────────────────────────────
+    // ── Modifier le Profil de l'utilisateur connecté ──────────────────
     public function updateProfile(): void {
         $this->requireLogin();
 
-        $first_name = trim($_POST['first_name'] ?? '');
-        $last_name  = trim($_POST['last_name']  ?? '');
-        $phone      = trim($_POST['phone']      ?? '');
+        $first_name = '';
+        if (isset($_POST['first_name'])) { $first_name = trim($_POST['first_name']); }
+
+        $last_name = '';
+        if (isset($_POST['last_name'])) { $last_name = trim($_POST['last_name']); }
+
+        $phone = '';
+        if (isset($_POST['phone'])) { $phone = trim($_POST['phone']); }
 
         $errors = [];
-        if (empty($first_name))                        $errors[] = 'First name is required.';
-        if (empty($last_name))                         $errors[] = 'Last name is required.';
-        if (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $first_name)) $errors[] = 'First name is invalid.';
-        if (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $last_name))  $errors[] = 'Last name is invalid.';
+        if (empty($first_name)) { $errors[] = 'First name is required.'; }
+        if (empty($last_name)) { $errors[] = 'Last name is required.'; }
+        if (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $first_name)) { $errors[] = 'First name is invalid.'; }
+        if (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $last_name)) { $errors[] = 'Last name is invalid.'; }
         if (!empty($phone) && !preg_match('/^\+?[0-9\s\-]{7,15}$/', $phone)) {
             $errors[] = 'Phone number is invalid.';
         }
@@ -138,29 +181,37 @@ class UserController {
             exit;
         }
 
-        $user             = new User();
-        $user->id         = $_SESSION['user_id'];
+        $user = new User();
+        $user->id = $_SESSION['user_id'];
         $user->first_name = htmlspecialchars($first_name);
         $user->last_name  = htmlspecialchars($last_name);
         $user->phone      = htmlspecialchars($phone);
-        $user->profile_pic = $_SESSION['user_pic'] ?? '';
+        
+        // Garder l'ancienne photo s'il y en a une
+        if (isset($_SESSION['user_pic'])) {
+            $user->profile_pic = $_SESSION['user_pic'];
+        } else {
+            $user->profile_pic = '';
+        }
 
-        // Handle file upload
+        // Gérer le téléchargement de la nouvelle photo
         if (!empty($_FILES['profile_pic']['name'])) {
             $upload_dir = __DIR__ . '/../uploads/profile_pics/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
 
-            $ext     = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
+            $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
             if (!in_array($ext, $allowed)) {
-                $_SESSION['errors'] = ['Only JPG, PNG and GIF images are allowed.'];
+                $_SESSION['errors'] = array('Only JPG, PNG and GIF images are allowed.');
                 header('Location: index.php?action=profile');
                 exit;
             }
 
             if ($_FILES['profile_pic']['size'] > 2 * 1024 * 1024) {
-                $_SESSION['errors'] = ['Image must be under 2MB.'];
+                $_SESSION['errors'] = array('Image must be under 2MB.');
                 header('Location: index.php?action=profile');
                 exit;
             }
@@ -172,20 +223,20 @@ class UserController {
 
         $result = $user->updateProfile();
 
-        if ($result['success']) {
+        if ($result['success'] == true) {
             $_SESSION['user_first_name'] = $user->first_name;
             $_SESSION['user_last_name']  = $user->last_name;
             $_SESSION['user_pic']        = $user->profile_pic;
             $_SESSION['success']         = $result['message'];
         } else {
-            $_SESSION['errors'] = [$result['message']];
+            $_SESSION['errors'] = array($result['message']);
         }
 
         header('Location: index.php?action=profile');
         exit;
     }
 
-    // ── Logout ─────────────────────────────────────────────────────────
+    // ── Se déconnecter ───────────────────────────────────────────────
     public function logout(): void {
         session_destroy();
         header('Location: index.php?action=login');
@@ -193,45 +244,58 @@ class UserController {
     }
 
     // ════════════════════════════════════════════════════════════════════
-    //  BACK OFFICE  (admin)
+    //  BACK OFFICE (La partie réservée à l'administration)
     // ════════════════════════════════════════════════════════════════════
 
-    // ── List all users ───────────────────────────────────────────────────
+    // ── Lister tous les utilisateurs dans un tableau ─────────────────
     public function adminListUsers(): void {
         $this->requireLogin();
         $user  = new User();
-        $users = $user->getAll();
+        $users = $user->getAll(); // Appel au modèle
         require_once __DIR__ . '/../View/admin/users_list.php';
     }
 
-    // ── Show edit form for a user ────────────────────────────────────────
+    // ── Afficher le formulaire de modification pour un utilisateur ───
     public function adminEditUser(): void {
         $this->requireLogin();
-        $id   = (int) ($_GET['id'] ?? 0);
+        
+        $id = 0;
+        if (isset($_GET['id'])) { $id = (int) $_GET['id']; }
+
         $user = new User();
         $data = $user->getById($id);
+        
         if (!$data) {
-            $_SESSION['errors'] = ['User not found.'];
+            $_SESSION['errors'] = array('User not found.');
             header('Location: index.php?action=admin_users');
             exit;
         }
         require_once __DIR__ . '/../View/admin/user_edit.php';
     }
 
-    // ── Handle admin user update ─────────────────────────────────────────
+    // ── Appliquer les changements d'un utilisateur depuis l'admin ────
     public function adminUpdateUser(): void {
         $this->requireLogin();
 
-        $id         = (int) ($_POST['id']         ?? 0);
-        $first_name = trim($_POST['first_name']   ?? '');
-        $last_name  = trim($_POST['last_name']    ?? '');
-        $phone      = trim($_POST['phone']        ?? '');
-        $role       = trim($_POST['role']         ?? '');
+        $id = 0;
+        if (isset($_POST['id'])) { $id = (int) $_POST['id']; }
+
+        $first_name = '';
+        if (isset($_POST['first_name'])) { $first_name = trim($_POST['first_name']); }
+
+        $last_name = '';
+        if (isset($_POST['last_name'])) { $last_name = trim($_POST['last_name']); }
+
+        $phone = '';
+        if (isset($_POST['phone'])) { $phone = trim($_POST['phone']); }
+
+        $role = '';
+        if (isset($_POST['role'])) { $role = trim($_POST['role']); }
 
         $errors = [];
-        if (empty($first_name))                              $errors[] = 'First name is required.';
-        if (empty($last_name))                               $errors[] = 'Last name is required.';
-        if (!in_array($role, ['job_seeker', 'employer']))    $errors[] = 'Invalid role selected.';
+        if (empty($first_name)) { $errors[] = 'First name is required.'; }
+        if (empty($last_name)) { $errors[] = 'Last name is required.'; }
+        if (!in_array($role, ['job_seeker', 'employer'])) { $errors[] = 'Invalid role selected.'; }
 
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
@@ -239,37 +303,47 @@ class UserController {
             exit;
         }
 
-        $user             = new User();
-        $user->id         = $id;
+        $user = new User();
+        $user->id = $id;
         $user->first_name = htmlspecialchars($first_name);
         $user->last_name  = htmlspecialchars($last_name);
         $user->phone      = htmlspecialchars($phone);
         $user->role       = $role;
-        $user->profile_pic = '';
+        $user->profile_pic = ''; // Pas de modification d'image depuis l'admin pour simplifier
 
         $result = $user->updateProfile();
-        $_SESSION[$result['success'] ? 'success' : 'errors'] =
-            $result['success'] ? $result['message'] : [$result['message']];
+        
+        // Gestion des erreurs claire au lieu d'un raccourci difficile à lire
+        if ($result['success'] == true) {
+            $_SESSION['success'] = $result['message'];
+        } else {
+            $_SESSION['errors'] = array($result['message']);
+        }
 
         header('Location: index.php?action=admin_users');
         exit;
     }
 
-    // ── Handle admin user delete ─────────────────────────────────────────
+    // ── Effacer le compte d'un utilisateur ────────────────────────────
     public function adminDeleteUser(): void {
         $this->requireLogin();
-        $id   = (int) ($_GET['id'] ?? 0);
+        
+        $id = 0; 
+        if (isset($_GET['id'])) { $id = (int) $_GET['id']; }
+        
         $user = new User();
         $user->deleteAccount($id);
+        
         $_SESSION['success'] = 'User deleted successfully.';
         header('Location: index.php?action=admin_users');
         exit;
     }
 
     // ════════════════════════════════════════════════════════════════════
-    //  HELPERS
+    //  OUTILS D'AIDE (Fonctions privées du contrôleur)
     // ════════════════════════════════════════════════════════════════════
 
+    // Sécurité de base, si non connecté, retour à la page profil.
     private function requireLogin(): void {
         if (empty($_SESSION['user_id'])) {
             header('Location: index.php?action=login');
@@ -277,6 +351,7 @@ class UserController {
         }
     }
 
+    // Validation manuelle de l'inscription
     private function validateRegister(
         string $first_name,
         string $last_name,
@@ -288,38 +363,45 @@ class UserController {
     ): array {
         $errors = [];
 
-        if (empty($first_name))
+        if (empty($first_name)) {
             $errors[] = 'First name is required.';
-        elseif (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,50}$/', $first_name))
+        } elseif (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,50}$/', $first_name)) {
             $errors[] = 'First name must be 2–50 letters only.';
+        }
 
-        if (empty($last_name))
+        if (empty($last_name)) {
             $errors[] = 'Last name is required.';
-        elseif (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,50}$/', $last_name))
+        } elseif (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,50}$/', $last_name)) {
             $errors[] = 'Last name must be 2–50 letters only.';
+        }
 
-        if (empty($email))
+        if (empty($email)) {
             $errors[] = 'Email is required.';
-        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL))
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Invalid email format.';
+        }
 
-        if (!empty($phone) && !preg_match('/^\+?[0-9\s\-]{7,15}$/', $phone))
+        if (!empty($phone) && !preg_match('/^\+?[0-9\s\-]{7,15}$/', $phone)) {
             $errors[] = 'Phone number is invalid.';
+        }
 
-        if (!in_array($role, ['job_seeker', 'employer']))
+        if (!in_array($role, ['job_seeker', 'employer'])) {
             $errors[] = 'Please select a valid role.';
+        }
 
-        if (empty($password))
+        if (empty($password)) {
             $errors[] = 'Password is required.';
-        elseif (strlen($password) < 8)
+        } elseif (strlen($password) < 8) {
             $errors[] = 'Password must be at least 8 characters.';
-        elseif (!preg_match('/[A-Z]/', $password))
+        } elseif (!preg_match('/[A-Z]/', $password)) {
             $errors[] = 'Password must contain at least one uppercase letter.';
-        elseif (!preg_match('/[0-9]/', $password))
+        } elseif (!preg_match('/[0-9]/', $password)) {
             $errors[] = 'Password must contain at least one number.';
+        }
 
-        if ($password !== $confirm_password)
+        if ($password !== $confirm_password) {
             $errors[] = 'Passwords do not match.';
+        }
 
         return $errors;
     }

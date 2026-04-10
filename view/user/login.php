@@ -21,7 +21,7 @@
         <ul id="js-error-list"></ul>
     </div>
 
-    <form id="loginForm" action="/job_platform/index.php?action=login_submit" method="POST" novalidate>
+    <form id="loginForm" action="/workwave/index.php?action=login_submit" method="POST" novalidate>
 
         <label>Email Address</label>
         <input type="text" id="email" name="email">
@@ -31,7 +31,7 @@
 
         <br/>
         <button type="submit" class="btn btn-primary">Log In</button>
-        <a href="/job_platform/index.php?action=register" class="btn btn-secondary">No account? Register</a>
+        <a href="/workwave/index.php?action=register" class="btn btn-secondary">No account? Register</a>
 
     </form>
 </div>

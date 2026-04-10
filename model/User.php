@@ -5,36 +5,43 @@ require_once __DIR__ . '/../config/database.php';
 
 class User {
 
-    // ── Properties ──────────────────────────────────────────────────────
-    public int    $id;
+    // ── Propriétés de l'utilisateur (Correspondent aux colonnes de la base de données) ──
+    public int $id;
     public string $first_name;
     public string $last_name;
     public string $email;
     public string $password;
-    public string $phone       = '';
-    public string $role        = 'job_seeker';
+    public string $phone = '';
+    public string $role = 'job_seeker';
     public string $profile_pic = '';
-    public string $created_at  = '';
+    public string $created_at = '';
 
+    // L'objet PDO pour faire le lien avec la base de données
     private PDO $pdo;
 
+    // Le constructeur s'exécute automatiquement lors du "new User()"
     public function __construct() {
+        // On récupère la connexion depuis database.php
         $this->pdo = getConnection();
     }
 
-    // ── CREATE: Register a new user ──────────────────────────────────────
+    // ── CREATE : Enregistrer un nouvel utilisateur ──────────────────────────────────────
     public function register(): array {
-        if ($this->emailExists()) {
+        // 1. On vérifie d'abord si l'email existe déjà dans la base
+        if ($this->emailExists() == true) {
             return ['success' => false, 'message' => 'This email is already registered.'];
         }
 
+        // 2. On sécurise le mot de passe avant de le sauvegarder (hachage)
         $hashed = password_hash($this->password, PASSWORD_BCRYPT);
 
+        // 3. On prépare la requête SQL (utiliser prepare protège contre les requêtes pirates "injections SQL")
         $stmt = $this->pdo->prepare(
             "INSERT INTO users (first_name, last_name, email, password, phone, role)
              VALUES (:first_name, :last_name, :email, :password, :phone, :role)"
         );
 
+        // 4. On exécute la requête en injectant les vraies valeurs
         $stmt->execute([
             ':first_name' => $this->first_name,
             ':last_name'  => $this->last_name,
@@ -44,12 +51,15 @@ class User {
             ':role'       => $this->role,
         ]);
 
+        // 5. On récupère l'ID que MySQL vient de générer et on l'assigne à l'utilisateur
         $this->id = (int) $this->pdo->lastInsertId();
+        
         return ['success' => true, 'message' => 'Account created successfully.'];
     }
 
-    // ── READ: Verify credentials for login ──────────────────────────────
+    // ── READ : Vérifier les identifiants pour la connexion ──────────────────────────────
     public function login(): array {
+        // 1. On cherche l'utilisateur via son adresse e-mail
         $stmt = $this->pdo->prepare(
             "SELECT id, first_name, last_name, email, password, role, profile_pic
              FROM users WHERE email = :email LIMIT 1"
@@ -57,20 +67,30 @@ class User {
         $stmt->execute([':email' => $this->email]);
         $row = $stmt->fetch();
 
-        if ($row && password_verify($this->password, $row['password'])) {
+        // 2. Si on trouve une ligne, on vérifie si le mot de passe tapé correspond au mot de passe haché
+        if ($row !== false && password_verify($this->password, $row['password'])) {
+            // Le mot de passe est bon, on remplit les informations de l'utilisateur
             $this->id          = (int) $row['id'];
             $this->first_name  = $row['first_name'];
             $this->last_name   = $row['last_name'];
             $this->role        = $row['role'];
-            $this->profile_pic = $row['profile_pic'] ?? '';
+            
+            // Si la photo de profil existe on la prend, sinon on met du vide
+            if (isset($row['profile_pic'])) {
+                $this->profile_pic = $row['profile_pic'];
+            } else {
+                $this->profile_pic = '';
+            }
+
             return ['success' => true, 'message' => 'Login successful.'];
         }
 
+        // Si l'e-mail n'existe pas ou que le mot de passe est faux
         return ['success' => false, 'message' => 'Invalid email or password.'];
     }
 
-    // ── READ: Get user by ID ─────────────────────────────────────────────
-    public function getById(int $id): array|false {
+    // ── READ : Récupérer toutes les infos d'un utilisateur par son ID ────────────────────
+    public function getById(int $id) {
         $stmt = $this->pdo->prepare(
             "SELECT id, first_name, last_name, email, phone, role, profile_pic, created_at
              FROM users WHERE id = :id LIMIT 1"
@@ -79,7 +99,7 @@ class User {
         return $stmt->fetch();
     }
 
-    // ── READ: Get all users (Back Office) ────────────────────────────────
+    // ── READ : Récupérer tous les utilisateurs (pour le tableau de bord Admin) ───────────
     public function getAll(): array {
         $stmt = $this->pdo->query(
             "SELECT id, first_name, last_name, email, phone, role, created_at FROM users ORDER BY created_at DESC"
@@ -87,7 +107,7 @@ class User {
         return $stmt->fetchAll();
     }
 
-    // ── UPDATE: Update profile ───────────────────────────────────────────
+    // ── UPDATE : Mettre à jour le profil de l'utilisateur ────────────────────────────────
     public function updateProfile(): array {
         $stmt = $this->pdo->prepare(
             "UPDATE users SET first_name=:first_name, last_name=:last_name,
@@ -105,7 +125,7 @@ class User {
         return ['success' => true, 'message' => 'Profile updated successfully.'];
     }
 
-    // ── UPDATE: Change password ──────────────────────────────────────────
+    // ── UPDATE : Changer le mot de passe ─────────────────────────────────────────────────
     public function changePassword(string $new_password): array {
         $hashed = password_hash($new_password, PASSWORD_BCRYPT);
         $stmt   = $this->pdo->prepare("UPDATE users SET password=:password WHERE id=:id");
@@ -113,18 +133,25 @@ class User {
         return ['success' => true, 'message' => 'Password changed successfully.'];
     }
 
-    // ── DELETE: Delete a user ────────────────────────────────────────────
+    // ── DELETE : Supprimer un compte ─────────────────────────────────────────────────────
     public function deleteAccount(int $id): array {
         $stmt = $this->pdo->prepare("DELETE FROM users WHERE id=:id");
         $stmt->execute([':id' => $id]);
         return ['success' => true, 'message' => 'Account deleted.'];
     }
 
-    // ── HELPER: Check if email already exists ────────────────────────────
+    // ── Fonction interne : Vérifier si l'email existe pour éviter les doublons ───────────
     private function emailExists(): bool {
         $stmt = $this->pdo->prepare("SELECT id FROM users WHERE email=:email LIMIT 1");
         $stmt->execute([':email' => $this->email]);
-        return (bool) $stmt->fetch();
+        $result = $stmt->fetch();
+        
+        // Si le résultat retourne des données, l'email existe. Sinon, il n'existe pas.
+        if ($result !== false) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 ?>

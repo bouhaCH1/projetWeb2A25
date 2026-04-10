@@ -39,8 +39,8 @@
                 </td>
                 <td><?= htmlspecialchars($u['created_at']) ?></td>
                 <td>
-                    <a href="/job_platform/index.php?action=admin_edit_user&id=<?= $u['id'] ?>" class="btn btn-warning">Edit</a>
-                    <a href="/job_platform/index.php?action=admin_delete_user&id=<?= $u['id'] ?>"
+                    <a href="/workwave/index.php?action=admin_edit_user&id=<?= $u['id'] ?>" class="btn btn-warning">Edit</a>
+                    <a href="/workwave/index.php?action=admin_delete_user&id=<?= $u['id'] ?>"
                        class="btn btn-danger"
                        onclick="return confirm('Delete this user?')">Delete</a>
                 </td>

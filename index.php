@@ -35,7 +35,9 @@ switch ($action) {
 
     case 'home':
     default:
-        require_once __DIR__ . '/View/home.php';
+        require_once __DIR__ . '/view/layout/header.php';
+        require_once __DIR__ . '/view/layout/home.php';
+        require_once __DIR__ . '/view/layout/footer.php';
         break;
 }
 ?>
