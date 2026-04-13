@@ -24,26 +24,13 @@ class UserController {
         }
 
         // Récupération classique des données du formulaire POST
-        $first_name = '';
-        if (isset($_POST['first_name'])) { $first_name = trim($_POST['first_name']); }
-
-        $last_name = '';
-        if (isset($_POST['last_name'])) { $last_name = trim($_POST['last_name']); }
-
-        $email = '';
-        if (isset($_POST['email'])) { $email = trim($_POST['email']); }
-
-        $phone = '';
-        if (isset($_POST['phone'])) { $phone = trim($_POST['phone']); }
-
-        $role = '';
-        if (isset($_POST['role'])) { $role = trim($_POST['role']); }
-
-        $password = '';
-        if (isset($_POST['password'])) { $password = $_POST['password']; }
-
-        $confirm_password = '';
-        if (isset($_POST['confirm_password'])) { $confirm_password = $_POST['confirm_password']; }
+        $first_name       = trim($_POST['first_name'] ?? '');
+        $last_name        = trim($_POST['last_name'] ?? '');
+        $email            = trim($_POST['email'] ?? '');
+        $phone            = trim($_POST['phone'] ?? '');
+        $role             = trim($_POST['role'] ?? '');
+        $password         = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
 
         // Appel de la méthode de sécurité pour vérifier que tout soit propre
         $errors = $this->validateRegister(
@@ -79,7 +66,7 @@ class UserController {
         // On ordonne au Modèle de sauvegarder dans MySQL
         $result = $user->register();
 
-        if ($result['success'] == true) {
+        if ($result['success']) {
             $_SESSION['success'] = $result['message'];
             header('Location: index.php?action=login');
         } else {
@@ -101,11 +88,8 @@ class UserController {
             exit;
         }
 
-        $email = '';
-        if (isset($_POST['email'])) { $email = trim($_POST['email']); }
-
-        $password = '';
-        if (isset($_POST['password'])) { $password = $_POST['password']; }
+        $email    = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
 
         $errors = [];
         if (empty($email)) { $errors[] = 'Email is required.'; }
@@ -124,7 +108,7 @@ class UserController {
         // On demande au modèle si le compte est valide
         $result = $user->login();
 
-        if ($result['success'] == true) {
+        if ($result['success']) {
             // Création des variables de session pour retenir l'utilisateur
             $_SESSION['user_id']         = $user->id;
             $_SESSION['user_first_name'] = $user->first_name;
@@ -132,8 +116,11 @@ class UserController {
             $_SESSION['user_role']       = $user->role;
             $_SESSION['user_pic']        = $user->profile_pic;
 
-            // Redirection vers le bon tableau de bord
-            if ($user->role === 'employer') {
+            // Redirection selon le rôle
+            if ($user->role === 'admin') {
+                // L'administrateur va directement au back-office
+                header('Location: index.php?action=admin_users');
+            } elseif ($user->role === 'employer') {
                 header('Location: index.php?action=dashboard_employer');
             } else {
                 header('Location: index.php?action=dashboard_seeker');
@@ -157,14 +144,9 @@ class UserController {
     public function updateProfile(): void {
         $this->requireLogin();
 
-        $first_name = '';
-        if (isset($_POST['first_name'])) { $first_name = trim($_POST['first_name']); }
-
-        $last_name = '';
-        if (isset($_POST['last_name'])) { $last_name = trim($_POST['last_name']); }
-
-        $phone = '';
-        if (isset($_POST['phone'])) { $phone = trim($_POST['phone']); }
+        $first_name = trim($_POST['first_name'] ?? '');
+        $last_name  = trim($_POST['last_name'] ?? '');
+        $phone      = trim($_POST['phone'] ?? '');
 
         $errors = [];
         if (empty($first_name)) { $errors[] = 'First name is required.'; }
@@ -188,15 +170,11 @@ class UserController {
         $user->phone      = htmlspecialchars($phone);
         
         // Garder l'ancienne photo s'il y en a une
-        if (isset($_SESSION['user_pic'])) {
-            $user->profile_pic = $_SESSION['user_pic'];
-        } else {
-            $user->profile_pic = '';
-        }
+        $user->profile_pic = $_SESSION['user_pic'] ?? '';
 
         // Gérer le téléchargement de la nouvelle photo
         if (!empty($_FILES['profile_pic']['name'])) {
-            $upload_dir = __DIR__ . '/../uploads/profile_pics/';
+            $upload_dir = __DIR__ . '/../view/uploads/profile_pics/';
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, 0755, true);
             }
@@ -218,12 +196,12 @@ class UserController {
 
             $filename = 'user_' . $user->id . '_' . time() . '.' . $ext;
             move_uploaded_file($_FILES['profile_pic']['tmp_name'], $upload_dir . $filename);
-            $user->profile_pic = 'uploads/profile_pics/' . $filename;
+            $user->profile_pic = 'view/uploads/profile_pics/' . $filename;
         }
 
         $result = $user->updateProfile();
 
-        if ($result['success'] == true) {
+        if ($result['success']) {
             $_SESSION['user_first_name'] = $user->first_name;
             $_SESSION['user_last_name']  = $user->last_name;
             $_SESSION['user_pic']        = $user->profile_pic;
@@ -249,7 +227,7 @@ class UserController {
 
     // ── Lister tous les utilisateurs dans un tableau ─────────────────
     public function adminListUsers(): void {
-        $this->requireLogin();
+        $this->requireAdmin();
         $user  = new User();
         $users = $user->getAll(); // Appel au modèle
         require_once __DIR__ . '/../View/admin/users_list.php';
@@ -257,10 +235,9 @@ class UserController {
 
     // ── Afficher le formulaire de modification pour un utilisateur ───
     public function adminEditUser(): void {
-        $this->requireLogin();
+        $this->requireAdmin();
         
-        $id = 0;
-        if (isset($_GET['id'])) { $id = (int) $_GET['id']; }
+        $id = (int) ($_GET['id'] ?? 0);
 
         $user = new User();
         $data = $user->getById($id);
@@ -270,31 +247,31 @@ class UserController {
             header('Location: index.php?action=admin_users');
             exit;
         }
+
+        // Un admin ne peut pas modifier un autre compte admin
+        if ($data['role'] === 'admin') {
+            $_SESSION['errors'] = array('Admin accounts cannot be edited.');
+            header('Location: index.php?action=admin_users');
+            exit;
+        }
+
         require_once __DIR__ . '/../View/admin/user_edit.php';
     }
 
     // ── Appliquer les changements d'un utilisateur depuis l'admin ────
     public function adminUpdateUser(): void {
-        $this->requireLogin();
+        $this->requireAdmin();
 
-        $id = 0;
-        if (isset($_POST['id'])) { $id = (int) $_POST['id']; }
-
-        $first_name = '';
-        if (isset($_POST['first_name'])) { $first_name = trim($_POST['first_name']); }
-
-        $last_name = '';
-        if (isset($_POST['last_name'])) { $last_name = trim($_POST['last_name']); }
-
-        $phone = '';
-        if (isset($_POST['phone'])) { $phone = trim($_POST['phone']); }
-
-        $role = '';
-        if (isset($_POST['role'])) { $role = trim($_POST['role']); }
+        $id         = (int) ($_POST['id'] ?? 0);
+        $first_name = trim($_POST['first_name'] ?? '');
+        $last_name  = trim($_POST['last_name'] ?? '');
+        $phone      = trim($_POST['phone'] ?? '');
+        $role       = trim($_POST['role'] ?? '');
 
         $errors = [];
         if (empty($first_name)) { $errors[] = 'First name is required.'; }
         if (empty($last_name)) { $errors[] = 'Last name is required.'; }
+        // Seuls job_seeker et employer sont autorisés (pas admin)
         if (!in_array($role, ['job_seeker', 'employer'])) { $errors[] = 'Invalid role selected.'; }
 
         if (!empty($errors)) {
@@ -304,17 +281,16 @@ class UserController {
         }
 
         $user = new User();
-        $user->id = $id;
+        $user->id         = $id;
         $user->first_name = htmlspecialchars($first_name);
         $user->last_name  = htmlspecialchars($last_name);
         $user->phone      = htmlspecialchars($phone);
         $user->role       = $role;
-        $user->profile_pic = ''; // Pas de modification d'image depuis l'admin pour simplifier
 
-        $result = $user->updateProfile();
+        // On utilise la méthode dédiée au back-office (elle protège les admins)
+        $result = $user->adminUpdate();
         
-        // Gestion des erreurs claire au lieu d'un raccourci difficile à lire
-        if ($result['success'] == true) {
+        if ($result['success']) {
             $_SESSION['success'] = $result['message'];
         } else {
             $_SESSION['errors'] = array($result['message']);
@@ -326,10 +302,9 @@ class UserController {
 
     // ── Effacer le compte d'un utilisateur ────────────────────────────
     public function adminDeleteUser(): void {
-        $this->requireLogin();
+        $this->requireAdmin();
         
-        $id = 0; 
-        if (isset($_GET['id'])) { $id = (int) $_GET['id']; }
+        $id = (int) ($_GET['id'] ?? 0);
         
         $user = new User();
         $user->deleteAccount($id);
@@ -343,10 +318,24 @@ class UserController {
     //  OUTILS D'AIDE (Fonctions privées du contrôleur)
     // ════════════════════════════════════════════════════════════════════
 
-    // Sécurité de base, si non connecté, retour à la page profil.
+    // Sécurité de base, si non connecté, retour à la page login.
     private function requireLogin(): void {
         if (empty($_SESSION['user_id'])) {
             header('Location: index.php?action=login');
+            exit;
+        }
+    }
+
+    // Sécurité back-office : seuls les admin ont accès.
+    // Si quelqu'un qui n'est pas admin essaie d'accéder, on le redirige.
+    private function requireAdmin(): void {
+        if (empty($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+        if (($_SESSION['user_role'] ?? '') !== 'admin') {
+            // Accès refusé — on redirige vers la page d'accueil
+            header('Location: index.php');
             exit;
         }
     }

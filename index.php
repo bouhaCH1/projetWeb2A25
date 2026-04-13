@@ -3,7 +3,7 @@
 
 session_start();
 
-require_once __DIR__ . '/Controller/UserController.php';
+require_once __DIR__ . '/controller/UserController.php';
 
 $action     = $_GET['action'] ?? 'home';
 $controller = new UserController();
@@ -21,10 +21,10 @@ switch ($action) {
 
     // ── Dashboards ───────────────────────────────────────────────────────
     case 'dashboard_seeker':
-        require_once __DIR__ . '/View/user/dashboard_seeker.php';
+        require_once __DIR__ . '/view/user/dashboard_seeker.php';
         break;
     case 'dashboard_employer':
-        require_once __DIR__ . '/View/user/dashboard_employer.php';
+        require_once __DIR__ . '/view/user/dashboard_employer.php';
         break;
 
     // ── Back Office ──────────────────────────────────────────────────────

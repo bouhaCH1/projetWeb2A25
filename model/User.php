@@ -1,7 +1,7 @@
 <?php
 // Model/User.php
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/Database.php';
 
 class User {
 
@@ -12,7 +12,7 @@ class User {
     public string $email;
     public string $password;
     public string $phone = '';
-    public string $role = 'job_seeker';
+    public string $role = 'job_seeker'; // possible values: job_seeker | employer | admin
     public string $profile_pic = '';
     public string $created_at = '';
 
@@ -28,7 +28,7 @@ class User {
     // ── CREATE : Enregistrer un nouvel utilisateur ──────────────────────────────────────
     public function register(): array {
         // 1. On vérifie d'abord si l'email existe déjà dans la base
-        if ($this->emailExists() == true) {
+        if ($this->emailExists()) {
             return ['success' => false, 'message' => 'This email is already registered.'];
         }
 
@@ -76,11 +76,7 @@ class User {
             $this->role        = $row['role'];
             
             // Si la photo de profil existe on la prend, sinon on met du vide
-            if (isset($row['profile_pic'])) {
-                $this->profile_pic = $row['profile_pic'];
-            } else {
-                $this->profile_pic = '';
-            }
+            $this->profile_pic = $row['profile_pic'] ?? '';
 
             return ['success' => true, 'message' => 'Login successful.'];
         }
@@ -100,14 +96,16 @@ class User {
     }
 
     // ── READ : Récupérer tous les utilisateurs (pour le tableau de bord Admin) ───────────
+    // Note: On exclut les comptes admin de la liste pour les protéger.
     public function getAll(): array {
         $stmt = $this->pdo->query(
-            "SELECT id, first_name, last_name, email, phone, role, created_at FROM users ORDER BY created_at DESC"
+            "SELECT id, first_name, last_name, email, phone, role, created_at
+             FROM users WHERE role != 'admin' ORDER BY created_at DESC"
         );
         return $stmt->fetchAll();
     }
 
-    // ── UPDATE : Mettre à jour le profil de l'utilisateur ────────────────────────────────
+    // ── UPDATE : Mettre à jour le profil de l'utilisateur (front-office) ───────────────────
     public function updateProfile(): array {
         $stmt = $this->pdo->prepare(
             "UPDATE users SET first_name=:first_name, last_name=:last_name,
@@ -125,6 +123,34 @@ class User {
         return ['success' => true, 'message' => 'Profile updated successfully.'];
     }
 
+    // ── UPDATE : Modification des données d'un utilisateur par l'admin (back-office) ──────
+    // Seuls les rôles non-admin peuvent être mis à jour ici.
+    public function adminUpdate(): array {
+        // Vérifier que le compte cible n'est pas un admin (sécurité supplémentaire)
+        $check = $this->pdo->prepare("SELECT role FROM users WHERE id=:id LIMIT 1");
+        $check->execute([':id' => $this->id]);
+        $existing = $check->fetch();
+
+        if (!$existing || $existing['role'] === 'admin') {
+            return ['success' => false, 'message' => 'Cannot modify an admin account.'];
+        }
+
+        $stmt = $this->pdo->prepare(
+            "UPDATE users SET first_name=:first_name, last_name=:last_name,
+             phone=:phone, role=:role WHERE id=:id AND role != 'admin'"
+        );
+
+        $stmt->execute([
+            ':first_name' => $this->first_name,
+            ':last_name'  => $this->last_name,
+            ':phone'      => $this->phone,
+            ':role'       => $this->role,
+            ':id'         => $this->id,
+        ]);
+
+        return ['success' => true, 'message' => 'User updated successfully.'];
+    }
+
     // ── UPDATE : Changer le mot de passe ─────────────────────────────────────────────────
     public function changePassword(string $new_password): array {
         $hashed = password_hash($new_password, PASSWORD_BCRYPT);
@@ -133,9 +159,10 @@ class User {
         return ['success' => true, 'message' => 'Password changed successfully.'];
     }
 
-    // ── DELETE : Supprimer un compte ─────────────────────────────────────────────────────
+    // ── DELETE : Supprimer un compte (les admins sont protégés) ─────────────────────────────
     public function deleteAccount(int $id): array {
-        $stmt = $this->pdo->prepare("DELETE FROM users WHERE id=:id");
+        // On ne supprime jamais un compte admin
+        $stmt = $this->pdo->prepare("DELETE FROM users WHERE id=:id AND role != 'admin'");
         $stmt->execute([':id' => $id]);
         return ['success' => true, 'message' => 'Account deleted.'];
     }
@@ -146,12 +173,8 @@ class User {
         $stmt->execute([':email' => $this->email]);
         $result = $stmt->fetch();
         
-        // Si le résultat retourne des données, l'email existe. Sinon, il n'existe pas.
-        if ($result !== false) {
-            return true;
-        } else {
-            return false;
-        }
+        // Retourne true si l'email existe, sinon false
+        return $result !== false;
     }
 }
 ?>

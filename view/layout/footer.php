@@ -32,6 +32,6 @@
         </div>
     </footer>
 
-    <script src="/workwave/templatemo-aurum-script.js"></script>
+    <script src="/workwave/view/assets/templatemo-aurum-script.js"></script>
 </body>
 </html>

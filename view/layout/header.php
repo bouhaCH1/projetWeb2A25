@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <!-- The New Template Styles -->
-<link rel="stylesheet" href="/workwave/templatemo-aurum-gold.css">
+<link rel="stylesheet" href="/workwave/view/assets/templatemo-aurum-gold.css">
 
 <!-- Inlined old layout styles to keep administrative forms looking decent -->
 <style>
@@ -45,7 +45,7 @@
                     <li><a href="/workwave/index.php">Home</a></li>
                     <?php if (!empty($_SESSION['user_id'])): ?>
                         <li><a href="/workwave/index.php?action=profile">My Profile</a></li>
-                        <?php if ($_SESSION['user_role'] === 'employer'): ?>
+                        <?php if ($_SESSION['user_role'] === 'admin'): ?>
                         <li><a href="/workwave/index.php?action=admin_users">Admin Panel</a></li>
                         <?php endif; ?>
                         <li><a href="/workwave/index.php?action=logout">Log Out</a></li>
@@ -88,7 +88,7 @@
             <li><a href="/workwave/index.php">Home</a></li>
             <?php if (!empty($_SESSION['user_id'])): ?>
                 <li><a href="/workwave/index.php?action=profile">My Profile</a></li>
-                <?php if ($_SESSION['user_role'] === 'employer'): ?>
+                <?php if ($_SESSION['user_role'] === 'admin'): ?>
                 <li><a href="/workwave/index.php?action=admin_users">Admin Panel</a></li>
                 <?php endif; ?>
                 <li><a href="/workwave/index.php?action=logout">Log Out</a></li>
