@@ -15,8 +15,8 @@
                         Connect with top employers, build your profile, and apply to thousands of active job opportunities. Start building your professional journey today.
                     </p>
                     <div class="hero-actions">
-                        <a href="/workwave/index.php" class="btn btn-primary">Browse Jobs</a>
-                        <a href="/workwave/index.php?action=register" class="btn btn-outline">Join for Free</a>
+                        <a href="/workwave/Controller/index.php?action=jobs" class="btn btn-primary">Browse Jobs</a>
+                        <a href="/workwave/Controller/index.php?action=register" class="btn btn-outline">Join for Free</a>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                 <h2 class="cta-title">Start Building Your <span class="gold">Career</span> Today</h2>
                 <p class="cta-desc">Whether you're a first-time applicant or an experienced professional, we are ready to help you achieve your goals.</p>
                 <div class="cta-actions">
-                    <a href="/workwave/index.php?action=register" class="btn btn-primary">Create an Account</a>
+                    <a href="/workwave/Controller/index.php?action=register" class="btn btn-primary">Create an Account</a>
                 </div>
             </div>
         </div>

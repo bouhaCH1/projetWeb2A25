@@ -2,7 +2,7 @@
 
 <div class="content_box">
     <h1>Edit User</h1>
-    <a href="/workwave/index.php?action=admin_users" class="btn btn-secondary">← Back to list</a>
+    <a href="/workwave/Controller/index.php?action=admin_users" class="btn btn-secondary">← Back to list</a>
     <br/><br/>
 
     <?php if (!empty($_SESSION['errors'])): ?>
@@ -17,7 +17,7 @@
         <ul id="js-error-list"></ul>
     </div>
 
-    <form id="editForm" action="/workwave/index.php?action=admin_update_user" method="POST" novalidate>
+    <form id="editForm" action="/workwave/Controller/index.php?action=admin_update_user" method="POST" novalidate>
         <input type="hidden" name="id" value="<?= (int)$data['id'] ?>">
 
         <label>First Name</label>

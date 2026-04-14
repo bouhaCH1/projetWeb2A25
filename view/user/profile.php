@@ -21,7 +21,7 @@
         <ul id="js-error-list"></ul>
     </div>
 
-    <form id="profileForm" action="/workwave/index.php?action=profile_update"
+    <form id="profileForm" action="/workwave/Controller/index.php?action=profile_update"
           method="POST" enctype="multipart/form-data" novalidate>
 
         <label>First Name</label>
@@ -41,7 +41,7 @@
 
         <br/>
         <button type="submit" class="btn btn-success">Save Changes</button>
-        <a href="/workwave/index.php?action=logout" class="btn btn-danger">Log Out</a>
+        <a href="/workwave/Controller/index.php?action=logout" class="btn btn-danger">Log Out</a>
 
     </form>
 </div>

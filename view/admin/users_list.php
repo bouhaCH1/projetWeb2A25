@@ -1,7 +1,6 @@
 <?php
-// Back-office guard (redundant safety — controller already checks, but good practice)
 if (empty($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    header('Location: /workwave/index.php');
+    header('Location: /workwave/Controller/index.php');
     exit;
 }
 include __DIR__ . '/../layout/header.php';
@@ -9,13 +8,12 @@ include __DIR__ . '/../layout/header.php';
 
 <div class="content_box">
 
-    <!-- ── Back-Office Header ─────────────────────────────────────── -->
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
         <div>
             <h1 style="margin:0;">🛡️ Admin Panel — User Management</h1>
             <p style="margin:4px 0 0; color:#aaa; font-size:0.9rem;">
                 Logged in as <strong style="color:#C4A15A;"><?= htmlspecialchars($_SESSION['user_first_name'] . ' ' . $_SESSION['user_last_name']) ?></strong>
-                &nbsp;|&nbsp; <a href="/workwave/index.php?action=logout">Log Out</a>
+                &nbsp;|&nbsp; <a href="/workwave/Controller/index.php?action=logout">Log Out</a>
             </p>
         </div>
         <span style="background:#C4A15A; color:#000; padding:6px 14px; border-radius:20px; font-weight:700; font-size:0.85rem; letter-spacing:1px;">
@@ -67,9 +65,9 @@ include __DIR__ . '/../layout/header.php';
                 </td>
                 <td><?= htmlspecialchars($u['created_at']) ?></td>
                 <td>
-                    <a href="/workwave/index.php?action=admin_edit_user&id=<?= $u['id'] ?>"
+                    <a href="/workwave/Controller/index.php?action=admin_edit_user&id=<?= $u['id'] ?>"
                        class="btn btn-warning">Edit</a>
-                    <a href="/workwave/index.php?action=admin_delete_user&id=<?= $u['id'] ?>"
+                    <a href="/workwave/Controller/index.php?action=admin_delete_user&id=<?= $u['id'] ?>"
                        class="btn btn-danger"
                        onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                 </td>

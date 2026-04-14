@@ -15,7 +15,7 @@
         <ul id="js-error-list"></ul>
     </div>
 
-    <form id="registerForm" action="/workwave/index.php?action=register_submit" method="POST" novalidate>
+    <form id="registerForm" action="/workwave/Controller/index.php?action=register_submit" method="POST" novalidate>
 
         <label>First Name *</label>
         <input type="text" name="first_name" value="<?= htmlspecialchars($_SESSION['old']['first_name'] ?? '') ?>">
@@ -44,7 +44,7 @@
 
         <br/>
         <button type="submit" class="btn btn-primary">Register</button>
-        <a href="/workwave/index.php?action=login" class="btn btn-secondary">Already have an account?</a>
+        <a href="/workwave/Controller/index.php?action=login" class="btn btn-secondary">Already have an account?</a>
 
     </form>
     <?php unset($_SESSION['old']); ?>
