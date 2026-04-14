@@ -1,15 +1,10 @@
 <?php
-<<<<<<< HEAD
-=======
-// Controller/index.php — Single entry point (front controller)
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 
 session_start();
 
 require_once __DIR__ . '/UserController.php';
 require_once __DIR__ . '/JobController.php';
 
-<<<<<<< HEAD
 $action        = $_GET['action'] ?? 'home';
 $controller    = new UserController();
 $jobController = new JobController();
@@ -60,41 +55,12 @@ switch ($action) {
     case 'logout':
         $controller->logout();
         break;
-=======
-$action          = $_GET['action'] ?? 'home';
-$controller      = new UserController();
-$jobController   = new JobController();
-
-switch ($action) {
-
-    // ── Jobs (second entity + JOIN in model) ───────────────────────────
-    case 'jobs':             $jobController->listJobs();    break;
-    case 'job_view':         $jobController->showJob();     break;
-    case 'job_post':         $jobController->showPostJob(); break;
-    case 'job_post_submit':  $jobController->postJob();      break;
-    case 'my_jobs':          $jobController->myJobs();       break;
-    case 'job_delete':       $jobController->deleteJob();   break;
-
-    // ── Front Office ─────────────────────────────────────────────────────
-    case 'register':         $controller->showRegister();     break;
-    case 'register_submit':  $controller->register();         break;
-    case 'login':            $controller->showLogin();        break;
-    case 'login_submit':     $controller->login();            break;
-    case 'admin_login':      $controller->showAdminLogin();   break;
-    case 'admin_login_submit': $controller->adminLogin();     break;
-    case 'profile':          $controller->showProfile();      break;
-    case 'profile_update':   $controller->updateProfile();    break;
-    case 'logout':           $controller->logout();           break;
-
-    // ── Dashboards ───────────────────────────────────────────────────────
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     case 'dashboard_seeker':
         require_once __DIR__ . '/../View/user/dashboard_seeker.php';
         break;
     case 'dashboard_employer':
         require_once __DIR__ . '/../View/user/dashboard_employer.php';
         break;
-<<<<<<< HEAD
     case 'admin_users':
         $controller->adminListUsers();
         break;
@@ -107,15 +73,6 @@ switch ($action) {
     case 'admin_delete_user':
         $controller->adminDeleteUser();
         break;
-=======
-
-    // ── Back Office ──────────────────────────────────────────────────────
-    case 'admin_users':      $controller->adminListUsers();   break;
-    case 'admin_edit_user':  $controller->adminEditUser();    break;
-    case 'admin_update_user':$controller->adminUpdateUser();  break;
-    case 'admin_delete_user':$controller->adminDeleteUser();  break;
-
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     case 'home':
     default:
         require_once __DIR__ . '/../View/layout/header.php';

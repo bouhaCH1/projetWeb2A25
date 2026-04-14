@@ -63,10 +63,7 @@ class UserController {
         require_once __DIR__ . '/../View/user/login.php';
     }
 
-<<<<<<< HEAD
-=======
     // ── Connexion administrateur (page dédiée) ──────────────────────────
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function showAdminLogin(): void {
         require_once __DIR__ . '/../View/admin/login.php';
     }
@@ -112,28 +109,17 @@ class UserController {
             exit;
         }
 
-<<<<<<< HEAD
         $_SESSION['user_id']         = $user->id;
         $_SESSION['user_first_name'] = $user->first_name;
         $_SESSION['user_last_name']  = $user->last_name;
         $_SESSION['user_role']       = $user->role;
         $_SESSION['user_pic']        = $user->profile_pic;
-=======
-        $_SESSION['user_id']          = $user->id;
-        $_SESSION['user_first_name']  = $user->first_name;
-        $_SESSION['user_last_name']   = $user->last_name;
-        $_SESSION['user_role']        = $user->role;
-        $_SESSION['user_pic']         = $user->profile_pic;
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 
         header('Location: index.php?action=admin_users');
         exit;
     }
 
-<<<<<<< HEAD
-=======
     // ── Gérer le fonctionnement de la connexion ─────────────────────────
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function login(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=login');
@@ -164,10 +150,7 @@ class UserController {
         $result = $user->login();
 
         if ($result['success']) {
-<<<<<<< HEAD
-=======
             // Les comptes admin utilisent la page de connexion dédiée
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
             if ($user->role === 'admin') {
                 $_SESSION['errors'] = ['Administrator accounts must sign in via the Administrator login page.'];
                 header('Location: index.php?action=admin_login');
@@ -230,7 +213,7 @@ class UserController {
         }
 
         $user = new User();
-        $user->id = (int) $_SESSION['user_id'];
+        $user->id         = (int) $_SESSION['user_id'];
         $user->first_name = htmlspecialchars($first_name);
         $user->last_name  = htmlspecialchars($last_name);
         $user->phone      = htmlspecialchars($phone);
@@ -242,7 +225,7 @@ class UserController {
                 mkdir($upload_dir, 0755, true);
             }
 
-            $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
+            $ext     = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
             if (!in_array($ext, $allowed)) {

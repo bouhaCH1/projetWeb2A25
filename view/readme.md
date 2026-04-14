@@ -1,16 +1,5 @@
 # projetWeb2A25 — WorkWave
 
-<<<<<<< HEAD
-Root folder: **`Model/`**, **`View/`**, **`Controller/`** only (plus optional root `index.php` redirect).
-
-| URL | Purpose |
-|-----|---------|
-| `.../Controller/index.php` | App entry |
-| `.../Controller/index.php?action=admin_login` | Admin login |
-| `.../Model/setup_admin.php` | One-time admin setup (delete after) |
-
-Copy project into `htdocs/workwave`, import `Model/create_tables.sql`, set DB in `Model/Database.php`, run setup once, open `Controller/index.php`.
-=======
 ## Folder layout (MVC only at project root)
 
 The **project root** must contain **only** three folders:
@@ -38,4 +27,3 @@ There are **no** `index.php`, `readme.md`, or `setup_admin.php` files at the roo
 3. Edit `Model/Database.php` if your MySQL user/password differ.
 4. Run `Model/setup_admin.php` once, then **delete** that file.
 5. Use **`Controller/index.php`** as the main page for the site.
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b

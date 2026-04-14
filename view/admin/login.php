@@ -2,11 +2,7 @@
 
 <div class="content_box" style="max-width:480px;margin:0 auto;">
     <h1 style="margin-bottom:8px;">Administrator login</h1>
-<<<<<<< HEAD
-    <p style="color:#aaa;font-size:0.95rem;margin-bottom:20px;"><a href="/workwave/Controller/index.php?action=login">Public login</a> for seekers and employers.</p>
-=======
     <p style="color:#aaa;font-size:0.95rem;margin-bottom:20px;">Back-office access only. Job seekers and employers use the <a href="/workwave/Controller/index.php?action=login">public login</a>.</p>
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 
     <?php if (!empty($_SESSION['errors'])): ?>
         <div class="alert alert-danger"><ul>

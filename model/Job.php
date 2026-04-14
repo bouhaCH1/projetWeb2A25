@@ -1,8 +1,5 @@
 <?php
-<<<<<<< HEAD
-=======
 // Model/Job.php — Second entity: job postings linked to employers (users)
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 
 require_once __DIR__ . '/Database.php';
 
@@ -13,10 +10,7 @@ class Job {
     public string $title = '';
     public string $description = '';
     public string $location = '';
-<<<<<<< HEAD
-=======
     /** full_time | part_time | contract | internship */
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public string $employment_type = 'full_time';
     public string $salary_range = '';
     public string $created_at = '';
@@ -27,12 +21,9 @@ class Job {
         $this->pdo = getConnection();
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Insert a new job row (employer must be validated by controller).
      */
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function create(): array {
         $stmt = $this->pdo->prepare(
             'INSERT INTO jobs (employer_id, title, description, location, employment_type, salary_range)
@@ -50,14 +41,11 @@ class Job {
         return ['success' => true, 'message' => 'Job posted successfully.'];
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Public job board: all jobs with employer name (INNER JOIN users).
      *
      * @return array<int, array<string, mixed>>
      */
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function findAllWithEmployers(): array {
         $sql = 'SELECT j.id, j.title, j.description, j.location, j.employment_type, j.salary_range,
                        j.created_at, j.employer_id,
@@ -71,12 +59,9 @@ class Job {
         return $stmt->fetchAll();
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Single job detail with employer info (INNER JOIN).
      */
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function findByIdWithEmployer(int $id): ?array {
         $sql = 'SELECT j.id, j.title, j.description, j.location, j.employment_type, j.salary_range,
                        j.created_at, j.employer_id,
@@ -91,14 +76,11 @@ class Job {
         return $row !== false ? $row : null;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Jobs posted by one employer (same JOIN pattern for consistent columns in the view).
      *
      * @return array<int, array<string, mixed>>
      */
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function findByEmployerWithEmployerInfo(int $employerId): array {
         $sql = 'SELECT j.id, j.title, j.description, j.location, j.employment_type, j.salary_range,
                        j.created_at, j.employer_id,
@@ -112,12 +94,9 @@ class Job {
         return $stmt->fetchAll();
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Delete a job only if it belongs to the given employer.
      */
->>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function deleteByOwner(int $jobId, int $employerId): array {
         $stmt = $this->pdo->prepare('DELETE FROM jobs WHERE id = :id AND employer_id = :employer_id');
         $stmt->execute([':id' => $jobId, ':employer_id' => $employerId]);
