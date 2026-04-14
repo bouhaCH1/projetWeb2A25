@@ -5,7 +5,11 @@ $old = $_SESSION['old_job'] ?? [];
 
 <div class="content_box">
     <h1>Post a job</h1>
+<<<<<<< HEAD
     <p>New job listing (validated on the server).</p>
+=======
+    <p>Create a new listing for job seekers. Validation is performed on the server (PHP), not via HTML5 constraint attributes.</p>
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 
     <?php if (!empty($_SESSION['errors'])): ?>
         <div class="alert alert-danger"><ul>

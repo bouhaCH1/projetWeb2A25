@@ -1,15 +1,27 @@
 <?php
+<<<<<<< HEAD
+=======
+// Controller/JobController.php
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 
 require_once __DIR__ . '/../Model/Job.php';
 
 class JobController {
 
+<<<<<<< HEAD
+=======
+    /** Public list of jobs (JOIN in model). */
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function listJobs(): void {
         $job  = new Job();
         $jobs = $job->findAllWithEmployers();
         require_once __DIR__ . '/../View/job/list.php';
     }
 
+<<<<<<< HEAD
+=======
+    /** Single job with employer row (JOIN). */
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     public function showJob(): void {
         $id = (int) ($_GET['id'] ?? 0);
         if ($id < 1) {
@@ -40,11 +52,19 @@ class JobController {
             exit;
         }
 
+<<<<<<< HEAD
         $title           = trim($_POST['title'] ?? '');
         $description     = trim($_POST['description'] ?? '');
         $location        = trim($_POST['location'] ?? '');
         $employment_type = trim($_POST['employment_type'] ?? '');
         $salary_range    = trim($_POST['salary_range'] ?? '');
+=======
+        $title            = trim($_POST['title'] ?? '');
+        $description      = trim($_POST['description'] ?? '');
+        $location         = trim($_POST['location'] ?? '');
+        $employment_type  = trim($_POST['employment_type'] ?? '');
+        $salary_range     = trim($_POST['salary_range'] ?? '');
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 
         $errors = $this->validateJobInput($title, $description, $location, $employment_type, $salary_range);
 
@@ -62,12 +82,21 @@ class JobController {
         }
 
         $job = new Job();
+<<<<<<< HEAD
         $job->employer_id     = (int) $_SESSION['user_id'];
         $job->title           = $title;
         $job->description     = $description;
         $job->location        = $location;
         $job->employment_type = $employment_type;
         $job->salary_range    = $salary_range;
+=======
+        $job->employer_id      = (int) $_SESSION['user_id'];
+        $job->title            = $title;
+        $job->description      = $description;
+        $job->location         = $location;
+        $job->employment_type  = $employment_type;
+        $job->salary_range     = $salary_range;
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 
         $result = $job->create();
         $_SESSION['success'] = $result['message'];
@@ -75,9 +104,16 @@ class JobController {
         exit;
     }
 
+<<<<<<< HEAD
     public function myJobs(): void {
         $this->requireEmployer();
         $job  = new Job();
+=======
+    /** Employer's listings (JOIN in model). */
+    public function myJobs(): void {
+        $this->requireEmployer();
+        $job = new Job();
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
         $jobs = $job->findByEmployerWithEmployerInfo((int) $_SESSION['user_id']);
         require_once __DIR__ . '/../View/job/my_jobs.php';
     }
@@ -117,6 +153,14 @@ class JobController {
         }
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Server-side validation only (no HTML5 constraint attributes).
+     *
+     * @return string[]
+     */
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
     private function validateJobInput(
         string $title,
         string $description,

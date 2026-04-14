@@ -9,6 +9,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<<<<<<< HEAD
+=======
+<!-- The New Template Styles -->
+>>>>>>> b2a8300c8d5e972f31e17e8b354ce666ccf5ef8b
 <link rel="stylesheet" href="/workwave/View/assets/templatemo-aurum-gold.css">
 
 <style>
