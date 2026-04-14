@@ -9,7 +9,7 @@ ob_start();
                 <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Modifier la mission #<?= (int)$missionData['id'] ?></h4>
             </div>
             <div class="card-body p-4">
-                <form id="missionForm" method="POST" action="index.php?action=edit&id=<?= (int)$missionData['id'] ?>" novalidate>
+                <form id="missionForm" method="POST" action="index.php?action=front_edit&id=<?= (int)$missionData['id'] ?>" novalidate>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Titre <span class="text-danger">*</span></label>
                         <input type="text" name="titre" id="titre" class="form-control <?= isset($errors['titre']) ? 'is-invalid' : '' ?>"
@@ -79,6 +79,6 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
-$extraJs = '<script src="public/assets/js/validation.js"></script>';
+$extraJs = '<script src="../View/public/assets/js/validation.js"></script>';
 require_once 'layout.php';
 ?>

@@ -30,6 +30,22 @@ try {
     $conn->exec($sql);
     echo "Table mission créée avec succès.<br>";
 
+    $sql = "CREATE TABLE IF NOT EXISTS candidature (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        mission_id INT NOT NULL,
+        nom VARCHAR(100) NOT NULL,
+        prenom VARCHAR(100) NOT NULL,
+        email VARCHAR(150) NOT NULL,
+        telephone VARCHAR(30) NOT NULL,
+        motivation TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT fk_candidature_mission
+            FOREIGN KEY (mission_id) REFERENCES mission(id)
+            ON DELETE CASCADE
+    )";
+    $conn->exec($sql);
+    echo "Table candidature créée avec succès.<br>";
+
     // Insert sample data
     $sql = "INSERT INTO mission (titre, description, budget, date_debut, date_fin, statut, competences) VALUES
     ('Développement site web', 'Création d\'un site web responsive pour une entreprise locale.', 2500.00, '2024-05-01', '2024-06-15', 'ouverte', 'HTML, CSS, JavaScript, PHP'),

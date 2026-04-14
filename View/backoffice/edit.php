@@ -102,7 +102,7 @@ ob_start();
 </div>
 
 <?php
-$extraJs = '<script src="../public/assets/js/validation.js"></script>';
+$extraJs = '<script src="../View/public/assets/js/validation.js"></script>';
 $content = ob_get_clean();
 require_once 'layout.php';
 ?>

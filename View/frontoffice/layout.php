@@ -38,10 +38,10 @@
                 <a class="nav-link" href="index.php?action=missions">
                     <i class="fas fa-home"></i> Accueil
                 </a>
-                <a class="nav-link" href="index.php?action=create">
+                <a class="nav-link" href="index.php?action=front_create">
                     <i class="fas fa-plus-circle"></i> Publier
                 </a>
-                <a class="nav-link" href="backoffice/index.php">
+                <a class="nav-link" href="index.php?action=index">
                     <i class="fas fa-cog"></i> Administration
                 </a>
             </div>

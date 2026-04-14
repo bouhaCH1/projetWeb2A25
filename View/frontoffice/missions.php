@@ -10,6 +10,13 @@ ob_start();
 </div>
 
 <div class="row">
+    <?php if (isset($_GET['applied'])): ?>
+        <div class="col-12">
+            <div class="alert alert-success">
+                Candidature envoyee avec succes.
+            </div>
+        </div>
+    <?php endif; ?>
     <?php if (empty($missions)): ?>
         <div class="col-12">
             <div class="alert alert-info text-center">
@@ -43,6 +50,10 @@ ob_start();
                         <?php endif; ?>
                     </div>
                     <div class="card-footer bg-transparent border-0">
+                        <a href="index.php?action=front_apply&id=<?php echo (int)$mission['id']; ?>" class="btn btn-primary btn-sm mb-2">
+                            <i class="fas fa-paper-plane"></i> Postuler
+                        </a>
+                        <br>
                         <small class="text-muted">
                             <i class="fas fa-clock"></i> Postée le <?php echo date('d/m/Y', strtotime($mission['created_at'])); ?>
                         </small>

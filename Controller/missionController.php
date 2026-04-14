@@ -1,20 +1,23 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/mission.php';
+require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/../Model/mission.php';
+require_once __DIR__ . '/../Model/candidature.php';
 
 class MissionController {
     private $db;
     private $mission;
+    private $candidature;
 
     public function __construct() {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->mission = new Mission($this->db);
+        $this->candidature = new Candidature($this->db);
     }
 
     public function frontIndex() {
         $missions = $this->mission->getAll();
-        require_once __DIR__ . '/../views/frontoffice/missions.php';
+        require_once __DIR__ . '/../View/frontoffice/missions.php';
     }
 
     public function frontCreate() {
@@ -27,12 +30,12 @@ class MissionController {
                     exit;
                 }
             }
-            require_once __DIR__ . '/../views/frontoffice/create.php';
+            require_once __DIR__ . '/../View/frontoffice/create.php';
             return;
         }
 
         $errors = [];
-        require_once __DIR__ . '/../views/frontoffice/create.php';
+        require_once __DIR__ . '/../View/frontoffice/create.php';
     }
 
     public function frontEdit() {
@@ -55,7 +58,7 @@ class MissionController {
             }
         }
 
-        require_once __DIR__ . '/../views/frontoffice/edit.php';
+        require_once __DIR__ . '/../View/frontoffice/edit.php';
     }
 
     public function frontDelete() {
@@ -67,9 +70,39 @@ class MissionController {
         exit;
     }
 
+    public function frontApply() {
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $missionData = $this->mission->getById($id);
+        if (!$missionData) {
+            header('Location: index.php?action=missions');
+            exit;
+        }
+
+        $errors = [];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = $this->validateCandidature($_POST);
+            if (empty($errors)) {
+                $this->candidature->mission_id = $id;
+                $this->candidature->nom = trim($_POST['nom']);
+                $this->candidature->prenom = trim($_POST['prenom']);
+                $this->candidature->email = trim($_POST['email']);
+                $this->candidature->telephone = trim($_POST['telephone']);
+                $this->candidature->motivation = trim($_POST['motivation']);
+
+                if ($this->candidature->create()) {
+                    header('Location: index.php?action=missions&applied=1');
+                    exit;
+                }
+                $errors['general'] = "Impossible d'envoyer la candidature pour le moment.";
+            }
+        }
+
+        require_once __DIR__ . '/../View/frontoffice/candidature.php';
+    }
+
     public function index() {
         $missions = $this->mission->getAll();
-        require_once __DIR__ . '/../views/backoffice/list.php';
+        require_once __DIR__ . '/../View/backoffice/list.php';
     }
 
     public function create() {
@@ -82,10 +115,10 @@ class MissionController {
                     exit;
                 }
             }
-            require_once __DIR__ . '/../views/backoffice/create.php';
+            require_once __DIR__ . '/../View/backoffice/create.php';
         } else {
             $errors = [];
-            require_once __DIR__ . '/../views/backoffice/create.php';
+            require_once __DIR__ . '/../View/backoffice/create.php';
         }
     }
 
@@ -107,7 +140,7 @@ class MissionController {
                 }
             }
         }
-        require_once __DIR__ . '/../views/backoffice/edit.php';
+        require_once __DIR__ . '/../View/backoffice/edit.php';
     }
 
     public function delete() {
@@ -163,6 +196,36 @@ class MissionController {
             $errors['competences'] = "Les compétences sont obligatoires.";
         elseif (strlen(trim($data['competences'])) < 3)
             $errors['competences'] = "Entrez au moins une compétence valide.";
+
+        return $errors;
+    }
+
+    private function validateCandidature($data) {
+        $errors = [];
+
+        if (empty(trim($data['nom'] ?? ''))) {
+            $errors['nom'] = "Le nom est obligatoire.";
+        }
+
+        if (empty(trim($data['prenom'] ?? ''))) {
+            $errors['prenom'] = "Le prénom est obligatoire.";
+        }
+
+        if (empty(trim($data['email'] ?? ''))) {
+            $errors['email'] = "L'email est obligatoire.";
+        } elseif (!filter_var(trim($data['email']), FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = "Email invalide.";
+        }
+
+        if (empty(trim($data['telephone'] ?? ''))) {
+            $errors['telephone'] = "Le téléphone est obligatoire.";
+        }
+
+        if (empty(trim($data['motivation'] ?? ''))) {
+            $errors['motivation'] = "La motivation est obligatoire.";
+        } elseif (strlen(trim($data['motivation'])) < 20) {
+            $errors['motivation'] = "Minimum 20 caractères pour la motivation.";
+        }
 
         return $errors;
     }
