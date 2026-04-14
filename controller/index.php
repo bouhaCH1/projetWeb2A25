@@ -1,30 +1,42 @@
 <?php
-// index.php — Single entry point (Front Controller)
+// Controller/index.php — Single entry point (front controller)
 
 session_start();
 
-require_once __DIR__ . '/controller/UserController.php';
+require_once __DIR__ . '/UserController.php';
+require_once __DIR__ . '/JobController.php';
 
-$action     = $_GET['action'] ?? 'home';
-$controller = new UserController();
+$action          = $_GET['action'] ?? 'home';
+$controller      = new UserController();
+$jobController   = new JobController();
 
 switch ($action) {
+
+    // ── Jobs (second entity + JOIN in model) ───────────────────────────
+    case 'jobs':             $jobController->listJobs();    break;
+    case 'job_view':         $jobController->showJob();     break;
+    case 'job_post':         $jobController->showPostJob(); break;
+    case 'job_post_submit':  $jobController->postJob();      break;
+    case 'my_jobs':          $jobController->myJobs();       break;
+    case 'job_delete':       $jobController->deleteJob();   break;
 
     // ── Front Office ─────────────────────────────────────────────────────
     case 'register':         $controller->showRegister();     break;
     case 'register_submit':  $controller->register();         break;
     case 'login':            $controller->showLogin();        break;
     case 'login_submit':     $controller->login();            break;
+    case 'admin_login':      $controller->showAdminLogin();   break;
+    case 'admin_login_submit': $controller->adminLogin();     break;
     case 'profile':          $controller->showProfile();      break;
     case 'profile_update':   $controller->updateProfile();    break;
     case 'logout':           $controller->logout();           break;
 
     // ── Dashboards ───────────────────────────────────────────────────────
     case 'dashboard_seeker':
-        require_once __DIR__ . '/view/user/dashboard_seeker.php';
+        require_once __DIR__ . '/../View/user/dashboard_seeker.php';
         break;
     case 'dashboard_employer':
-        require_once __DIR__ . '/view/user/dashboard_employer.php';
+        require_once __DIR__ . '/../View/user/dashboard_employer.php';
         break;
 
     // ── Back Office ──────────────────────────────────────────────────────
@@ -35,9 +47,8 @@ switch ($action) {
 
     case 'home':
     default:
-        require_once __DIR__ . '/view/layout/header.php';
-        require_once __DIR__ . '/view/layout/home.php';
-        require_once __DIR__ . '/view/layout/footer.php';
+        require_once __DIR__ . '/../View/layout/header.php';
+        require_once __DIR__ . '/../View/layout/home.php';
+        require_once __DIR__ . '/../View/layout/footer.php';
         break;
 }
-?>

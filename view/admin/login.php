@@ -1,7 +1,8 @@
 <?php include __DIR__ . '/../layout/header.php'; ?>
 
-<div class="content_box">
-    <h1>Log In</h1>
+<div class="content_box" style="max-width:480px;margin:0 auto;">
+    <h1 style="margin-bottom:8px;">Administrator login</h1>
+    <p style="color:#aaa;font-size:0.95rem;margin-bottom:20px;">Back-office access only. Job seekers and employers use the <a href="/workwave/Controller/index.php?action=login">public login</a>.</p>
 
     <?php if (!empty($_SESSION['errors'])): ?>
         <div class="alert alert-danger"><ul>
@@ -21,32 +22,28 @@
         <ul id="js-error-list"></ul>
     </div>
 
-    <form id="loginForm" action="/workwave/Controller/index.php?action=login_submit" method="POST" novalidate>
+    <form id="adminLoginForm" action="/workwave/Controller/index.php?action=admin_login_submit" method="POST" novalidate>
 
-        <label>Email Address</label>
-        <input type="text" id="email" name="email">
+        <label>Administrator email</label>
+        <input type="text" id="email" name="email" autocomplete="username">
 
         <label>Password</label>
-        <input type="password" id="password" name="password">
+        <input type="password" id="password" name="password" autocomplete="current-password">
 
         <br/>
-        <button type="submit" class="btn btn-primary">Log In</button>
-        <a href="/workwave/Controller/index.php?action=register" class="btn btn-secondary">No account? Register</a>
+        <button type="submit" class="btn btn-primary">Sign in to admin panel</button>
+        <a href="/workwave/Controller/index.php" class="btn btn-secondary">← Back to site</a>
 
     </form>
 </div>
 
 <script>
-document.getElementById('loginForm').addEventListener('submit', function(e) {
+document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
     var errors = [];
-    var email    = document.getElementById('email').value.trim();
+    var email = document.getElementById('email').value.trim();
     var password = document.getElementById('password').value;
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!email)                       errors.push('Email is required.');
-    else if (!emailRegex.test(email)) errors.push('Invalid email format.');
-    if (!password)                    errors.push('Password is required.');
-
+    if (!email) errors.push('Email is required.');
+    if (!password) errors.push('Password is required.');
     if (errors.length > 0) {
         e.preventDefault();
         var list = document.getElementById('js-error-list');
@@ -55,6 +52,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
             var li = document.createElement('li'); li.textContent = msg; list.appendChild(li);
         });
         document.getElementById('js-errors').style.display = 'block';
+        window.scrollTo(0, 0);
     }
 });
 </script>

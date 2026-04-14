@@ -81,6 +81,62 @@ class UserController {
         require_once __DIR__ . '/../View/user/login.php';
     }
 
+    // ── Connexion administrateur (page dédiée) ──────────────────────────
+    public function showAdminLogin(): void {
+        require_once __DIR__ . '/../View/admin/login.php';
+    }
+
+    public function adminLogin(): void {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?action=admin_login');
+            exit;
+        }
+
+        $email    = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+
+        $errors = [];
+        if ($email === '') {
+            $errors[] = 'Email is required.';
+        }
+        if ($password === '') {
+            $errors[] = 'Password is required.';
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            header('Location: index.php?action=admin_login');
+            exit;
+        }
+
+        $user = new User();
+        $user->email    = $email;
+        $user->password = $password;
+
+        $result = $user->login();
+
+        if (!$result['success']) {
+            $_SESSION['errors'] = [$result['message']];
+            header('Location: index.php?action=admin_login');
+            exit;
+        }
+
+        if ($user->role !== 'admin') {
+            $_SESSION['errors'] = ['This login is reserved for administrator accounts only. Use the public login for job seekers and employers.'];
+            header('Location: index.php?action=admin_login');
+            exit;
+        }
+
+        $_SESSION['user_id']          = $user->id;
+        $_SESSION['user_first_name']  = $user->first_name;
+        $_SESSION['user_last_name']   = $user->last_name;
+        $_SESSION['user_role']        = $user->role;
+        $_SESSION['user_pic']         = $user->profile_pic;
+
+        header('Location: index.php?action=admin_users');
+        exit;
+    }
+
     // ── Gérer le fonctionnement de la connexion ─────────────────────────
     public function login(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -109,18 +165,20 @@ class UserController {
         $result = $user->login();
 
         if ($result['success']) {
-            // Création des variables de session pour retenir l'utilisateur
+            // Les comptes admin utilisent la page de connexion dédiée
+            if ($user->role === 'admin') {
+                $_SESSION['errors'] = ['Administrator accounts must sign in via the Administrator login page.'];
+                header('Location: index.php?action=admin_login');
+                exit;
+            }
+
             $_SESSION['user_id']         = $user->id;
             $_SESSION['user_first_name'] = $user->first_name;
             $_SESSION['user_last_name']  = $user->last_name;
             $_SESSION['user_role']       = $user->role;
             $_SESSION['user_pic']        = $user->profile_pic;
 
-            // Redirection selon le rôle
-            if ($user->role === 'admin') {
-                // L'administrateur va directement au back-office
-                header('Location: index.php?action=admin_users');
-            } elseif ($user->role === 'employer') {
+            if ($user->role === 'employer') {
                 header('Location: index.php?action=dashboard_employer');
             } else {
                 header('Location: index.php?action=dashboard_seeker');
@@ -174,7 +232,7 @@ class UserController {
 
         // Gérer le téléchargement de la nouvelle photo
         if (!empty($_FILES['profile_pic']['name'])) {
-            $upload_dir = __DIR__ . '/../view/uploads/profile_pics/';
+            $upload_dir = __DIR__ . '/../View/uploads/profile_pics/';
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, 0755, true);
             }
@@ -196,7 +254,7 @@ class UserController {
 
             $filename = 'user_' . $user->id . '_' . time() . '.' . $ext;
             move_uploaded_file($_FILES['profile_pic']['tmp_name'], $upload_dir . $filename);
-            $user->profile_pic = 'view/uploads/profile_pics/' . $filename;
+            $user->profile_pic = 'View/uploads/profile_pics/' . $filename;
         }
 
         $result = $user->updateProfile();
@@ -330,7 +388,7 @@ class UserController {
     // Si quelqu'un qui n'est pas admin essaie d'accéder, on le redirige.
     private function requireAdmin(): void {
         if (empty($_SESSION['user_id'])) {
-            header('Location: index.php?action=login');
+            header('Location: index.php?action=admin_login');
             exit;
         }
         if (($_SESSION['user_role'] ?? '') !== 'admin') {

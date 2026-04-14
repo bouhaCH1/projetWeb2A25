@@ -8,16 +8,16 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="/workwave/index.php" class="logo">Work<span>Wave</span></a>
+                    <a href="/workwave/Controller/index.php" class="logo">Work<span>Wave</span></a>
                     <p>Your trusted partner in career building and recruitment. We provide secure, transparent, and competitive job placement services worldwide.</p>
                 </div>
                 <div class="footer-col">
                     <h4 class="footer-title">Services</h4>
                     <ul class="footer-links">
-                        <li><a href="/workwave/index.php?action=register">Post a Job</a></li>
-                        <li><a href="/workwave/index.php">Find a Job</a></li>
-                        <li><a href="/workwave/index.php?action=login">Employer Login</a></li>
-                        <li><a href="/workwave/index.php?action=login">Seeker Login</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">Post a Job</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=jobs">Find a Job</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=login">Employer Login</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=login">Seeker Login</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -28,10 +28,11 @@
             </div>
             <div class="footer-bottom">
                 <p class="footer-copy">&copy; 2026 WorkWave. All rights reserved. Design based on <a href="https://templatemo.com" target="_blank" style="color: var(--gold-light);">TemplateMo</a></p>
+                <p class="footer-copy" style="margin-top:8px;"><a href="/workwave/Controller/index.php?action=admin_login" style="color:#666;font-size:0.85rem;">Administrator login</a></p>
             </div>
         </div>
     </footer>
 
-    <script src="/workwave/view/assets/templatemo-aurum-script.js"></script>
+    <script src="/workwave/View/assets/templatemo-aurum-script.js"></script>
 </body>
 </html>
