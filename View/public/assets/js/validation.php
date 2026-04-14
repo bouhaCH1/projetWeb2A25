@@ -1,9 +1,12 @@
+<?php
+header('Content-Type: application/javascript; charset=UTF-8');
+?>
 document.addEventListener('DOMContentLoaded', function () {
 
     const form = document.getElementById('missionForm');
     if (!form) return;
 
-    // Validation en temps réel
+    // Validation en temps reel
     document.getElementById('titre').addEventListener('input', function () {
         validateTitre();
     });
@@ -26,14 +29,14 @@ document.addEventListener('DOMContentLoaded', function () {
         validateCompetences();
     });
 
-    // Validation à la soumission
+    // Validation a la soumission
     form.addEventListener('submit', function (e) {
         let valid = true;
-        if (!validateTitre())       valid = false;
-        if (!validateBudget())      valid = false;
+        if (!validateTitre()) valid = false;
+        if (!validateBudget()) valid = false;
         if (!validateDescription()) valid = false;
-        if (!validateDates())       valid = false;
-        if (!validateStatut())      valid = false;
+        if (!validateDates()) valid = false;
+        if (!validateStatut()) valid = false;
         if (!validateCompetences()) valid = false;
         if (!valid) e.preventDefault();
     });
@@ -63,9 +66,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (val === '')
             return showError('titre', 'Le titre est obligatoire.');
         if (val.length < 5)
-            return showError('titre', 'Le titre doit contenir au moins 5 caractères.');
+            return showError('titre', 'Le titre doit contenir au moins 5 caracteres.');
         if (val.length > 100)
-            return showError('titre', 'Le titre ne doit pas dépasser 100 caractères.');
+            return showError('titre', 'Le titre ne doit pas depasser 100 caracteres.');
         return showSuccess('titre');
     }
 
@@ -74,9 +77,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (val === '')
             return showError('budget', 'Le budget est obligatoire.');
         if (isNaN(val) || Number(val) <= 0)
-            return showError('budget', 'Le budget doit être un nombre positif.');
+            return showError('budget', 'Le budget doit etre un nombre positif.');
         if (Number(val) > 1000000)
-            return showError('budget', 'Le budget ne peut pas dépasser 1 000 000 €.');
+            return showError('budget', 'Le budget ne peut pas depasser 1 000 000 EUR.');
         return showSuccess('budget');
     }
 
@@ -85,17 +88,17 @@ document.addEventListener('DOMContentLoaded', function () {
         if (val === '')
             return showError('description', 'La description est obligatoire.');
         if (val.length < 20)
-            return showError('description', 'La description doit contenir au moins 20 caractères. (' + val.length + '/20)');
+            return showError('description', 'La description doit contenir au moins 20 caracteres. (' + val.length + '/20)');
         return showSuccess('description');
     }
 
     function validateDates() {
         const debut = document.getElementById('date_debut').value;
-        const fin   = document.getElementById('date_fin').value;
+        const fin = document.getElementById('date_fin').value;
         let valid = true;
 
         if (debut === '') {
-            showError('date_debut', 'La date de début est obligatoire.');
+            showError('date_debut', 'La date de debut est obligatoire.');
             valid = false;
         } else {
             showSuccess('date_debut');
@@ -105,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             showError('date_fin', 'La date de fin est obligatoire.');
             valid = false;
         } else if (debut !== '' && fin <= debut) {
-            showError('date_fin', 'La date de fin doit être après la date de début.');
+            showError('date_fin', 'La date de fin doit etre apres la date de debut.');
             valid = false;
         } else {
             showSuccess('date_fin');
@@ -124,9 +127,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function validateCompetences() {
         const val = document.getElementById('competences').value.trim();
         if (val === '')
-            return showError('competences', 'Les compétences sont obligatoires.');
+            return showError('competences', 'Les competences sont obligatoires.');
         if (val.length < 3)
-            return showError('competences', 'Entrez au moins une compétence.');
+            return showError('competences', 'Entrez au moins une competence.');
         return showSuccess('competences');
     }
 });

@@ -79,6 +79,6 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
-$extraJs = '<script src="../View/public/assets/js/validation.js"></script>';
+$extraJs = '<script src="../View/public/assets/js/validation.php"></script>';
 require_once 'layout.php';
 ?>

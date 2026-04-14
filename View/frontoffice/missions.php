@@ -4,8 +4,8 @@ ob_start();
 
 <div class="hero">
     <div class="container">
-        <h1 class="display-4">Découvrez nos Missions</h1>
-        <p class="lead">Trouvez la mission parfaite pour vos compétences</p>
+        <h1 class="display-4">Where Talent <span>Builds Reality</span></h1>
+        <p class="lead">Des missions ambitieuses pour freelancers, devs et equipes qui veulent livrer vite.</p>
     </div>
 </div>
 
@@ -33,7 +33,7 @@ ob_start();
                         <h5 class="card-title"><?php echo htmlspecialchars($mission['titre']); ?></h5>
                         <p class="card-text"><?php echo htmlspecialchars(substr($mission['description'], 0, 100)) . '...'; ?></p>
                         <div class="mb-2">
-                            <span class="badge bg-primary statut-badge">
+                            <span class="badge statut-badge badge-<?= htmlspecialchars($mission['statut']) ?>">
                                 <?php echo htmlspecialchars($mission['statut']); ?>
                             </span>
                         </div>
