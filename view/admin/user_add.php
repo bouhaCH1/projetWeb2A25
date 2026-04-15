@@ -28,7 +28,7 @@
                value="<?= htmlspecialchars($_SESSION['old']['last_name'] ?? '') ?>">
 
         <label>Email</label>
-        <input type="email" id="email" name="email"
+        <input type="text" id="email" name="email"
                value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>">
 
         <label>Phone</label>
