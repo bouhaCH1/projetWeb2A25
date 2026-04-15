@@ -61,6 +61,9 @@ switch ($action) {
     case 'dashboard_employer':
         require_once __DIR__ . '/../View/user/dashboard_employer.php';
         break;
+    case 'admin_dashboard':
+        $controller->adminDashboard();
+        break;
     case 'admin_users':
         $controller->adminListUsers();
         break;

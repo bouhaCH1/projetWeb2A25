@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../Model/User.php';
+require_once __DIR__ . '/../Model/Job.php';
 
 class UserController {
 
@@ -115,7 +116,7 @@ class UserController {
         $_SESSION['user_role']       = $user->role;
         $_SESSION['user_pic']        = $user->profile_pic;
 
-        header('Location: index.php?action=admin_users');
+        header('Location: index.php?action=admin_dashboard');
         exit;
     }
 
@@ -264,6 +265,16 @@ class UserController {
         session_destroy();
         header('Location: index.php?action=login');
         exit;
+    }
+
+    public function adminDashboard(): void {
+        $this->requireAdmin();
+        $userModel = new User();
+        $jobModel  = new Job();
+        $stats     = $userModel->getStats();
+        $jobCount  = $jobModel->countAll();
+        $pageTitle = 'Admin Dashboard';
+        require_once __DIR__ . '/../View/admin/dashboard.php';
     }
 
     public function adminShowAddUser(): void {

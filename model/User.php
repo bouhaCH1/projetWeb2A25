@@ -139,6 +139,22 @@ class User {
         return ['success' => true, 'message' => 'Account deleted.'];
     }
 
+    /**
+     * Returns counts of non-admin users grouped by role.
+     * Used by the admin dashboard overview.
+     */
+    public function getStats(): array {
+        $stmt = $this->pdo->query(
+            "SELECT role, COUNT(*) AS cnt FROM users WHERE role != 'admin' GROUP BY role"
+        );
+        $stats = ['job_seeker' => 0, 'employer' => 0, 'total' => 0];
+        foreach ($stmt->fetchAll() as $row) {
+            $stats[$row['role']] = (int) $row['cnt'];
+            $stats['total']     += (int) $row['cnt'];
+        }
+        return $stats;
+    }
+
     private function emailExists(): bool {
         $stmt = $this->pdo->prepare('SELECT id FROM users WHERE email=:email LIMIT 1');
         $stmt->execute([':email' => $this->email]);

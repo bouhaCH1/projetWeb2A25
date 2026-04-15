@@ -105,4 +105,12 @@ class Job {
         }
         return ['success' => false, 'message' => 'Job not found or you do not have permission to delete it.'];
     }
+
+    /**
+     * Total job count — used by admin dashboard overview.
+     */
+    public function countAll(): int {
+        $stmt = $this->pdo->query('SELECT COUNT(*) FROM jobs');
+        return (int) $stmt->fetchColumn();
+    }
 }
