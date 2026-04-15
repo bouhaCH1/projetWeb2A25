@@ -52,6 +52,9 @@ ob_start();
                             <a href="index.php?action=edit&id=<?= $m['id'] ?>" class="btn btn-sm btn-outline-primary me-1">
                                 <i class="fas fa-edit"></i>
                             </a>
+                            <a href="index.php?action=candidatures&mission_id=<?= $m['id'] ?>" class="btn btn-sm btn-outline-info me-1" title="Voir candidatures">
+                                <i class="fas fa-user-check"></i>
+                            </a>
                             <a href="index.php?action=delete&id=<?= $m['id'] ?>"
                                class="btn btn-sm btn-outline-danger"
                                onclick="return confirm('Supprimer cette mission ?')">

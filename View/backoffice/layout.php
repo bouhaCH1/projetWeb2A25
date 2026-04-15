@@ -17,6 +17,9 @@
         <a href="index.php?action=create" class="<?= (isset($activePage) && $activePage === 'create') ? 'active' : '' ?>">
             <i class="fas fa-plus-circle"></i> Ajouter une mission
         </a>
+        <a href="index.php?action=candidatures" class="<?= (isset($activePage) && $activePage === 'candidatures') ? 'active' : '' ?>">
+            <i class="fas fa-user-check"></i> Candidatures
+        </a>
         <a href="index.php?action=missions">
             <i class="fas fa-globe"></i> Aller au FrontOffice
         </a>

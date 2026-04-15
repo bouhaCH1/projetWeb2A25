@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/config/database.php';
-require_once __DIR__ . '/../Model/mission.php';
 require_once __DIR__ . '/missionController.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : 'home';
@@ -19,6 +18,9 @@ switch ($action) {
         break;
     case 'delete':
         $controller->delete();
+        break;
+    case 'candidatures':
+        $controller->candidatures();
         break;
     case 'front_create':
         $controller->frontCreate();

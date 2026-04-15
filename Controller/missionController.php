@@ -151,6 +151,15 @@ class MissionController {
         }
     }
 
+    public function candidatures() {
+        $selectedMissionId = isset($_GET['mission_id']) ? (int)$_GET['mission_id'] : 0;
+        $selectedMissionId = $selectedMissionId > 0 ? $selectedMissionId : null;
+
+        $missions = $this->mission->getAll();
+        $candidatures = $this->candidature->getAllWithMission($selectedMissionId);
+        require_once __DIR__ . '/../View/backoffice/candidatures.php';
+    }
+
     private function hydrateMission($data) {
         $this->mission->titre = trim($data['titre']);
         $this->mission->description = trim($data['description']);

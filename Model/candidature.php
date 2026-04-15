@@ -27,5 +27,25 @@ class Candidature {
         $stmt->bindParam(':motivation', $this->motivation);
         return $stmt->execute();
     }
+
+    public function getAllWithMission($missionId = null) {
+        $query = "SELECT c.*, m.titre AS mission_titre
+                  FROM " . $this->table . " c
+                  INNER JOIN mission m ON m.id = c.mission_id";
+
+        if ($missionId !== null) {
+            $query .= " WHERE c.mission_id = :mission_id";
+        }
+
+        $query .= " ORDER BY c.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+
+        if ($missionId !== null) {
+            $stmt->bindParam(':mission_id', $missionId, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

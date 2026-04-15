@@ -9,6 +9,13 @@
     <link href="../View/tempatemo_style.css" rel="stylesheet">
 </head>
 <body>
+    <div class="front-animated-bg" aria-hidden="true">
+        <i class="fas fa-laptop-code icon i1"></i>
+        <i class="fas fa-briefcase icon i2"></i>
+        <i class="fas fa-bullhorn icon i3"></i>
+        <i class="fas fa-chart-line icon i4"></i>
+        <i class="fas fa-users icon i5"></i>
+    </div>
     <nav class="navbar navbar-expand-lg navbar-dark forge-nav">
         <div class="container forge-nav-container">
             <a class="navbar-brand forge-logo" href="index.php?action=missions">
