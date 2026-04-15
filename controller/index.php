@@ -64,6 +64,12 @@ switch ($action) {
     case 'admin_users':
         $controller->adminListUsers();
         break;
+    case 'admin_add_user':
+        $controller->adminShowAddUser();
+        break;
+    case 'admin_add_user_submit':
+        $controller->adminAddUser();
+        break;
     case 'admin_edit_user':
         $controller->adminEditUser();
         break;

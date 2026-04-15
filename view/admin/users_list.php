@@ -16,9 +16,13 @@ include __DIR__ . '/../layout/header.php';
                 &nbsp;|&nbsp; <a href="/workwave/Controller/index.php?action=logout">Log Out</a>
             </p>
         </div>
-        <span style="background:#C4A15A; color:#000; padding:6px 14px; border-radius:20px; font-weight:700; font-size:0.85rem; letter-spacing:1px;">
-            ADMINISTRATOR
-        </span>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <a href="/workwave/Controller/index.php?action=admin_add_user"
+               class="btn btn-primary" style="font-weight:700;">+ Add User</a>
+            <span style="background:#C4A15A; color:#000; padding:6px 14px; border-radius:20px; font-weight:700; font-size:0.85rem; letter-spacing:1px;">
+                ADMINISTRATOR
+            </span>
+        </div>
     </div>
 
     <!-- ── Flash Messages ─────────────────────────────────────────── -->

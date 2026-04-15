@@ -266,6 +266,64 @@ class UserController {
         exit;
     }
 
+    public function adminShowAddUser(): void {
+        $this->requireAdmin();
+        require_once __DIR__ . '/../View/admin/user_add.php';
+    }
+
+    public function adminAddUser(): void {
+        $this->requireAdmin();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?action=admin_add_user');
+            exit;
+        }
+
+        $first_name       = trim($_POST['first_name'] ?? '');
+        $last_name        = trim($_POST['last_name'] ?? '');
+        $email            = trim($_POST['email'] ?? '');
+        $phone            = trim($_POST['phone'] ?? '');
+        $role             = trim($_POST['role'] ?? '');
+        $password         = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+
+        $errors = $this->validateRegister(
+            $first_name, $last_name, $email, $phone, $role, $password, $confirm_password
+        );
+
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old'] = [
+                'first_name' => $first_name,
+                'last_name'  => $last_name,
+                'email'      => $email,
+                'phone'      => $phone,
+                'role'       => $role,
+            ];
+            header('Location: index.php?action=admin_add_user');
+            exit;
+        }
+
+        $user = new User();
+        $user->first_name = htmlspecialchars($first_name);
+        $user->last_name  = htmlspecialchars($last_name);
+        $user->email      = $email;
+        $user->phone      = htmlspecialchars($phone);
+        $user->role       = $role;
+        $user->password   = $password;
+
+        $result = $user->register();
+
+        if ($result['success']) {
+            $_SESSION['success'] = 'User "' . htmlspecialchars($first_name . ' ' . $last_name) . '" created successfully.';
+            header('Location: index.php?action=admin_users');
+        } else {
+            $_SESSION['errors'] = [$result['message']];
+            header('Location: index.php?action=admin_add_user');
+        }
+        exit;
+    }
+
     public function adminListUsers(): void {
         $this->requireAdmin();
         $user  = new User();
