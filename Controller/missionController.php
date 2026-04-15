@@ -160,6 +160,25 @@ class MissionController {
         require_once __DIR__ . '/../View/backoffice/candidatures.php';
     }
 
+    public function updateCandidatureStatut() {
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $statut = isset($_GET['statut']) ? trim($_GET['statut']) : '';
+        if ($id > 0 && in_array($statut, ['en_attente', 'acceptee', 'refusee'], true)) {
+            $this->candidature->updateStatut($id, $statut);
+        }
+        header('Location: index.php?action=candidatures&updated_statut=1');
+        exit;
+    }
+
+    public function deleteCandidature() {
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        if ($id > 0) {
+            $this->candidature->delete($id);
+        }
+        header('Location: index.php?action=candidatures&deleted_candidature=1');
+        exit;
+    }
+
     private function hydrateMission($data) {
         $this->mission->titre = trim($data['titre']);
         $this->mission->description = trim($data['description']);

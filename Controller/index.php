@@ -22,6 +22,12 @@ switch ($action) {
     case 'candidatures':
         $controller->candidatures();
         break;
+    case 'update_candidature_statut':
+        $controller->updateCandidatureStatut();
+        break;
+    case 'delete_candidature':
+        $controller->deleteCandidature();
+        break;
     case 'front_create':
         $controller->frontCreate();
         break;

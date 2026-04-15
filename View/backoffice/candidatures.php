@@ -51,8 +51,9 @@ ob_start();
                             <th>Nom complet</th>
                             <th>Email</th>
                             <th>Téléphone</th>
-                            <th>Motivation</th>
-                            <th>Date</th>
+                            <th style="width:20%">Motivation</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,7 +72,23 @@ ob_start();
                                     <small><?= nl2br(htmlspecialchars($c['motivation'])) ?></small>
                                 </td>
                                 <td>
-                                    <?= !empty($c['created_at']) ? date('d/m/Y H:i', strtotime($c['created_at'])) : '-' ?>
+                                    <?php 
+                                        $badgeClass = 'bg-secondary';
+                                        $statutText = 'En attente';
+                                        if (isset($c['statut'])) {
+                                            if ($c['statut'] === 'acceptee') { $badgeClass = 'bg-success'; $statutText = 'Acceptée'; }
+                                            if ($c['statut'] === 'refusee') { $badgeClass = 'bg-danger'; $statutText = 'Refusée'; }
+                                        }
+                                    ?>
+                                    <span class="badge <?= $badgeClass ?>"><?= $statutText ?></span>
+                                </td>
+                                <td>
+                                    <div class="text-nowrap mb-1">
+                                        <small class="text-muted d-block mb-2"><?= !empty($c['created_at']) ? date('d/m/Y H:i', strtotime($c['created_at'])) : '-' ?></small>
+                                        <a href="index.php?action=update_candidature_statut&id=<?= $c['id'] ?>&statut=acceptee" class="btn btn-sm <?= (isset($c['statut']) && $c['statut'] === 'acceptee') ? 'btn-success' : 'btn-outline-success' ?>" title="Accepter"><i class="fas fa-check"></i></a>
+                                        <a href="index.php?action=update_candidature_statut&id=<?= $c['id'] ?>&statut=refusee" class="btn btn-sm <?= (isset($c['statut']) && $c['statut'] === 'refusee') ? 'btn-danger' : 'btn-outline-danger' ?>" title="Refuser"><i class="fas fa-times"></i></a>
+                                        <a href="index.php?action=delete_candidature&id=<?= $c['id'] ?>" class="btn btn-sm btn-danger ms-1" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?');"><i class="fas fa-trash"></i></a>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
