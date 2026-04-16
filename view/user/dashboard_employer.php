@@ -41,6 +41,13 @@ include __DIR__ . '/../layout/dashboard_header.php';
         <div class="action-card-title">My Profile</div>
         <div class="action-card-desc">Update your company information and contact details</div>
     </a>
+    <a href="/workwave/Controller/index.php?action=cvs" class="action-card">
+        <div class="action-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+        </div>
+        <div class="action-card-title">Browse CVs</div>
+        <div class="action-card-desc">Find top talent and review candidate resumes</div>
+    </a>
 </div>
 
 <!-- Tips card -->

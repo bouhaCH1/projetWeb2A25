@@ -18,7 +18,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
         <?php endforeach; unset($_SESSION['errors']); ?>
     </ul></div>
 <?php endif; ?>
-<div class="alert alert-warning" id="js-errors" style="display:none;"><ul id="js-error-list"></ul></div>
+
 
 <div class="dsh-card" style="max-width:560px;">
     <form id="addForm" action="/workwave/Controller/index.php?action=admin_add_user_submit" method="POST" novalidate>
@@ -60,37 +60,6 @@ include __DIR__ . '/../layout/dashboard_header.php';
     </form>
 </div>
 
-<script>
-document.getElementById('addForm').addEventListener('submit', function(e) {
-    var errors = [], fn = document.getElementById('first_name').value.trim(),
-        ln = document.getElementById('last_name').value.trim(),
-        em = document.getElementById('email').value.trim(),
-        ph = document.getElementById('phone').value.trim(),
-        pw = document.getElementById('password').value,
-        cp = document.getElementById('confirm_password').value,
-        nr = /^[a-zA-ZÀ-ÿ\s\-]{2,50}$/, pr = /^\+?[0-9\s\-]{7,15}$/,
-        er = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!fn) errors.push('First name is required.');
-    else if (!nr.test(fn)) errors.push('First name: 2–50 letters only.');
-    if (!ln) errors.push('Last name is required.');
-    else if (!nr.test(ln)) errors.push('Last name: 2–50 letters only.');
-    if (!em) errors.push('Email is required.');
-    else if (!er.test(em)) errors.push('Invalid email format.');
-    if (ph && !pr.test(ph)) errors.push('Phone number is invalid.');
-    if (!pw) errors.push('Password is required.');
-    else if (pw.length < 8) errors.push('Password must be at least 8 characters.');
-    else if (!/[A-Z]/.test(pw)) errors.push('Password must contain an uppercase letter.');
-    else if (!/[0-9]/.test(pw)) errors.push('Password must contain a number.');
-    if (pw !== cp) errors.push('Passwords do not match.');
-    if (errors.length > 0) {
-        e.preventDefault();
-        var list = document.getElementById('js-error-list');
-        list.innerHTML = '';
-        errors.forEach(function(m){ var li = document.createElement('li'); li.textContent = m; list.appendChild(li); });
-        document.getElementById('js-errors').style.display = 'block';
-        window.scrollTo(0,0);
-    }
-});
-</script>
+
 
 <?php include __DIR__ . '/../layout/dashboard_footer.php'; ?>

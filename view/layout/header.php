@@ -42,6 +42,7 @@
                 <ul class="nav-links">
                     <li><a href="/workwave/Controller/index.php">Home</a></li>
                     <li><a href="/workwave/Controller/index.php?action=jobs">Jobs</a></li>
+                    <li><a href="/workwave/Controller/index.php?action=cvs">Candidates</a></li>
                     <?php if (!empty($_SESSION['user_id'])): ?>
                         <li><a href="/workwave/Controller/index.php?action=profile">My Profile</a></li>
                         <?php if ($_SESSION['user_role'] === 'employer'): ?>

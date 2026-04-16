@@ -4,10 +4,12 @@ session_start();
 
 require_once __DIR__ . '/UserController.php';
 require_once __DIR__ . '/JobController.php';
+require_once __DIR__ . '/CvController.php';
 
 $action        = $_GET['action'] ?? 'home';
 $controller    = new UserController();
 $jobController = new JobController();
+$cvController  = new CvController();
 
 switch ($action) {
     case 'jobs':
@@ -27,6 +29,18 @@ switch ($action) {
         break;
     case 'job_delete':
         $jobController->deleteJob();
+        break;
+    case 'cvs':
+        $cvController->listCvs();
+        break;
+    case 'cv_view':
+        $cvController->showCv();
+        break;
+    case 'my_cv':
+        $cvController->myCv();
+        break;
+    case 'cv_submit':
+        $cvController->submitCv();
         break;
     case 'register':
         $controller->showRegister();

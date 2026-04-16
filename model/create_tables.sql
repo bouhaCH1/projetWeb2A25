@@ -57,3 +57,19 @@ VALUES (
     NULL,
     'admin'
 );
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- CVs (Third entity) — linked to job_seeker in users
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS cvs (
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    seeker_id          INT          NOT NULL,
+    professional_title VARCHAR(150) NOT NULL,
+    skills             TEXT         NOT NULL,
+    experience_years   INT          DEFAULT 0,
+    hourly_rate        VARCHAR(50)  DEFAULT '',
+    about_me           TEXT         NOT NULL,
+    created_at         DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_cvs_seeker FOREIGN KEY (seeker_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_cvs_seeker (seeker_id)
+);

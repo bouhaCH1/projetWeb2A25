@@ -11,9 +11,7 @@
         </ul></div>
     <?php endif; ?>
 
-    <div id="js-errors" class="alert alert-warning" style="display:none;">
-        <ul id="js-error-list"></ul>
-    </div>
+
 
     <form id="registerForm" action="/workwave/Controller/index.php?action=register_submit" method="POST" novalidate>
 
@@ -50,45 +48,6 @@
     <?php unset($_SESSION['old']); ?>
 </div>
 
-<script>
-document.getElementById('registerForm').addEventListener('submit', function(e) {
-    var errors = [];
-    var firstName = document.querySelector('[name="first_name"]').value.trim();
-    var lastName  = document.querySelector('[name="last_name"]').value.trim();
-    var email     = document.getElementById('email').value.trim();
-    var phone     = document.getElementById('phone').value.trim();
-    var role      = document.getElementById('role').value;
-    var password  = document.getElementById('password').value;
-    var confirm   = document.getElementById('confirm_password').value;
-    var nameRegex  = /^[a-zA-ZÀ-ÿ\s\-]{2,50}$/;
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    var phoneRegex = /^\+?[0-9\s\-]{7,15}$/;
 
-    if (!firstName)                       errors.push('First name is required.');
-    else if (!nameRegex.test(firstName))  errors.push('First name must be 2-50 letters only.');
-    if (!lastName)                        errors.push('Last name is required.');
-    else if (!nameRegex.test(lastName))   errors.push('Last name must be 2-50 letters only.');
-    if (!email)                           errors.push('Email is required.');
-    else if (!emailRegex.test(email))     errors.push('Invalid email format.');
-    if (phone && !phoneRegex.test(phone)) errors.push('Phone number is invalid.');
-    if (!role)                            errors.push('Please select a role.');
-    if (!password)                        errors.push('Password is required.');
-    else if (password.length < 8)         errors.push('Password must be at least 8 characters.');
-    else if (!/[A-Z]/.test(password))     errors.push('Password must contain at least one uppercase letter.');
-    else if (!/[0-9]/.test(password))     errors.push('Password must contain at least one number.');
-    if (password !== confirm)             errors.push('Passwords do not match.');
-
-    if (errors.length > 0) {
-        e.preventDefault();
-        var list = document.getElementById('js-error-list');
-        list.innerHTML = '';
-        errors.forEach(function(msg) {
-            var li = document.createElement('li'); li.textContent = msg; list.appendChild(li);
-        });
-        document.getElementById('js-errors').style.display = 'block';
-        window.scrollTo(0,0);
-    }
-});
-</script>
 
 <?php include __DIR__ . '/../layout/footer.php'; ?>

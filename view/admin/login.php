@@ -18,9 +18,7 @@
         </div>
     <?php endif; ?>
 
-    <div id="js-errors" class="alert alert-warning" style="display:none;">
-        <ul id="js-error-list"></ul>
-    </div>
+
 
     <form id="adminLoginForm" action="/workwave/Controller/index.php?action=admin_login_submit" method="POST" novalidate>
 
@@ -37,24 +35,6 @@
     </form>
 </div>
 
-<script>
-document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
-    var errors = [];
-    var email = document.getElementById('email').value.trim();
-    var password = document.getElementById('password').value;
-    if (!email) errors.push('Email is required.');
-    if (!password) errors.push('Password is required.');
-    if (errors.length > 0) {
-        e.preventDefault();
-        var list = document.getElementById('js-error-list');
-        list.innerHTML = '';
-        errors.forEach(function(msg) {
-            var li = document.createElement('li'); li.textContent = msg; list.appendChild(li);
-        });
-        document.getElementById('js-errors').style.display = 'block';
-        window.scrollTo(0, 0);
-    }
-});
-</script>
+
 
 <?php include __DIR__ . '/../layout/footer.php'; ?>

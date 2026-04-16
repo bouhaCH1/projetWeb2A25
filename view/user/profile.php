@@ -20,7 +20,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
 <?php if (!empty($_SESSION['success'])): ?>
     <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
 <?php endif; ?>
-<div class="alert alert-warning" id="js-errors" style="display:none;"><ul id="js-error-list"></ul></div>
+
 
 <div class="dsh-card" style="max-width:560px;">
     <!-- Avatar preview -->
@@ -64,26 +64,6 @@ include __DIR__ . '/../layout/dashboard_header.php';
     </form>
 </div>
 
-<script>
-document.getElementById('profileForm').addEventListener('submit', function(e) {
-    var errors = [], fn = document.getElementById('first_name').value.trim(),
-        ln = document.getElementById('last_name').value.trim(),
-        ph = document.getElementById('phone').value.trim(),
-        nr = /^[a-zA-ZÀ-ÿ\s\-]{2,50}$/, pr = /^\+?[0-9\s\-]{7,15}$/;
-    if (!fn) errors.push('First name is required.');
-    else if (!nr.test(fn)) errors.push('First name is invalid.');
-    if (!ln) errors.push('Last name is required.');
-    else if (!nr.test(ln)) errors.push('Last name is invalid.');
-    if (ph && !pr.test(ph)) errors.push('Phone number is invalid.');
-    if (errors.length > 0) {
-        e.preventDefault();
-        var list = document.getElementById('js-error-list');
-        list.innerHTML = '';
-        errors.forEach(function(m){ var li = document.createElement('li'); li.textContent = m; list.appendChild(li); });
-        document.getElementById('js-errors').style.display = 'block';
-        window.scrollTo(0,0);
-    }
-});
-</script>
+
 
 <?php include __DIR__ . '/../layout/dashboard_footer.php'; ?>
