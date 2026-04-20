@@ -41,12 +41,9 @@
                 
                 <ul class="nav-links">
                     <li><a href="/workwave/Controller/index.php">Home</a></li>
-                    <li><a href="/workwave/Controller/index.php?action=jobs">Jobs</a></li>
-                    <li><a href="/workwave/Controller/index.php?action=cvs">Candidates</a></li>
                     <?php if (!empty($_SESSION['user_id'])): ?>
                         <li><a href="/workwave/Controller/index.php?action=profile">My Profile</a></li>
                         <?php if ($_SESSION['user_role'] === 'employer'): ?>
-                        <li><a href="/workwave/Controller/index.php?action=my_jobs">My postings</a></li>
                         <?php endif; ?>
                         <?php if ($_SESSION['user_role'] === 'admin'): ?>
                         <li><a href="/workwave/Controller/index.php?action=admin_users">Admin Panel</a></li>
@@ -89,11 +86,9 @@
         </button>
         <ul class="mobile-nav-links">
             <li><a href="/workwave/Controller/index.php">Home</a></li>
-            <li><a href="/workwave/Controller/index.php?action=jobs">Jobs</a></li>
             <?php if (!empty($_SESSION['user_id'])): ?>
                 <li><a href="/workwave/Controller/index.php?action=profile">My Profile</a></li>
                 <?php if ($_SESSION['user_role'] === 'employer'): ?>
-                <li><a href="/workwave/Controller/index.php?action=my_jobs">My postings</a></li>
                 <?php endif; ?>
                 <?php if ($_SESSION['user_role'] === 'admin'): ?>
                 <li><a href="/workwave/Controller/index.php?action=admin_users">Admin Panel</a></li>

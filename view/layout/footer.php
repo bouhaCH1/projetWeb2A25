@@ -14,8 +14,7 @@
                 <div class="footer-col">
                     <h4 class="footer-title">Services</h4>
                     <ul class="footer-links">
-                        <li><a href="/workwave/Controller/index.php?action=register">Post a Job</a></li>
-                        <li><a href="/workwave/Controller/index.php?action=jobs">Find a Job</a></li>
+
                         <li><a href="/workwave/Controller/index.php?action=login">Employer Login</a></li>
                         <li><a href="/workwave/Controller/index.php?action=login">Seeker Login</a></li>
                     </ul>

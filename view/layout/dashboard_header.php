@@ -257,10 +257,6 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
                 Add User
             </a>
             <div class="dsh-nav-label">Site</div>
-            <a href="/workwave/Controller/index.php?action=jobs" class="dsh-nav-link">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="8" width="18" height="12" rx="1"/><path d="M7 8V6a5 5 0 0110 0v2"/></svg>
-                View Jobs
-            </a>
             <a href="/workwave/Controller/index.php" class="dsh-nav-link">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
                 Public Site
@@ -278,27 +274,7 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
                 My Profile
             </a>
-            <div class="dsh-nav-label">Jobs</div>
-            <a href="/workwave/Controller/index.php?action=my_jobs"
-               class="dsh-nav-link <?= $action === 'my_jobs' ? 'active' : '' ?>">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="8" width="18" height="12" rx="1"/><path d="M7 8V6a5 5 0 0110 0v2"/></svg>
-                My Listings
-            </a>
-            <a href="/workwave/Controller/index.php?action=job_post"
-               class="dsh-nav-link <?= $action === 'job_post' ? 'active' : '' ?>">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Post a Job
-            </a>
-            <a href="/workwave/Controller/index.php?action=jobs" class="dsh-nav-link">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                Browse All Jobs
-            </a>
-            <div class="dsh-nav-label">Candidates</div>
-            <a href="/workwave/Controller/index.php?action=cvs"
-               class="dsh-nav-link <?= $action === 'cvs' ? 'active' : '' ?>">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
-                Browse Resumes
-            </a>
+
 
         <?php else: /* job_seeker */ ?>
             <div class="dsh-nav-label">My Account</div>
@@ -312,17 +288,7 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
                 My Profile
             </a>
-            <a href="/workwave/Controller/index.php?action=my_cv"
-               class="dsh-nav-link <?= $action === 'my_cv' ? 'active' : '' ?>">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 00-2 2v16c0 1.1.9 2 2 2h12a2 2 0 002-2V8l-6-6z"/><path d="M14 3v5h5M16 13H8M16 17H8M10 9H8"/></svg>
-                Manage My CV
-            </a>
-            <div class="dsh-nav-label">Jobs</div>
-            <a href="/workwave/Controller/index.php?action=jobs"
-               class="dsh-nav-link <?= $action === 'jobs' ? 'active' : '' ?>">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                Browse Jobs
-            </a>
+
         <?php endif; ?>
     </nav>
 

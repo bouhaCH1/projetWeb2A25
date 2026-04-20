@@ -22,22 +22,6 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- ─────────────────────────────────────────────────────────────────────────────
--- Job postings (second entity) — linked to employers in users
--- ─────────────────────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS jobs (
-    id               INT AUTO_INCREMENT PRIMARY KEY,
-    employer_id      INT          NOT NULL,
-    title            VARCHAR(200) NOT NULL,
-    description      TEXT         NOT NULL,
-    location         VARCHAR(150) DEFAULT '',
-    employment_type  ENUM('full_time', 'part_time', 'contract', 'internship') NOT NULL DEFAULT 'full_time',
-    salary_range     VARCHAR(120) DEFAULT '',
-    created_at       DATETIME     DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_jobs_employer FOREIGN KEY (employer_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_jobs_employer (employer_id)
-);
-
--- ─────────────────────────────────────────────────────────────────────────────
 -- If the table already exists and is missing the 'admin' role value, run this:
 -- ALTER TABLE users MODIFY COLUMN role ENUM('job_seeker','employer','admin') NOT NULL DEFAULT 'job_seeker';
 -- ─────────────────────────────────────────────────────────────────────────────
@@ -56,20 +40,4 @@ VALUES (
     '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIXmeZv0RzxlWiq',
     NULL,
     'admin'
-);
-
--- ─────────────────────────────────────────────────────────────────────────────
--- CVs (Third entity) — linked to job_seeker in users
--- ─────────────────────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS cvs (
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-    seeker_id          INT          NOT NULL,
-    professional_title VARCHAR(150) NOT NULL,
-    skills             TEXT         NOT NULL,
-    experience_years   INT          DEFAULT 0,
-    hourly_rate        VARCHAR(50)  DEFAULT '',
-    about_me           TEXT         NOT NULL,
-    created_at         DATETIME     DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_cvs_seeker FOREIGN KEY (seeker_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_cvs_seeker (seeker_id)
 );

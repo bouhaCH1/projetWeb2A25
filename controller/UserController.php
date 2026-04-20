@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../Model/User.php';
-require_once __DIR__ . '/../Model/Job.php';
 
 class UserController {
 
@@ -270,9 +269,7 @@ class UserController {
     public function adminDashboard(): void {
         $this->requireAdmin();
         $userModel = new User();
-        $jobModel  = new Job();
         $stats     = $userModel->getStats();
-        $jobCount  = $jobModel->countAll();
         $pageTitle = 'Admin Dashboard';
         require_once __DIR__ . '/../View/admin/dashboard.php';
     }

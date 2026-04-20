@@ -28,12 +28,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
         <div class="stat-card-value"><?= $stats['employer'] ?></div>
         <div class="stat-card-sub">Hiring companies</div>
     </div>
-    <div class="stat-card">
-        <div class="stat-card-label">Job Postings</div>
-        <div class="stat-card-value"><?= $jobCount ?></div>
-        <div class="stat-card-sub">Published listings</div>
-    </div>
-</div>
+
 
 <!-- Flash messages -->
 <?php if (!empty($_SESSION['success'])): ?>
@@ -66,13 +61,6 @@ include __DIR__ . '/../layout/dashboard_header.php';
             </div>
             <div class="action-card-title">Add New User</div>
             <div class="action-card-desc">Manually create a job seeker or employer account</div>
-        </a>
-        <a href="/workwave/Controller/index.php?action=jobs" class="action-card">
-            <div class="action-card-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="12" rx="1"/><path d="M7 8V6a5 5 0 0110 0v2"/></svg>
-            </div>
-            <div class="action-card-title">View Job Board</div>
-            <div class="action-card-desc">Browse all active job listings on the platform</div>
         </a>
         <a href="/workwave/Controller/index.php" class="action-card">
             <div class="action-card-icon">

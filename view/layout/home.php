@@ -15,7 +15,7 @@
                         Connect with top employers, build your profile, and apply to thousands of active job opportunities. Start building your professional journey today.
                     </p>
                     <div class="hero-actions">
-                        <a href="/workwave/Controller/index.php?action=jobs" class="btn btn-primary">Browse Jobs</a>
+
                         <a href="/workwave/Controller/index.php?action=register" class="btn btn-outline">Join for Free</a>
                     </div>
                 </div>
