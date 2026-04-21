@@ -12,16 +12,17 @@
                     <p>Your trusted partner in career building and recruitment. We provide secure, transparent, and competitive job placement services worldwide.</p>
                 </div>
                 <div class="footer-col">
-                    <h4 class="footer-title">Services</h4>
+                    <h4 class="footer-title">Core Features</h4>
                     <ul class="footer-links">
-
-                        <li><a href="/workwave/Controller/index.php?action=login">Employer Login</a></li>
-                        <li><a href="/workwave/Controller/index.php?action=login">Seeker Login</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">💼 Post Job Listings</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">🔍 Find Top Candidates</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">📄 Create Professional Profile</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">🚀 Secure Fast Placements</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4 class="footer-title">Contact</h4>
-                    <p style="color: #999;">Email: info@jobplatform.com</p>
+                    <p style="color: #999;">Email: contact@workwave.com</p>
                     <p style="color: #999;">Tel: 010-040-0220</p>
                 </div>
             </div>
