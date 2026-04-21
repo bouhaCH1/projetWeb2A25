@@ -172,6 +172,7 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
 .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: .7rem; font-weight: 600; }
 .badge-employer { background: rgba(196,161,90,.15); color: #C4A15A; border: 1px solid rgba(196,161,90,.3); }
 .badge-seeker   { background: rgba(120,120,255,.12); color: #8888ff; border: 1px solid rgba(120,120,255,.25); }
+.badge-admin    { background: rgba(220,60,60,.12); color: #ff8080; border: 1px solid rgba(220,60,60,.25); }
 
 /* Quick-action cards */
 .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
@@ -244,6 +245,11 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
                class="dsh-nav-link <?= $action === 'admin_dashboard' ? 'active' : '' ?>">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                 Dashboard
+            </a>
+            <a href="/workwave/Controller/index.php?action=profile"
+               class="dsh-nav-link <?= $action === 'profile' ? 'active' : '' ?>">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
+                My Profile
             </a>
             <div class="dsh-nav-label">Users</div>
             <a href="/workwave/Controller/index.php?action=admin_users"

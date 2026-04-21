@@ -35,7 +35,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
         <div>
             <div style="font-size:1rem;font-weight:600;color:#e0e0e0;"><?= htmlspecialchars($data['first_name'] . ' ' . $data['last_name']) ?></div>
             <div style="font-size:.78rem;color:#666;margin-top:3px;"><?= htmlspecialchars($data['email']) ?></div>
-            <span class="badge <?= $data['role'] === 'employer' ? 'badge-employer' : 'badge-seeker' ?>" style="margin-top:6px;">
+            <span class="badge <?= $data['role'] === 'admin' ? 'badge-admin' : ($data['role'] === 'employer' ? 'badge-employer' : 'badge-seeker') ?>" style="margin-top:6px;">
                 <?= ucfirst(str_replace('_', ' ', $data['role'])) ?>
             </span>
         </div>
