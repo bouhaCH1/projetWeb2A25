@@ -4,8 +4,8 @@ ob_start();
 
 <div class="hero">
     <div class="container">
-        <h1 class="display-4">Where Talent <span>Builds Reality</span></h1>
-        <p class="lead">Des missions ambitieuses pour freelancers, devs et equipes qui veulent livrer vite.</p>
+        <h1 class="display-4">Découvrez nos Missions</h1>
+        <p class="lead">Trouvez la mission parfaite pour vos compétences</p>
     </div>
 </div>
 

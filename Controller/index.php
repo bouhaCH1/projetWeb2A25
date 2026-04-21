@@ -40,6 +40,18 @@ switch ($action) {
     case 'front_apply':
         $controller->frontApply();
         break;
+    case 'front_candidatures':
+        $controller->frontCandidatures();
+        break;
+    case 'front_edit_candidature':
+        $controller->frontEditCandidature();
+        break;
+    case 'front_delete_candidature':
+        $controller->frontDeleteCandidature();
+        break;
+    case 'front_missions':
+        $controller->frontMissions();
+        break;
     case 'missions':
     case 'home':
     default:

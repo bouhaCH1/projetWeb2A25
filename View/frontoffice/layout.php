@@ -23,6 +23,8 @@
             </a>
             <div class="navbar-nav ms-auto forge-nav-links">
                 <a class="nav-link" href="index.php?action=missions"><i class="fas fa-briefcase"></i> Missions</a>
+                <a class="nav-link" href="index.php?action=front_missions"><i class="fas fa-tasks"></i> Mes Missions</a>
+                <a class="nav-link" href="index.php?action=front_candidatures"><i class="fas fa-user-check"></i> Mes Candidatures</a>
                 <a class="nav-link" href="index.php?action=front_create"><i class="fas fa-bullhorn"></i> Publier</a>
                 <a class="nav-link" href="index.php?action=index"><i class="fas fa-user-shield"></i> Admin</a>
             </div>

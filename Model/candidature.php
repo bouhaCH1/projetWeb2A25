@@ -3,6 +3,7 @@ class Candidature {
     private $conn;
     private $table = "candidature";
 
+    public $id;
     public $mission_id;
     public $nom;
     public $prenom;
@@ -53,6 +54,41 @@ class Candidature {
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':statut', $statut);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    public function getAll() {
+        $query = "SELECT c.*, m.titre AS mission_titre
+                  FROM " . $this->table . " c
+                  INNER JOIN mission m ON m.id = c.mission_id
+                  ORDER BY c.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getById($id) {
+        $query = "SELECT c.*, m.titre AS mission_titre
+                  FROM " . $this->table . " c
+                  INNER JOIN mission m ON m.id = c.mission_id
+                  WHERE c.id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function update() {
+        $query = "UPDATE " . $this->table . "
+                  SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone, motivation = :motivation
+                  WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':nom', $this->nom);
+        $stmt->bindParam(':prenom', $this->prenom);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':telephone', $this->telephone);
+        $stmt->bindParam(':motivation', $this->motivation);
+        $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 

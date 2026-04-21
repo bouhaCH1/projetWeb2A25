@@ -100,6 +100,55 @@ class MissionController {
         require_once __DIR__ . '/../View/frontoffice/candidature.php';
     }
 
+    public function frontCandidatures() {
+        $candidatures = $this->candidature->getAll();
+        require_once __DIR__ . '/../View/frontoffice/candidatures.php';
+    }
+
+    public function frontEditCandidature() {
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        $candidatureData = $this->candidature->getById($id);
+        if (!$candidatureData) {
+            header('Location: index.php?action=front_candidatures');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = $this->validateCandidature($_POST);
+            if (empty($errors)) {
+                $this->candidature->id = $id;
+                $this->candidature->nom = trim($_POST['nom']);
+                $this->candidature->prenom = trim($_POST['prenom']);
+                $this->candidature->email = trim($_POST['email']);
+                $this->candidature->telephone = trim($_POST['telephone']);
+                $this->candidature->motivation = trim($_POST['motivation']);
+                if ($this->candidature->update()) {
+                    header('Location: index.php?action=front_candidatures&updated=1');
+                    exit;
+                }
+            }
+            require_once __DIR__ . '/../View/frontoffice/edit_candidature.php';
+            return;
+        }
+
+        $errors = [];
+        require_once __DIR__ . '/../View/frontoffice/edit_candidature.php';
+    }
+
+    public function frontDeleteCandidature() {
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+        if ($id > 0) {
+            $this->candidature->delete($id);
+        }
+        header('Location: index.php?action=front_candidatures&deleted=1');
+        exit;
+    }
+
+    public function frontMissions() {
+        $missions = $this->mission->getAll();
+        require_once __DIR__ . '/../View/frontoffice/mes_missions.php';
+    }
+
     public function index() {
         $missions = $this->mission->getAll();
         require_once __DIR__ . '/../View/backoffice/list.php';
