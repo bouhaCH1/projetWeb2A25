@@ -1,6 +1,11 @@
 <?php
 $pageTitle = 'My Profile';
-include __DIR__ . '/../layout/dashboard_header.php';
+$isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
+if ($isAdmin) {
+    include __DIR__ . '/../layout/dashboard_header.php';
+} else {
+    include __DIR__ . '/../layout/pl_dashboard_header.php';
+}
 ?>
 
 <div class="page-header">
@@ -66,4 +71,10 @@ include __DIR__ . '/../layout/dashboard_header.php';
 
 
 
-<?php include __DIR__ . '/../layout/dashboard_footer.php'; ?>
+<?php
+if ($isAdmin) {
+    include __DIR__ . '/../layout/dashboard_footer.php';
+} else {
+    include __DIR__ . '/../layout/pl_dashboard_footer.php';
+}
+?>

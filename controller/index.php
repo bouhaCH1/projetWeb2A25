@@ -65,8 +65,8 @@ switch ($action) {
         break;
     case 'home':
     default:
-        require_once __DIR__ . '/../View/layout/header.php';
+        require_once __DIR__ . '/../View/layout/pl_header.php';
         require_once __DIR__ . '/../View/layout/home.php';
-        require_once __DIR__ . '/../View/layout/footer.php';
+        require_once __DIR__ . '/../View/layout/pl_footer.php';
         break;
 }

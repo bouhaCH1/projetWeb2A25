@@ -1,0 +1,67 @@
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="about">
+          <div class="logo" style="margin-bottom:12px;">
+            <span style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.4rem;color:#1a1a2e;letter-spacing:-.5px;">Work<span style="color:#ef6f31;">Wave</span></span>
+          </div>
+          <p>Your trusted partner in career building and recruitment. Connecting top talent with leading employers worldwide.</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="helpful-links">
+          <h4>Quick Links</h4>
+          <div class="row">
+            <div class="col-lg-6 col-sm-6">
+              <ul>
+                <li><a href="/workwave/Controller/index.php">Home</a></li>
+                <li><a href="/workwave/Controller/index.php?action=register">Register</a></li>
+                <li><a href="/workwave/Controller/index.php?action=login">Sign In</a></li>
+              </ul>
+            </div>
+            <div class="col-lg-6">
+              <ul>
+                <li><a href="#">Post a Job</a></li>
+                <li><a href="#">Find Talent</a></li>
+                <li><a href="/workwave/Controller/index.php?action=admin_login" style="color:#aaa;font-size:.85rem;">Admin</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="contact-us">
+          <h4>Contact Us</h4>
+          <p>27th Street of New Town, Digital Villa</p>
+          <div class="row">
+            <div class="col-lg-6">
+              <a href="#">010-040-0220</a>
+            </div>
+            <div class="col-lg-6">
+              <a href="#">contact@workwave.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="sub-footer">
+          <p>Copyright &copy; 2026 WorkWave. All Rights Reserved.
+          <br>Design based on <a rel="nofollow" href="https://templatemo.com" target="_blank">TemplateMo</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="/workwave/View/assets/plot-listing/vendor/jquery/jquery.min.js"></script>
+<script src="/workwave/View/assets/plot-listing/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/workwave/View/assets/plot-listing/js/owl-carousel.js"></script>
+<script src="/workwave/View/assets/plot-listing/js/animation.js"></script>
+<script src="/workwave/View/assets/plot-listing/js/imagesloaded.js"></script>
+<script src="/workwave/View/assets/plot-listing/js/custom.js"></script>
+
+</body>
+</html>

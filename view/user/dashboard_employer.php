@@ -1,6 +1,6 @@
 <?php
 $pageTitle = 'My Dashboard';
-include __DIR__ . '/../layout/dashboard_header.php';
+include __DIR__ . '/../layout/pl_dashboard_header.php';
 ?>
 
 <div class="page-header">
@@ -36,4 +36,4 @@ include __DIR__ . '/../layout/dashboard_header.php';
     </ul>
 </div>
 
-<?php include __DIR__ . '/../layout/dashboard_footer.php'; ?>
+<?php include __DIR__ . '/../layout/pl_dashboard_footer.php'; ?>
