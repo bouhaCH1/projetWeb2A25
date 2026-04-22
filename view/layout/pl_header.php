@@ -124,8 +124,7 @@
     }
     .ww-btn-secondary:hover { background: #e4e8ef; color: #222; }
 
-    /* Nav overrides — keep Plot Listing nav but brand it as WorkWave */
-    .main-nav .logo::after { content: 'WorkWave'; font-weight: 800; font-size: 1.4rem; color: #fff; letter-spacing: -.5px; }
+    /* Hide the default Plot Listing logo image — we use our own text logo in the HTML */
     .main-nav .logo img { display: none; }
   </style>
 </head>
