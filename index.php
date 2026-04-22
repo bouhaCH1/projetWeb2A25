@@ -1,43 +1,225 @@
 <?php
-// index.php — Single entry point (Front Controller)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-session_start();
+$action = $_GET['action'] ?? 'home';
 
-require_once __DIR__ . '/Controller/UserController.php';
-
-$action     = $_GET['action'] ?? 'home';
-$controller = new UserController();
-
-switch ($action) {
-
-    // ── Front Office ─────────────────────────────────────────────────────
-    case 'register':         $controller->showRegister();     break;
-    case 'register_submit':  $controller->register();         break;
-    case 'login':            $controller->showLogin();        break;
-    case 'login_submit':     $controller->login();            break;
-    case 'profile':          $controller->showProfile();      break;
-    case 'profile_update':   $controller->updateProfile();    break;
-    case 'logout':           $controller->logout();           break;
-
-    // ── Dashboards ───────────────────────────────────────────────────────
-    case 'dashboard_seeker':
-        require_once __DIR__ . '/View/user/dashboard_seeker.php';
-        break;
-    case 'dashboard_employer':
-        require_once __DIR__ . '/View/user/dashboard_employer.php';
-        break;
-
-    // ── Back Office ──────────────────────────────────────────────────────
-    case 'admin_users':      $controller->adminListUsers();   break;
-    case 'admin_edit_user':  $controller->adminEditUser();    break;
-    case 'admin_update_user':$controller->adminUpdateUser();  break;
-    case 'admin_delete_user':$controller->adminDeleteUser();  break;
-
+switch($action) {
+    // ========== FRONTOFFICE ==========
     case 'home':
+        require_once 'controller/HomeController.php';
+        $controller = new HomeController();
+        $controller->index();
+        break;
+        
+    case 'front-list':
+        require_once 'model/PortfolioModel.php';
+        $model = new PortfolioModel();
+        $portfolios = $model->getApprovedPortfolios();
+        require_once 'view/frontoffice/portfolio_list.php';
+        break;
+        
+    case 'front-detail':
+        $id = $_GET['id'] ?? null;
+        require_once 'model/PortfolioModel.php';
+        $model = new PortfolioModel();
+        $portfolio = $model->getById($id);
+        require_once 'view/frontoffice/portfolio_detail.php';
+        break;
+    
+    // ========== AUTH ==========
+    case 'login':
+        require_once 'controller/AuthController.php';
+        $controller = new AuthController();
+        $controller->login();
+        break;
+        
+    case 'logout':
+        require_once 'controller/AuthController.php';
+        $controller = new AuthController();
+        $controller->logout();
+        break;
+        
+    case 'register':
+        require_once 'controller/AuthController.php';
+        $controller = new AuthController();
+        $controller->register();
+        break;
+    
+    // ========== ADMIN ==========
+    case 'admin-dashboard':
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->dashboard();
+        break;
+        
+    case 'admin-pending-portfolios':
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->pendingPortfolios();
+        break;
+        
+    case 'admin-approved-portfolios':
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->approvedPortfolios();
+        break;
+        
+    case 'admin-approve':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->approvePortfolio($id);
+        break;
+        
+    case 'admin-reject':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->rejectPortfolio($id);
+        break;
+        
+    case 'admin-view-pending':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->viewPendingPortfolio($id);
+        break;
+        
+    case 'admin-candidats':
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->candidats();
+        break;
+        
+    case 'admin-entreprises':
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->entreprises();
+        break;
+        
+    case 'admin-mark-notification':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->markNotificationRead($id);
+        break;
+
+    case 'admin-pending-jobs':
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->pendingJobs();
+        break;
+
+    case 'admin-approve-job':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->approveJob($id);
+        break;
+
+    case 'admin-reject-job':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/AdminController.php';
+        $controller = new AdminController();
+        $controller->rejectJob($id);
+        break;
+    
+    // ========== CANDIDAT ==========
+    case 'candidat-dashboard':
+        require_once 'controller/CandidatController.php';
+        $controller = new CandidatController();
+        $controller->dashboard();
+        break;
+        
+    case 'candidat-submit':
+        require_once 'controller/CandidatController.php';
+        $controller = new CandidatController();
+        $controller->submitPortfolio();
+        break;
+        
+    case 'candidat-edit':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/CandidatController.php';
+        $controller = new CandidatController();
+        $controller->editPortfolio($id);
+        break;
+        
+    case 'candidat-delete':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/CandidatController.php';
+        $controller = new CandidatController();
+        $controller->deletePortfolio($id);
+        break;
+        
+    case 'candidat-mark-notification':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/CandidatController.php';
+        $controller = new CandidatController();
+        $controller->markNotificationRead($id);
+        break;
+
+    case 'candidat-job-detail':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/CandidatController.php';
+        $controller = new CandidatController();
+        $controller->jobDetail($id);
+        break;
+
+    case 'candidat-apply-job':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/CandidatController.php';
+        $controller = new CandidatController();
+        $controller->applyJob($id);
+        break;
+    
+    // ========== ENTREPRISE ==========
+    case 'entreprise-dashboard':
+        require_once 'controller/EntrepriseController.php';
+        $controller = new EntrepriseController();
+        $controller->dashboard();
+        break;
+        
+    case 'entreprise-view':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/EntrepriseController.php';
+        $controller = new EntrepriseController();
+        $controller->viewPortfolio($id);
+        break;
+        
+    case 'entreprise-mark-notification':
+        $id = $_GET['id'] ?? null;
+        require_once 'controller/EntrepriseController.php';
+        $controller = new EntrepriseController();
+        $controller->markNotificationRead($id);
+        break;
+
+    case 'entreprise-submit-job':
+        require_once 'controller/EntrepriseController.php';
+        $controller = new EntrepriseController();
+        $controller->submitJob();
+        break;
+
+    case 'entreprise-applications':
+        $id = $_GET['job_id'] ?? null;
+        require_once 'controller/EntrepriseController.php';
+        $controller = new EntrepriseController();
+        $controller->viewApplications($id);
+        break;
+
+    case 'entreprise-update-application':
+        $id = $_GET['id'] ?? null;
+        $status = $_GET['status'] ?? null;
+        require_once 'controller/EntrepriseController.php';
+        $controller = new EntrepriseController();
+        $controller->updateApplication($id, $status);
+        break;
+    
     default:
-        require_once __DIR__ . '/view/layout/header.php';
-        require_once __DIR__ . '/view/layout/home.php';
-        require_once __DIR__ . '/view/layout/footer.php';
+        require_once 'controller/HomeController.php';
+        $controller = new HomeController();
+        $controller->index();
         break;
 }
 ?>

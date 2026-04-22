@@ -1,37 +1,43 @@
-    <?php $isHome = empty($_GET['action']) || $_GET['action'] === 'home'; ?>
-    <?php if (!$isHome): ?>
-    </div> <!-- Close the .container that we opened in header.php for non-home views -->
-    <?php endif; ?>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="/workwave/index.php" class="logo">Work<span>Wave</span></a>
-                    <p>Your trusted partner in career building and recruitment. We provide secure, transparent, and competitive job placement services worldwide.</p>
+                    <a href="index.php" class="logo">Work<span>Wave</span></a>
+                    <p>Votre partenaire de confiance pour le recrutement et la mise en relation professionnelle. Nous connectons les talents et les entreprises du monde entier.</p>
                 </div>
                 <div class="footer-col">
-                    <h4 class="footer-title">Services</h4>
+                    <h4 class="footer-title">Navigation</h4>
                     <ul class="footer-links">
-                        <li><a href="/workwave/index.php?action=register">Post a Job</a></li>
-                        <li><a href="/workwave/index.php">Find a Job</a></li>
-                        <li><a href="/workwave/index.php?action=login">Employer Login</a></li>
-                        <li><a href="/workwave/index.php?action=login">Seeker Login</a></li>
+                        <li><a href="index.php">Accueil</a></li>
+                        <li><a href="index.php#products">Offres d'emploi</a></li>
+                        <li><a href="index.php#products">Portfolios</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title">Légal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Conditions Générales</a></li>
+                        <li><a href="#">Politique de Confidentialité</a></li>
+                        <li><a href="#">Mentions Légales</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h4 class="footer-title">Contact</h4>
-                    <p style="color: #999;">Email: info@jobplatform.com</p>
-                    <p style="color: #999;">Tel: 010-040-0220</p>
+                    <ul class="footer-links">
+                        <li><a href="#">contact@workwave.com</a></li>
+                        <li><a href="#">Support Client</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p class="footer-copy">&copy; 2026 WorkWave. All rights reserved. Design based on <a href="https://templatemo.com" target="_blank" style="color: var(--gold-light);">TemplateMo</a></p>
+                <p class="footer-copy">&copy; 2026 WorkWave. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
 
-    <script src="/workwave/templatemo-aurum-script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="view/assets/js/templatemo-aurum-script.js"></script>
 </body>
 </html>

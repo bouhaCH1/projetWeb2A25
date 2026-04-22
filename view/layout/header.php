@@ -1,69 +1,106 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WorkWave</title>
-
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<!-- The New Template Styles -->
-<link rel="stylesheet" href="/workwave/templatemo-aurum-gold.css">
-
-<!-- Inlined old layout styles to keep administrative forms looking decent -->
-<style>
-    .alert-danger  { background:#ffe0e0; border:1px solid #f00; padding:10px; margin-bottom:10px; color:#900; }
-    .alert-success { background:#e0ffe0; border:1px solid #0a0; padding:10px; margin-bottom:10px; color:#060; }
-    .alert-warning { background:#fff8e0; border:1px solid #fa0; padding:10px; margin-bottom:10px; color:#960; }
-    .alert ul { margin:0; padding-left:18px; }
-    form label  { display:block; margin-top:15px; font-weight:bold; color:#fff; }
-    input[type="text"], input[type="password"], input[type="file"], select, textarea {
-        width:100%; padding:10px; margin-top:5px; background:#1e1e1e; color:#fff;
-        border:1px solid #C4A15A; border-radius: 4px; box-sizing:border-box;
-    }
-    input[type="submit"] { margin-top: 15px; background: #C4A15A; color: #000; padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; border-radius: 4px; }
-    table { width:100%; border-collapse:collapse; color:#fff; margin-top: 15px; }
-    table th { background:#C4A15A; color: #000; padding:10px; text-align:left; }
-    table td { padding:10px; border-bottom:1px solid #333; }
-    .badge-employer { background:#C4A15A; color:#000; padding:4px 8px; border-radius: 4px; }
-    .badge-seeker   { background:#444;    color:#fff; padding:4px 8px; border-radius: 4px; }
-    a { color: #C4A15A; text-decoration: none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkWave - Premium Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="view/assets/css/templatemo-aurum-gold.css">
+    <style>
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .product-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        body {
+            background-color: var(--bg-dark) !important;
+            color: #f8f9fa !important;
+        }
+        body * {
+            color: #e0e0e0;
+        }
+        h1, h2, h3, h4, h5, h6, .navbar-brand, .logo, strong, b {
+            color: var(--gold-main) !important;
+        }
+        p, span, div, label, td, th {
+            color: #f8f9fa;
+        }
+        .text-muted {
+            color: #a0a0a0 !important;
+        }
+        .form-control, .form-select {
+            background-color: rgba(20, 20, 20, 0.8) !important;
+            border: 1px solid rgba(212, 175, 55, 0.3) !important;
+            color: #fff !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--gold-main) !important;
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25) !important;
+        }
+        .dashboard-container {
+            padding: 120px 0 60px 0;
+            min-height: 80vh;
+        }
+        .glass-card, .form-container, .card, .stat-card {
+            background-color: #000000 !important;
+            border: 1px solid rgba(212, 175, 55, 0.4) !important;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: #ffffff !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--gold-main);
+        }
+        .table {
+            color: #fff;
+        }
+        .table-light {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: var(--gold-main);
+        }
+        .nav-cta a {
+            text-decoration: none;
+        }
+        .mobile-menu-cta a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-
     <!-- Navigation -->
     <nav class="nav" id="navbar">
         <div class="container">
             <div class="nav-inner">
-                <a href="/workwave/index.php" class="logo">Work<span>Wave</span></a>
-                
+                <a href="index.php" class="logo">Work<span>Wave</span></a>
                 <ul class="nav-links">
-                    <li><a href="/workwave/index.php">Home</a></li>
-                    <?php if (!empty($_SESSION['user_id'])): ?>
-                        <li><a href="/workwave/index.php?action=profile">My Profile</a></li>
-                        <?php if ($_SESSION['user_role'] === 'employer'): ?>
-                        <li><a href="/workwave/index.php?action=admin_users">Admin Panel</a></li>
-                        <?php endif; ?>
-                        <li><a href="/workwave/index.php?action=logout">Log Out</a></li>
-                    <?php else: ?>
-                        <li><a href="/workwave/index.php?action=login">Log In</a></li>
-                        <li><a href="/workwave/index.php?action=register">Register</a></li>
-                    <?php endif; ?>
+                    <li><a href="index.php">Accueil</a></li>
+                    <li><a href="index.php#products">Offres d'emploi</a></li>
+                    <li><a href="index.php#products">Portfolios</a></li>
                 </ul>
-                
                 <div class="nav-cta">
-                    <?php if (!empty($_SESSION['user_id'])): ?>
-                        <a href="/workwave/index.php?action=profile" class="btn btn-outline">Dashboard</a>
+                    <?php if (isset($_SESSION['user'])): ?>
+                        <?php 
+                            $role = strtolower($_SESSION['user']['role'] ?? ''); 
+                            if ($role === 'condidat') $role = 'candidat';
+                        ?>
+                        <a href="index.php?action=<?= $role ?>-dashboard" class="btn btn-outline" style="text-decoration: none;">Mon Espace</a>
+                        <a href="index.php?action=logout" class="btn btn-primary" style="text-decoration: none;">Déconnexion</a>
                     <?php else: ?>
-                        <a href="/workwave/index.php?action=register" class="btn btn-outline">Sign Up</a>
-                        <a href="/workwave/index.php?action=login" class="btn btn-primary">Sign In</a>
+                        <a href="index.php?action=login" class="btn btn-outline" style="text-decoration: none;">Connexion</a>
+                        <a href="index.php?action=register" class="btn btn-primary" style="text-decoration: none;">S'inscrire</a>
                     <?php endif; ?>
                 </div>
-
                 <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Menu">
                     <span></span>
                     <span></span>
@@ -85,30 +122,21 @@
             </svg>
         </button>
         <ul class="mobile-nav-links">
-            <li><a href="/workwave/index.php">Home</a></li>
-            <?php if (!empty($_SESSION['user_id'])): ?>
-                <li><a href="/workwave/index.php?action=profile">My Profile</a></li>
-                <?php if ($_SESSION['user_role'] === 'employer'): ?>
-                <li><a href="/workwave/index.php?action=admin_users">Admin Panel</a></li>
-                <?php endif; ?>
-                <li><a href="/workwave/index.php?action=logout">Log Out</a></li>
-            <?php else: ?>
-                <li><a href="/workwave/index.php?action=login">Log In</a></li>
-                <li><a href="/workwave/index.php?action=register">Register</a></li>
-            <?php endif; ?>
+            <li><a href="index.php">Accueil</a></li>
+            <li><a href="index.php#products">Offres d'emploi</a></li>
+            <li><a href="index.php#products">Portfolios</a></li>
         </ul>
         <div class="mobile-menu-cta">
-            <?php if (!empty($_SESSION['user_id'])): ?>
-                <a href="/workwave/index.php?action=profile" class="btn btn-outline">Dashboard</a>
+            <?php if (isset($_SESSION['user'])): ?>
+                <?php 
+                    $role = strtolower($_SESSION['user']['role'] ?? ''); 
+                    if ($role === 'condidat') $role = 'candidat';
+                ?>
+                <a href="index.php?action=<?= $role ?>-dashboard" class="btn btn-outline" style="text-decoration: none;">Mon Espace</a>
+                <a href="index.php?action=logout" class="btn btn-primary" style="text-decoration: none;">Déconnexion</a>
             <?php else: ?>
-                <a href="/workwave/index.php?action=register" class="btn btn-outline">Sign Up</a>
-                <a href="/workwave/index.php?action=login" class="btn btn-primary">Sign In</a>
+                <a href="index.php?action=login" class="btn btn-outline" style="text-decoration: none;">Connexion</a>
+                <a href="index.php?action=register" class="btn btn-primary" style="text-decoration: none;">S'inscrire</a>
             <?php endif; ?>
         </div>
     </div>
-
-    <!-- MAIN VIEW WRAPPER -->
-    <?php $isHome = empty($_GET['action']) || $_GET['action'] === 'home'; ?>
-    <?php if (!$isHome): ?>
-    <div class="container" style="padding-top: 120px; padding-bottom: 60px; min-height: 70vh;">
-    <?php endif; ?>
