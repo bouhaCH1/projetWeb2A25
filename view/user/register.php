@@ -5,6 +5,8 @@
     <h1>Créer un compte</h1>
     <p class="ww-subtitle">Rejoignez WorkWave en tant que Candidat ou Employeur</p>
 
+    <?php $fieldErrors = $_SESSION['field_errors'] ?? []; ?>
+
     <?php if (!empty($_SESSION['errors'])): ?>
       <div class="ww-alert ww-alert-danger"><ul>
         <?php foreach ($_SESSION['errors'] as $e): ?>
@@ -16,18 +18,33 @@
     <form id="registerForm" action="/workwave/Controller/index.php?action=register_submit" method="POST" novalidate>
 
       <label>Prénom *</label>
+      <?php if (!empty($fieldErrors['first_name'])): ?>
+        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['first_name']) ?></div>
+      <?php endif; ?>
       <input type="text" name="first_name" value="<?= htmlspecialchars($_SESSION['old']['first_name'] ?? '') ?>">
 
       <label>Nom *</label>
+      <?php if (!empty($fieldErrors['last_name'])): ?>
+        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['last_name']) ?></div>
+      <?php endif; ?>
       <input type="text" name="last_name" value="<?= htmlspecialchars($_SESSION['old']['last_name'] ?? '') ?>">
 
       <label>Adresse E-mail *</label>
+      <?php if (!empty($fieldErrors['email'])): ?>
+        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['email']) ?></div>
+      <?php endif; ?>
       <input type="text" id="email" name="email" value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>">
 
       <label>Numéro de téléphone</label>
+      <?php if (!empty($fieldErrors['phone'])): ?>
+        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['phone']) ?></div>
+      <?php endif; ?>
       <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($_SESSION['old']['phone'] ?? '') ?>">
 
       <label>Je suis un(e) *</label>
+      <?php if (!empty($fieldErrors['role'])): ?>
+        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['role']) ?></div>
+      <?php endif; ?>
       <select id="role" name="role">
         <option value="">-- Sélectionner --</option>
         <option value="job_seeker" <?= (($_SESSION['old']['role'] ?? '') === 'job_seeker') ? 'selected' : '' ?>>Chercheur d'emploi / Candidat</option>
@@ -35,16 +52,22 @@
       </select>
 
       <label>Mot de passe * <small style="color:#aaa;font-weight:400;">(Min. 8 car., 1 majuscule, 1 chiffre)</small></label>
+      <?php if (!empty($fieldErrors['password'])): ?>
+        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['password']) ?></div>
+      <?php endif; ?>
       <input type="password" id="password" name="password">
 
       <label>Confirmer le mot de passe *</label>
+      <?php if (!empty($fieldErrors['confirm_password'])): ?>
+        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['confirm_password']) ?></div>
+      <?php endif; ?>
       <input type="password" id="confirm_password" name="confirm_password">
 
       <button type="submit" class="ww-btn-primary">Créer le compte</button>
       <a href="/workwave/Controller/index.php?action=login" class="ww-btn-secondary">Déjà un compte ? Se connecter</a>
 
     </form>
-    <?php unset($_SESSION['old']); ?>
+    <?php unset($_SESSION['old'], $_SESSION['field_errors']); ?>
   </div>
 </div>
 

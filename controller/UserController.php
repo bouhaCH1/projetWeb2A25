@@ -27,7 +27,12 @@ class UserController {
         );
 
         if (!empty($errors)) {
-            $_SESSION['errors'] = $errors;
+            $fieldErrors = $this->extractRegisterFieldErrors($errors);
+            $_SESSION['errors'] = array_values(array_filter(
+                $errors,
+                static fn (string $error): bool => !in_array($error, $fieldErrors, true)
+            ));
+            $_SESSION['field_errors'] = $fieldErrors;
             $_SESSION['old'] = [
                 'first_name' => $first_name,
                 'last_name'  => $last_name,
@@ -490,5 +495,41 @@ class UserController {
         }
 
         return $errors;
+    }
+
+    private function extractRegisterFieldErrors(array $errors): array {
+        $fieldErrors = [];
+
+        foreach ($errors as $error) {
+            if (str_contains($error, 'prénom')) {
+                $fieldErrors['first_name'] = $error;
+                continue;
+            }
+            if (str_contains($error, 'nom est requis') || str_contains($error, 'Le nom doit')) {
+                $fieldErrors['last_name'] = $error;
+                continue;
+            }
+            if (str_contains($error, 'e-mail')) {
+                $fieldErrors['email'] = $error;
+                continue;
+            }
+            if (str_contains($error, 'téléphone')) {
+                $fieldErrors['phone'] = $error;
+                continue;
+            }
+            if (str_contains($error, 'rôle')) {
+                $fieldErrors['role'] = $error;
+                continue;
+            }
+            if (str_contains($error, 'mots de passe ne correspondent')) {
+                $fieldErrors['confirm_password'] = $error;
+                continue;
+            }
+            if (str_contains($error, 'mot de passe')) {
+                $fieldErrors['password'] = $error;
+            }
+        }
+
+        return $fieldErrors;
     }
 }
