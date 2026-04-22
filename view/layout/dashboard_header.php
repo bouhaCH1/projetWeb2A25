@@ -65,7 +65,7 @@ a:hover { color: #d4b16a; }
 .dsh-user-role { font-size: .7rem; color: #666; margin-top: 1px; text-transform: capitalize; }
 
 /* Nav */
-.dsh-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.dsh-nav { flex: 1; padding: 12px 0; overflow-y: auto; min-height: 0; }
 .dsh-nav-label {
     font-size: .6rem; text-transform: uppercase; letter-spacing: 2px;
     color: #444; padding: 10px 20px 4px;
@@ -217,11 +217,11 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
     <div class="dsh-logo-wrap">
         <a href="/workwave/Controller/index.php" class="dsh-logo">Work<span>Wave</span></a><br>
         <?php if ($role === 'admin'): ?>
-            <span class="dsh-role-chip">Admin Panel</span>
+            <span class="dsh-role-chip">Panel Admin</span>
         <?php elseif ($role === 'employer'): ?>
-            <span class="dsh-role-chip">Employer</span>
+            <span class="dsh-role-chip">Employeur</span>
         <?php else: ?>
-            <span class="dsh-role-chip">Job Seeker</span>
+            <span class="dsh-role-chip">Candidat</span>
         <?php endif; ?>
     </div>
 
@@ -235,113 +235,118 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
         </div>
         <div>
             <div class="dsh-user-name"><?= $userName ?></div>
-            <div class="dsh-user-role"><?= htmlspecialchars(str_replace('_', ' ', $role)) ?></div>
+            <div class="dsh-user-role"><?php
+              if ($role === 'job_seeker') echo 'Candidat';
+              elseif ($role === 'employer') echo 'Employeur';
+              elseif ($role === 'admin') echo 'Administrateur';
+              else echo htmlspecialchars($role);
+            ?></div>
         </div>
     </div>
 
     <nav class="dsh-nav">
         <?php if ($role === 'admin'): ?>
-            <div class="dsh-nav-label">Overview</div>
+            <div class="dsh-nav-label">Vue d'ensemble</div>
             <a href="/workwave/Controller/index.php?action=admin_dashboard"
                class="dsh-nav-link <?= $action === 'admin_dashboard' ? 'active' : '' ?>">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                Dashboard
+                Tableau de bord
             </a>
             <a href="/workwave/Controller/index.php?action=profile"
                class="dsh-nav-link <?= $action === 'profile' ? 'active' : '' ?>">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
-                My Profile
+                Mon Profil
             </a>
-            <div class="dsh-nav-label">Users</div>
+            <div class="dsh-nav-label">Utilisateurs</div>
             <a href="/workwave/Controller/index.php?action=admin_users"
                class="dsh-nav-link <?= $action === 'admin_users' ? 'active' : '' ?>">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75"/><path d="M21 21v-2a4 4 0 00-3-3.85"/></svg>
-                Manage Users
+                Gérer les utilisateurs
             </a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                System Logs
+                Journaux système
             </a>
             <div class="dsh-nav-label">Site</div>
             <a href="/workwave/Controller/index.php" class="dsh-nav-link">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-                Public Site
+                Site public
             </a>
 
-            <div class="dsh-nav-label">Settings</div>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibility</a>
+            <div class="dsh-nav-label">Paramètres</div>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibilité</a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> Notifications</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Privacy &amp; Security</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Language &amp; Region</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Account Security</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Confidentialité et Sécurité</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Langue et Région</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Sécurité du compte</a>
 
         <?php elseif ($role === 'employer'): ?>
-            <div class="dsh-nav-label">My Account</div>
+            <div class="dsh-nav-label">Mon Compte</div>
             <a href="/workwave/Controller/index.php?action=dashboard_employer"
                class="dsh-nav-link <?= $action === 'dashboard_employer' ? 'active' : '' ?>">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                Dashboard
+                Tableau de bord
             </a>
             <a href="/workwave/Controller/index.php?action=profile"
                class="dsh-nav-link <?= $action === 'profile' ? 'active' : '' ?>">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
-                Company Profile
+                Profil de l'entreprise
             </a>
             
-            <div class="dsh-nav-label">Recruitment (Coming Soon)</div>
+            <div class="dsh-nav-label">Recrutement (Bientôt disponible)</div>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                Post a Job
+                Publier une offre
             </a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-                Manage Jobs
+                Gérer les offres
             </a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                Applications
+                Candidatures
             </a>
 
-            <div class="dsh-nav-label">Settings</div>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibility</a>
+            <div class="dsh-nav-label">Paramètres</div>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibilité</a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> Notifications</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Privacy &amp; Security</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Language &amp; Region</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Account Security</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Confidentialité et Sécurité</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Langue et Région</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Sécurité du compte</a>
 
         <?php else: /* job_seeker */ ?>
-            <div class="dsh-nav-label">My Account</div>
+            <div class="dsh-nav-label">Mon Compte</div>
             <a href="/workwave/Controller/index.php?action=dashboard_seeker"
                class="dsh-nav-link <?= $action === 'dashboard_seeker' ? 'active' : '' ?>">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                Dashboard
+                Tableau de bord
             </a>
             <a href="/workwave/Controller/index.php?action=profile"
                class="dsh-nav-link <?= $action === 'profile' ? 'active' : '' ?>">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
-                My Profile
+                Mon Profil
             </a>
 
-            <div class="dsh-nav-label">Jobs (Coming Soon)</div>
+            <div class="dsh-nav-label">Emplois (Bientôt disponible)</div>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-                My Applications
+                Mes candidatures
             </a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-                Saved Jobs
+                Emplois sauvegardés
             </a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 Messages
             </a>
 
-            <div class="dsh-nav-label">Settings</div>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibility</a>
+            <div class="dsh-nav-label">Paramètres</div>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibilité</a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> Notifications</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Privacy &amp; Security</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Language &amp; Region</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Account Security</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Confidentialité et Sécurité</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Langue et Région</a>
+            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Sécurité du compte</a>
 
         <?php endif; ?>
     </nav>
@@ -349,7 +354,7 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
     <div class="dsh-sidebar-foot">
         <a href="/workwave/Controller/index.php?action=logout" class="dsh-logout">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            Sign Out
+            Déconnexion
         </a>
     </div>
 </aside>
@@ -364,7 +369,7 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
             <div class="dsh-topbar-title"><?= htmlspecialchars($pageTitle) ?></div>
         </div>
         <div class="dsh-topbar-right">
-            <a href="/workwave/Controller/index.php" class="dsh-topbar-link">← Public Site</a>
+            <a href="/workwave/Controller/index.php" class="dsh-topbar-link">← Site public</a>
         </div>
     </div>
     <div class="dsh-content">

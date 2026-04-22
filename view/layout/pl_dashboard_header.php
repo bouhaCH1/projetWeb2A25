@@ -117,7 +117,7 @@ a:hover { color: var(--pl-orange-dk); }
 .pld-user-role  { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: 1px; text-transform: capitalize; }
 
 /* Nav */
-.pld-nav { flex: 1; padding: 14px 0; overflow-y: auto; }
+.pld-nav { flex: 1; padding: 14px 0; overflow-y: auto; min-height: 0; }
 .pld-nav-label {
   font-size: .58rem; text-transform: uppercase; letter-spacing: 2px;
   color: rgba(255,255,255,.25); padding: 10px 22px 4px;
@@ -301,9 +301,9 @@ table tbody tr:hover td { background: rgba(239,111,49,.03); }
   <div class="pld-logo-wrap">
     <a href="/workwave/Controller/index.php" class="pld-logo">Work<span>Wave</span></a><br>
     <?php if ($role === 'employer'): ?>
-      <span class="pld-role-chip">Employer</span>
+      <span class="pld-role-chip">Employeur</span>
     <?php else: ?>
-      <span class="pld-role-chip">Job Seeker</span>
+      <span class="pld-role-chip">Candidat</span>
     <?php endif; ?>
   </div>
 
@@ -317,91 +317,96 @@ table tbody tr:hover td { background: rgba(239,111,49,.03); }
     </div>
     <div>
       <div class="pld-user-name"><?= $userName ?></div>
-      <div class="pld-user-role"><?= htmlspecialchars(str_replace('_', ' ', $role)) ?></div>
+      <div class="pld-user-role"><?php
+        if ($role === 'job_seeker') echo 'Candidat';
+        elseif ($role === 'employer') echo 'Employeur';
+        elseif ($role === 'admin') echo 'Administrateur';
+        else echo htmlspecialchars($role);
+      ?></div>
     </div>
   </div>
 
   <nav class="pld-nav">
     <?php if ($role === 'employer'): ?>
 
-      <div class="pld-nav-label">My Account</div>
+      <div class="pld-nav-label">Mon Compte</div>
       <a href="/workwave/Controller/index.php?action=dashboard_employer"
          class="pld-nav-link <?= $action === 'dashboard_employer' ? 'active' : '' ?>">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Dashboard
+        Tableau de bord
       </a>
       <a href="/workwave/Controller/index.php?action=profile"
          class="pld-nav-link <?= $action === 'profile' ? 'active' : '' ?>">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
-        Company Profile
+        Profil de l'entreprise
       </a>
 
-      <div class="pld-nav-label">Recruitment (Coming Soon)</div>
+      <div class="pld-nav-label">Recrutement (Bientôt disponible)</div>
       <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Post a Job
+        Publier une offre
       </a>
       <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-        Manage Jobs
+        Gérer les offres
       </a>
       <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Applications
+        Candidatures
       </a>
 
-      <div class="pld-nav-label">Settings</div>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibility</a>
+      <div class="pld-nav-label">Paramètres</div>
+      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibilité</a>
       <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> Notifications</a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Privacy &amp; Security</a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Language &amp; Region</a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Account Security</a>
+      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Confidentialité et Sécurité</a>
+      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Langue et Région</a>
+      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Sécurité du compte</a>
 
-      <div class="pld-nav-label">More</div>
+      <div class="pld-nav-label">Plus</div>
       <a href="/workwave/Controller/index.php" class="pld-nav-link">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        Public Site
+        Site public
       </a>
 
     <?php else: /* job_seeker */ ?>
 
-      <div class="pld-nav-label">My Account</div>
+      <div class="pld-nav-label">Mon Compte</div>
       <a href="/workwave/Controller/index.php?action=dashboard_seeker"
          class="pld-nav-link <?= $action === 'dashboard_seeker' ? 'active' : '' ?>">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Dashboard
+        Tableau de bord
       </a>
       <a href="/workwave/Controller/index.php?action=profile"
          class="pld-nav-link <?= $action === 'profile' ? 'active' : '' ?>">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
-        My Profile
+        Mon Profil
       </a>
 
-      <div class="pld-nav-label">Jobs (Coming Soon)</div>
+      <div class="pld-nav-label">Emplois (Bientôt disponible)</div>
       <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-        My Applications
+        Mes candidatures
       </a>
       <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-        Saved Jobs
+        Emplois sauvegardés
       </a>
       <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         Messages
       </a>
 
-      <div class="pld-nav-label">Settings</div>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibility</a>
+      <div class="pld-nav-label">Paramètres</div>
+      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibilité</a>
       <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> Notifications</a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Privacy &amp; Security</a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Language &amp; Region</a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Account Security</a>
+      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Confidentialité et Sécurité</a>
+      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Langue et Région</a>
+      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Sécurité du compte</a>
 
-      <div class="pld-nav-label">More</div>
+      <div class="pld-nav-label">Plus</div>
       <a href="/workwave/Controller/index.php" class="pld-nav-link">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        Public Site
+        Site public
       </a>
 
     <?php endif; ?>
@@ -410,7 +415,7 @@ table tbody tr:hover td { background: rgba(239,111,49,.03); }
   <div class="pld-sidebar-foot">
     <a href="/workwave/Controller/index.php?action=logout" class="pld-logout">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Sign Out
+      Déconnexion
     </a>
   </div>
 </aside>
@@ -426,7 +431,7 @@ table tbody tr:hover td { background: rgba(239,111,49,.03); }
       <div class="pld-topbar-title"><?= htmlspecialchars($pageTitle) ?></div>
     </div>
     <div class="pld-topbar-right">
-      <a href="/workwave/Controller/index.php" class="pld-topbar-link">← Public Site</a>
+      <a href="/workwave/Controller/index.php" class="pld-topbar-link">← Site public</a>
     </div>
   </div>
   <!-- Content starts here -->

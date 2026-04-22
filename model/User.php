@@ -22,7 +22,7 @@ class User {
 
     public function register(): array {
         if ($this->emailExists()) {
-            return ['success' => false, 'message' => 'This email is already registered.'];
+            return ['success' => false, 'message' => 'Cette adresse e-mail est déjà enregistrée.'];
         }
 
         $hashed = password_hash($this->password, PASSWORD_BCRYPT);
@@ -43,7 +43,7 @@ class User {
 
         $this->id = (int) $this->pdo->lastInsertId();
 
-        return ['success' => true, 'message' => 'Account created successfully.'];
+        return ['success' => true, 'message' => 'Compte créé avec succès.'];
     }
 
     public function login(): array {
@@ -61,10 +61,10 @@ class User {
             $this->role        = $row['role'];
             $this->profile_pic = $row['profile_pic'] ?? '';
 
-            return ['success' => true, 'message' => 'Login successful.'];
+            return ['success' => true, 'message' => 'Connexion réussie.'];
         }
 
-        return ['success' => false, 'message' => 'Invalid email or password.'];
+        return ['success' => false, 'message' => 'E-mail ou mot de passe invalide.'];
     }
 
     public function getById(int $id) {
@@ -98,7 +98,7 @@ class User {
             ':id'          => $this->id,
         ]);
 
-        return ['success' => true, 'message' => 'Profile updated successfully.'];
+        return ['success' => true, 'message' => 'Profil mis à jour avec succès.'];
     }
 
     public function adminUpdate(): array {
@@ -107,7 +107,7 @@ class User {
         $existing = $check->fetch();
 
         if (!$existing || $existing['role'] === 'admin') {
-            return ['success' => false, 'message' => 'Cannot modify an admin account.'];
+            return ['success' => false, 'message' => 'Impossible de modifier un compte administrateur.'];
         }
 
         $stmt = $this->pdo->prepare(
@@ -123,20 +123,20 @@ class User {
             ':id'         => $this->id,
         ]);
 
-        return ['success' => true, 'message' => 'User updated successfully.'];
+        return ['success' => true, 'message' => 'Utilisateur mis à jour avec succès.'];
     }
 
     public function changePassword(string $new_password): array {
         $hashed = password_hash($new_password, PASSWORD_BCRYPT);
         $stmt   = $this->pdo->prepare('UPDATE users SET password=:password WHERE id=:id');
         $stmt->execute([':password' => $hashed, ':id' => $this->id]);
-        return ['success' => true, 'message' => 'Password changed successfully.'];
+        return ['success' => true, 'message' => 'Mot de passe modifié avec succès.'];
     }
 
     public function deleteAccount(int $id): array {
         $stmt = $this->pdo->prepare("DELETE FROM users WHERE id=:id AND role != 'admin'");
         $stmt->execute([':id' => $id]);
-        return ['success' => true, 'message' => 'Account deleted.'];
+        return ['success' => true, 'message' => 'Compte supprimé.'];
     }
 
     /**

@@ -2,8 +2,8 @@
 
 <div class="ww-form-section">
   <div class="ww-form-card">
-    <h1>Welcome Back</h1>
-    <p class="ww-subtitle">Sign in to your WorkWave account</p>
+    <h1>Bon retour</h1>
+    <p class="ww-subtitle">Connectez-vous à votre compte WorkWave</p>
 
     <?php if (!empty($_SESSION['errors'])): ?>
       <div class="ww-alert ww-alert-danger"><ul>
@@ -20,14 +20,14 @@
     <?php endif; ?>
 
     <form id="loginForm" action="/workwave/Controller/index.php?action=login_submit" method="POST" novalidate>
-      <label>Email Address</label>
+      <label>Adresse E-mail</label>
       <input type="text" id="email" name="email">
 
-      <label>Password</label>
+      <label>Mot de passe</label>
       <input type="password" id="password" name="password">
 
-      <button type="submit" class="ww-btn-primary">Sign In</button>
-      <a href="/workwave/Controller/index.php?action=register" class="ww-btn-secondary">No account? Register</a>
+      <button type="submit" class="ww-btn-primary">Se connecter</button>
+      <a href="/workwave/Controller/index.php?action=register" class="ww-btn-secondary">Pas de compte ? S'inscrire</a>
     </form>
   </div>
 </div>

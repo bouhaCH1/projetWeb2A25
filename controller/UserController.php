@@ -79,10 +79,10 @@ class UserController {
 
         $errors = [];
         if ($email === '') {
-            $errors[] = 'Email is required.';
+            $errors[] = 'L\'adresse e-mail est requise.';
         }
         if ($password === '') {
-            $errors[] = 'Password is required.';
+            $errors[] = 'Le mot de passe est requis.';
         }
 
         if (!empty($errors)) {
@@ -104,7 +104,7 @@ class UserController {
         }
 
         if ($user->role !== 'admin') {
-            $_SESSION['errors'] = ['This login is reserved for administrator accounts only. Use the public login for job seekers and employers.'];
+            $_SESSION['errors'] = ['Cette connexion est réservée aux comptes administrateurs. Utilisez la connexion publique pour les candidats et les employeurs.'];
             header('Location: index.php?action=admin_login');
             exit;
         }
@@ -131,10 +131,10 @@ class UserController {
 
         $errors = [];
         if (empty($email)) {
-            $errors[] = 'Email is required.';
+            $errors[] = 'L\'adresse e-mail est requise.';
         }
         if (empty($password)) {
-            $errors[] = 'Password is required.';
+            $errors[] = 'Le mot de passe est requis.';
         }
 
         if (!empty($errors)) {
@@ -152,7 +152,7 @@ class UserController {
         if ($result['success']) {
             // Les comptes admin utilisent la page de connexion dédiée
             if ($user->role === 'admin') {
-                $_SESSION['errors'] = ['Administrator accounts must sign in via the Administrator login page.'];
+                $_SESSION['errors'] = ['Les comptes administrateurs doivent se connecter via la page de connexion administrateur.'];
                 header('Location: index.php?action=admin_login');
                 exit;
             }
@@ -191,19 +191,19 @@ class UserController {
 
         $errors = [];
         if (empty($first_name)) {
-            $errors[] = 'First name is required.';
+            $errors[] = 'Le prénom est requis.';
         }
         if (empty($last_name)) {
-            $errors[] = 'Last name is required.';
+            $errors[] = 'Le nom est requis.';
         }
         if (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $first_name)) {
-            $errors[] = 'First name is invalid.';
+            $errors[] = 'Le prénom est invalide.';
         }
         if (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $last_name)) {
-            $errors[] = 'Last name is invalid.';
+            $errors[] = 'Le nom est invalide.';
         }
         if (!empty($phone) && !preg_match('/^\+?[0-9\s\-]{7,15}$/', $phone)) {
-            $errors[] = 'Phone number is invalid.';
+            $errors[] = 'Le numéro de téléphone est invalide.';
         }
 
         if (!empty($errors)) {
@@ -229,13 +229,13 @@ class UserController {
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
 
             if (!in_array($ext, $allowed)) {
-                $_SESSION['errors'] = ['Only JPG, PNG and GIF images are allowed.'];
+                $_SESSION['errors'] = ['Seules les images JPG, PNG et GIF sont autorisées.'];
                 header('Location: index.php?action=profile');
                 exit;
             }
 
             if ($_FILES['profile_pic']['size'] > 2 * 1024 * 1024) {
-                $_SESSION['errors'] = ['Image must be under 2MB.'];
+                $_SESSION['errors'] = ['L\'image doit faire moins de 2 Mo.'];
                 header('Location: index.php?action=profile');
                 exit;
             }
@@ -323,7 +323,7 @@ class UserController {
         $result = $user->register();
 
         if ($result['success']) {
-            $_SESSION['success'] = 'User "' . htmlspecialchars($first_name . ' ' . $last_name) . '" created successfully.';
+            $_SESSION['success'] = 'L\'utilisateur "' . htmlspecialchars($first_name . ' ' . $last_name) . '" a été créé avec succès.';
             header('Location: index.php?action=admin_users');
         } else {
             $_SESSION['errors'] = [$result['message']];
@@ -348,13 +348,13 @@ class UserController {
         $data = $user->getById($id);
 
         if (!$data) {
-            $_SESSION['errors'] = ['User not found.'];
+            $_SESSION['errors'] = ['Utilisateur non trouvé.'];
             header('Location: index.php?action=admin_users');
             exit;
         }
 
         if ($data['role'] === 'admin') {
-            $_SESSION['errors'] = ['Admin accounts cannot be edited.'];
+            $_SESSION['errors'] = ['Les comptes administrateurs ne peuvent pas être modifiés.'];
             header('Location: index.php?action=admin_users');
             exit;
         }
@@ -373,13 +373,13 @@ class UserController {
 
         $errors = [];
         if (empty($first_name)) {
-            $errors[] = 'First name is required.';
+            $errors[] = 'Le prénom est requis.';
         }
         if (empty($last_name)) {
-            $errors[] = 'Last name is required.';
+            $errors[] = 'Le nom est requis.';
         }
         if (!in_array($role, ['job_seeker', 'employer'])) {
-            $errors[] = 'Invalid role selected.';
+            $errors[] = 'Rôle sélectionné invalide.';
         }
 
         if (!empty($errors)) {
@@ -415,7 +415,7 @@ class UserController {
         $user = new User();
         $user->deleteAccount($id);
 
-        $_SESSION['success'] = 'User deleted successfully.';
+        $_SESSION['success'] = 'Utilisateur supprimé avec succès.';
         header('Location: index.php?action=admin_users');
         exit;
     }
@@ -450,43 +450,43 @@ class UserController {
         $errors = [];
 
         if (empty($first_name)) {
-            $errors[] = 'First name is required.';
+            $errors[] = 'Le prénom est requis.';
         } elseif (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,50}$/', $first_name)) {
-            $errors[] = 'First name must be 2–50 letters only.';
+            $errors[] = 'Le prénom doit contenir uniquement de 2 à 50 lettres.';
         }
 
         if (empty($last_name)) {
-            $errors[] = 'Last name is required.';
+            $errors[] = 'Le nom est requis.';
         } elseif (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,50}$/', $last_name)) {
-            $errors[] = 'Last name must be 2–50 letters only.';
+            $errors[] = 'Le nom doit contenir uniquement de 2 à 50 lettres.';
         }
 
         if (empty($email)) {
-            $errors[] = 'Email is required.';
+            $errors[] = 'L\'adresse e-mail est requise.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = 'Invalid email format.';
+            $errors[] = 'Format d\'e-mail invalide.';
         }
 
         if (!empty($phone) && !preg_match('/^\+?[0-9\s\-]{7,15}$/', $phone)) {
-            $errors[] = 'Phone number is invalid.';
+            $errors[] = 'Le numéro de téléphone est invalide.';
         }
 
         if (!in_array($role, ['job_seeker', 'employer'])) {
-            $errors[] = 'Please select a valid role.';
+            $errors[] = 'Veuillez sélectionner un rôle valide.';
         }
 
         if (empty($password)) {
-            $errors[] = 'Password is required.';
+            $errors[] = 'Le mot de passe est requis.';
         } elseif (strlen($password) < 8) {
-            $errors[] = 'Password must be at least 8 characters.';
+            $errors[] = 'Le mot de passe doit comporter au moins 8 caractères.';
         } elseif (!preg_match('/[A-Z]/', $password)) {
-            $errors[] = 'Password must contain at least one uppercase letter.';
+            $errors[] = 'Le mot de passe doit contenir au moins une lettre majuscule.';
         } elseif (!preg_match('/[0-9]/', $password)) {
-            $errors[] = 'Password must contain at least one number.';
+            $errors[] = 'Le mot de passe doit contenir au moins un chiffre.';
         }
 
         if ($password !== $confirm_password) {
-            $errors[] = 'Passwords do not match.';
+            $errors[] = 'Les mots de passe ne correspondent pas.';
         }
 
         return $errors;

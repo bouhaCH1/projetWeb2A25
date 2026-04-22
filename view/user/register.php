@@ -2,8 +2,8 @@
 
 <div class="ww-form-section">
   <div class="ww-form-card" style="max-width:540px;">
-    <h1>Create Account</h1>
-    <p class="ww-subtitle">Join WorkWave as a Job Seeker or Employer</p>
+    <h1>Créer un compte</h1>
+    <p class="ww-subtitle">Rejoignez WorkWave en tant que Candidat ou Employeur</p>
 
     <?php if (!empty($_SESSION['errors'])): ?>
       <div class="ww-alert ww-alert-danger"><ul>
@@ -15,33 +15,33 @@
 
     <form id="registerForm" action="/workwave/Controller/index.php?action=register_submit" method="POST" novalidate>
 
-      <label>First Name *</label>
+      <label>Prénom *</label>
       <input type="text" name="first_name" value="<?= htmlspecialchars($_SESSION['old']['first_name'] ?? '') ?>">
 
-      <label>Last Name *</label>
+      <label>Nom *</label>
       <input type="text" name="last_name" value="<?= htmlspecialchars($_SESSION['old']['last_name'] ?? '') ?>">
 
-      <label>Email Address *</label>
+      <label>Adresse E-mail *</label>
       <input type="text" id="email" name="email" value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>">
 
-      <label>Phone Number</label>
+      <label>Numéro de téléphone</label>
       <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($_SESSION['old']['phone'] ?? '') ?>">
 
-      <label>I am a *</label>
+      <label>Je suis un(e) *</label>
       <select id="role" name="role">
-        <option value="">-- Select --</option>
-        <option value="job_seeker" <?= (($_SESSION['old']['role'] ?? '') === 'job_seeker') ? 'selected' : '' ?>>Job Seeker</option>
-        <option value="employer"   <?= (($_SESSION['old']['role'] ?? '') === 'employer')   ? 'selected' : '' ?>>Employer / Company</option>
+        <option value="">-- Sélectionner --</option>
+        <option value="job_seeker" <?= (($_SESSION['old']['role'] ?? '') === 'job_seeker') ? 'selected' : '' ?>>Chercheur d'emploi / Candidat</option>
+        <option value="employer"   <?= (($_SESSION['old']['role'] ?? '') === 'employer')   ? 'selected' : '' ?>>Employeur / Entreprise</option>
       </select>
 
-      <label>Password * <small style="color:#aaa;font-weight:400;">(Min. 8 chars, one uppercase, one number)</small></label>
+      <label>Mot de passe * <small style="color:#aaa;font-weight:400;">(Min. 8 car., 1 majuscule, 1 chiffre)</small></label>
       <input type="password" id="password" name="password">
 
-      <label>Confirm Password *</label>
+      <label>Confirmer le mot de passe *</label>
       <input type="password" id="confirm_password" name="confirm_password">
 
-      <button type="submit" class="ww-btn-primary">Create Account</button>
-      <a href="/workwave/Controller/index.php?action=login" class="ww-btn-secondary">Already have an account? Sign In</a>
+      <button type="submit" class="ww-btn-primary">Créer le compte</button>
+      <a href="/workwave/Controller/index.php?action=login" class="ww-btn-secondary">Déjà un compte ? Se connecter</a>
 
     </form>
     <?php unset($_SESSION['old']); ?>

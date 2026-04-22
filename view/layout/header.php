@@ -40,27 +40,27 @@
                 <a href="/workwave/Controller/index.php" class="logo">Work<span>Wave</span></a>
                 
                 <ul class="nav-links">
-                    <li><a href="/workwave/Controller/index.php">Home</a></li>
+                    <li><a href="/workwave/Controller/index.php">Accueil</a></li>
                     <?php if (!empty($_SESSION['user_id'])): ?>
-                        <li><a href="/workwave/Controller/index.php?action=profile">My Profile</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=profile">Mon Profil</a></li>
                         <?php if ($_SESSION['user_role'] === 'employer'): ?>
                         <?php endif; ?>
                         <?php if ($_SESSION['user_role'] === 'admin'): ?>
-                        <li><a href="/workwave/Controller/index.php?action=admin_users">Admin Panel</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=admin_users">Panel Admin</a></li>
                         <?php endif; ?>
-                        <li><a href="/workwave/Controller/index.php?action=logout">Log Out</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=logout">Déconnexion</a></li>
                     <?php else: ?>
-                        <li><a href="/workwave/Controller/index.php?action=login">Log In</a></li>
-                        <li><a href="/workwave/Controller/index.php?action=register">Register</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=login">Se connecter</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">S'inscrire</a></li>
                     <?php endif; ?>
                 </ul>
                 
                 <div class="nav-cta">
                     <?php if (!empty($_SESSION['user_id'])): ?>
-                        <a href="/workwave/Controller/index.php?action=profile" class="btn btn-outline">Dashboard</a>
+                        <a href="/workwave/Controller/index.php?action=profile" class="btn btn-outline">Tableau de bord</a>
                     <?php else: ?>
-                        <a href="/workwave/Controller/index.php?action=register" class="btn btn-outline">Sign Up</a>
-                        <a href="/workwave/Controller/index.php?action=login" class="btn btn-primary">Sign In</a>
+                        <a href="/workwave/Controller/index.php?action=register" class="btn btn-outline">S'inscrire</a>
+                        <a href="/workwave/Controller/index.php?action=login" class="btn btn-primary">Se connecter</a>
                     <?php endif; ?>
                 </div>
 
@@ -85,26 +85,26 @@
             </svg>
         </button>
         <ul class="mobile-nav-links">
-            <li><a href="/workwave/Controller/index.php">Home</a></li>
+            <li><a href="/workwave/Controller/index.php">Accueil</a></li>
             <?php if (!empty($_SESSION['user_id'])): ?>
-                <li><a href="/workwave/Controller/index.php?action=profile">My Profile</a></li>
+                <li><a href="/workwave/Controller/index.php?action=profile">Mon Profil</a></li>
                 <?php if ($_SESSION['user_role'] === 'employer'): ?>
                 <?php endif; ?>
                 <?php if ($_SESSION['user_role'] === 'admin'): ?>
-                <li><a href="/workwave/Controller/index.php?action=admin_users">Admin Panel</a></li>
+                <li><a href="/workwave/Controller/index.php?action=admin_users">Panel Admin</a></li>
                 <?php endif; ?>
-                <li><a href="/workwave/Controller/index.php?action=logout">Log Out</a></li>
+                <li><a href="/workwave/Controller/index.php?action=logout">Déconnexion</a></li>
             <?php else: ?>
-                <li><a href="/workwave/Controller/index.php?action=login">Log In</a></li>
-                <li><a href="/workwave/Controller/index.php?action=register">Register</a></li>
+                <li><a href="/workwave/Controller/index.php?action=login">Se connecter</a></li>
+                <li><a href="/workwave/Controller/index.php?action=register">S'inscrire</a></li>
             <?php endif; ?>
         </ul>
         <div class="mobile-menu-cta">
             <?php if (!empty($_SESSION['user_id'])): ?>
-                <a href="/workwave/Controller/index.php?action=profile" class="btn btn-outline">Dashboard</a>
+                <a href="/workwave/Controller/index.php?action=profile" class="btn btn-outline">Tableau de bord</a>
             <?php else: ?>
-                <a href="/workwave/Controller/index.php?action=register" class="btn btn-outline">Sign Up</a>
-                <a href="/workwave/Controller/index.php?action=login" class="btn btn-primary">Sign In</a>
+                <a href="/workwave/Controller/index.php?action=register" class="btn btn-outline">S'inscrire</a>
+                <a href="/workwave/Controller/index.php?action=login" class="btn btn-primary">Se connecter</a>
             <?php endif; ?>
         </div>
     </div>

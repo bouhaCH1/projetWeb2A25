@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'My Profile';
+$pageTitle = 'Mon Profil';
 $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
 if ($isAdmin) {
     include __DIR__ . '/../layout/dashboard_header.php';
@@ -10,8 +10,8 @@ if ($isAdmin) {
 
 <div class="page-header">
     <div>
-        <div class="page-header-title">My Profile</div>
-        <div class="page-header-sub">Update your personal information and profile picture</div>
+        <div class="page-header-title">Mon Profil</div>
+        <div class="page-header-sub">Mettez à jour vos informations personnelles et votre photo de profil</div>
     </div>
 </div>
 
@@ -41,7 +41,12 @@ if ($isAdmin) {
             <div style="font-size:1rem;font-weight:600;color:#e0e0e0;"><?= htmlspecialchars($data['first_name'] . ' ' . $data['last_name']) ?></div>
             <div style="font-size:.78rem;color:#666;margin-top:3px;"><?= htmlspecialchars($data['email']) ?></div>
             <span class="badge <?= $data['role'] === 'admin' ? 'badge-admin' : ($data['role'] === 'employer' ? 'badge-employer' : 'badge-seeker') ?>" style="margin-top:6px;">
-                <?= ucfirst(str_replace('_', ' ', $data['role'])) ?>
+                <?php
+                if ($data['role'] === 'job_seeker') echo 'Candidat';
+                elseif ($data['role'] === 'employer') echo 'Employeur';
+                elseif ($data['role'] === 'admin') echo 'Administrateur';
+                else echo htmlspecialchars($data['role']);
+                ?>
             </span>
         </div>
     </div>
@@ -49,23 +54,23 @@ if ($isAdmin) {
     <form id="profileForm" action="/workwave/Controller/index.php?action=profile_update"
           method="POST" enctype="multipart/form-data" novalidate>
 
-        <label>First Name</label>
+        <label>Prénom</label>
         <input type="text" id="first_name" name="first_name" value="<?= htmlspecialchars($data['first_name']) ?>">
 
-        <label>Last Name</label>
+        <label>Nom</label>
         <input type="text" id="last_name" name="last_name" value="<?= htmlspecialchars($data['last_name']) ?>">
 
-        <label>Email <small style="color:#555;font-weight:400;">(cannot be changed)</small></label>
+        <label>E-mail <small style="color:#555;font-weight:400;">(ne peut pas être modifié)</small></label>
         <input type="text" value="<?= htmlspecialchars($data['email']) ?>" disabled>
 
-        <label>Phone <small style="color:#555;font-weight:400;">(optional)</small></label>
+        <label>Téléphone <small style="color:#555;font-weight:400;">(facultatif)</small></label>
         <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($data['phone'] ?? '') ?>">
 
-        <label>Profile Picture <small style="color:#555;font-weight:400;">(JPG, PNG, GIF — max 2MB)</small></label>
+        <label>Photo de profil <small style="color:#555;font-weight:400;">(JPG, PNG, GIF — max 2 Mo)</small></label>
         <input type="file" name="profile_pic" accept="image/*">
 
         <br><br>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
     </form>
 </div>
 

@@ -3,16 +3,16 @@ if (empty($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     header('Location: /workwave/Controller/index.php');
     exit;
 }
-$pageTitle = 'Manage Users';
+$pageTitle = 'Gérer les utilisateurs';
 include __DIR__ . '/../layout/dashboard_header.php';
 ?>
 
 <div class="page-header">
     <div>
-        <div class="page-header-title">Manage Users</div>
-        <div class="page-header-sub">All registered job seekers and employers</div>
+        <div class="page-header-title">Gérer les utilisateurs</div>
+        <div class="page-header-sub">Tous les candidats et employeurs enregistrés</div>
     </div>
-    <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary">+ Add User</a>
+    <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary">+ Ajouter un utilisateur</a>
 </div>
 
 <?php if (!empty($_SESSION['success'])): ?>
@@ -31,17 +31,17 @@ include __DIR__ . '/../layout/dashboard_header.php';
         <thead>
             <tr>
                 <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Role</th>
-                <th>Registered</th>
+                <th>Nom</th>
+                <th>E-mail</th>
+                <th>Téléphone</th>
+                <th>Rôle</th>
+                <th>Enregistré le</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         <?php if (empty($users)): ?>
-            <tr><td colspan="7" style="text-align:center;color:#555;padding:24px;">No users found.</td></tr>
+            <tr><td colspan="7" style="text-align:center;color:#555;padding:24px;">Aucun utilisateur trouvé.</td></tr>
         <?php else: ?>
             <?php foreach ($users as $u): ?>
             <tr>
@@ -51,16 +51,20 @@ include __DIR__ . '/../layout/dashboard_header.php';
                 <td><?= htmlspecialchars($u['phone'] ?? '—') ?></td>
                 <td>
                     <span class="badge <?= $u['role'] === 'employer' ? 'badge-employer' : 'badge-seeker' ?>">
-                        <?= ucfirst(str_replace('_', ' ', $u['role'])) ?>
+                        <?php
+                        if ($u['role'] === 'job_seeker') echo 'Candidat';
+                        elseif ($u['role'] === 'employer') echo 'Employeur';
+                        else echo htmlspecialchars($u['role']);
+                        ?>
                     </span>
                 </td>
                 <td style="color:#555;"><?= htmlspecialchars(substr((string)$u['created_at'], 0, 10)) ?></td>
                 <td>
                     <a href="/workwave/Controller/index.php?action=admin_edit_user&id=<?= $u['id'] ?>"
-                       class="btn btn-warning btn-sm">Edit</a>
+                       class="btn btn-warning btn-sm">Modifier</a>
                     <a href="/workwave/Controller/index.php?action=admin_delete_user&id=<?= $u['id'] ?>"
                        class="btn btn-danger btn-sm"
-                       onclick="return confirm('Delete this user permanently?')">Delete</a>
+                       onclick="return confirm('Supprimer cet utilisateur définitivement ?')">Supprimer</a>
                 </td>
             </tr>
             <?php endforeach; ?>
@@ -68,6 +72,6 @@ include __DIR__ . '/../layout/dashboard_header.php';
         </tbody>
     </table>
 </div>
-<p style="margin-top:12px;color:#444;font-size:.78rem;">* Admin accounts are excluded from this list.</p>
+<p style="margin-top:12px;color:#444;font-size:.78rem;">* Les comptes administrateurs sont exclus de cette liste.</p>
 
 <?php include __DIR__ . '/../layout/dashboard_footer.php'; ?>

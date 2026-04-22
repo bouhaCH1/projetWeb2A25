@@ -1,8 +1,8 @@
 <?php include __DIR__ . '/../layout/header.php'; ?>
 
 <div class="content_box" style="max-width:480px;margin:0 auto;">
-    <h1 style="margin-bottom:8px;">Administrator login</h1>
-    <p style="color:#aaa;font-size:0.95rem;margin-bottom:20px;">Back-office access only. Job seekers and employers use the <a href="/workwave/Controller/index.php?action=login">public login</a>.</p>
+    <h1 style="margin-bottom:8px;">Connexion Administrateur</h1>
+    <p style="color:#aaa;font-size:0.95rem;margin-bottom:20px;">Accès back-office uniquement. Les candidats et employeurs utilisent la <a href="/workwave/Controller/index.php?action=login">connexion publique</a>.</p>
 
     <?php if (!empty($_SESSION['errors'])): ?>
         <div class="alert alert-danger"><ul>
@@ -22,15 +22,15 @@
 
     <form id="adminLoginForm" action="/workwave/Controller/index.php?action=admin_login_submit" method="POST" novalidate>
 
-        <label>Administrator email</label>
+        <label>E-mail administrateur</label>
         <input type="text" id="email" name="email" autocomplete="username">
 
-        <label>Password</label>
+        <label>Mot de passe</label>
         <input type="password" id="password" name="password" autocomplete="current-password">
 
         <br/>
-        <button type="submit" class="btn btn-primary">Sign in to admin panel</button>
-        <a href="/workwave/Controller/index.php" class="btn btn-secondary">← Back to site</a>
+        <button type="submit" class="btn btn-primary">Se connecter au panel admin</button>
+        <a href="/workwave/Controller/index.php" class="btn btn-secondary">← Retour au site</a>
 
     </form>
 </div>

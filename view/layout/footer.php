@@ -9,15 +9,15 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="/workwave/Controller/index.php" class="logo">Work<span>Wave</span></a>
-                    <p>Your trusted partner in career building and recruitment. We provide secure, transparent, and competitive job placement services worldwide.</p>
+                    <p>Votre partenaire de confiance dans le développement de carrière et le recrutement. Nous fournissons des services de placement professionnels sécurisés, transparents et compétitifs dans le monde entier.</p>
                 </div>
                 <div class="footer-col">
-                    <h4 class="footer-title">Core Features</h4>
+                    <h4 class="footer-title">Fonctionnalités principales</h4>
                     <ul class="footer-links">
-                        <li><a href="/workwave/Controller/index.php?action=register">💼 Post Job Listings</a></li>
-                        <li><a href="/workwave/Controller/index.php?action=register">🔍 Find Top Candidates</a></li>
-                        <li><a href="/workwave/Controller/index.php?action=register">📄 Create Professional Profile</a></li>
-                        <li><a href="/workwave/Controller/index.php?action=register">🚀 Secure Fast Placements</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">💼 Publier des offres d'emploi</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">🔍 Trouver les meilleurs candidats</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">📄 Créer un profil professionnel</a></li>
+                        <li><a href="/workwave/Controller/index.php?action=register">🚀 Sécuriser des placements rapides</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -27,8 +27,8 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p class="footer-copy">&copy; 2026 WorkWave. All rights reserved. Design based on <a href="https://templatemo.com" target="_blank" style="color: var(--gold-light);">TemplateMo</a></p>
-                <p class="footer-copy" style="margin-top:8px;"><a href="/workwave/Controller/index.php?action=admin_login" style="color:#666;font-size:0.85rem;">Administrator login</a></p>
+                <p class="footer-copy">&copy; 2026 WorkWave. Tous droits réservés. Design basé sur <a href="https://templatemo.com" target="_blank" style="color: var(--gold-light);">TemplateMo</a></p>
+                <p class="footer-copy" style="margin-top:8px;"><a href="/workwave/Controller/index.php?action=admin_login" style="color:#666;font-size:0.85rem;">Connexion administrateur</a></p>
             </div>
         </div>
     </footer>

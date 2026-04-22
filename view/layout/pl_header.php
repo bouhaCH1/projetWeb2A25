@@ -150,24 +150,24 @@
           </a>
           <!-- Menu -->
           <ul class="nav">
-            <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Home</a></li>
+            <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
             <?php if (!empty($_SESSION['user_id'])): ?>
-              <li><a href="/workwave/Controller/index.php?action=profile">My Profile</a></li>
+              <li><a href="/workwave/Controller/index.php?action=profile">Mon Profil</a></li>
               <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
-                <li><a href="/workwave/Controller/index.php?action=dashboard_seeker">Dashboard</a></li>
+                <li><a href="/workwave/Controller/index.php?action=dashboard_seeker">Tableau de bord</a></li>
               <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
-                <li><a href="/workwave/Controller/index.php?action=dashboard_employer">Dashboard</a></li>
+                <li><a href="/workwave/Controller/index.php?action=dashboard_employer">Tableau de bord</a></li>
               <?php endif; ?>
               <li>
                 <div class="main-white-button">
-                  <a href="/workwave/Controller/index.php?action=logout"><i class="fa fa-sign-out"></i> Log Out</a>
+                  <a href="/workwave/Controller/index.php?action=logout"><i class="fa fa-sign-out"></i> Déconnexion</a>
                 </div>
               </li>
             <?php else: ?>
-              <li><a href="/workwave/Controller/index.php?action=login">Log In</a></li>
+              <li><a href="/workwave/Controller/index.php?action=login">Connexion</a></li>
               <li>
                 <div class="main-white-button">
-                  <a href="/workwave/Controller/index.php?action=register"><i class="fa fa-plus"></i> Register</a>
+                  <a href="/workwave/Controller/index.php?action=register"><i class="fa fa-plus"></i> S'inscrire</a>
                 </div>
               </li>
             <?php endif; ?>
