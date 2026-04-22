@@ -1,3 +1,4 @@
+<?php $isHome = empty($_GET['action']) || $_GET['action'] === 'home'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,6 +127,13 @@
 
     /* Hide the default Plot Listing logo image — we use our own text logo in the HTML */
     .main-nav .logo img { display: none; }
+    
+    /* Dynamic text colors based on page type */
+    .header-area .logo { color: <?= $isHome ? '#fff' : '#1a1a2e' ?> !important; }
+    .header-area.background-header .logo { color: #1a1a2e !important; }
+    <?php if (!$isHome): ?>
+    .header-area .main-nav .nav li a { color: #1a1a2e !important; }
+    <?php endif; ?>
   </style>
 </head>
 <body>
@@ -145,7 +153,7 @@
       <div class="col-12">
         <nav class="main-nav">
           <!-- Logo -->
-          <a href="/workwave/Controller/index.php" class="logo" style="font-weight:800;font-size:1.4rem;color:#fff;letter-spacing:-.5px;font-family:'Montserrat',sans-serif;">
+          <a href="/workwave/Controller/index.php" class="logo" style="font-weight:800;font-size:1.4rem;letter-spacing:-.5px;font-family:'Montserrat',sans-serif;">
             Work<span style="color:#ef6f31;">Wave</span>
           </a>
           <!-- Menu -->
