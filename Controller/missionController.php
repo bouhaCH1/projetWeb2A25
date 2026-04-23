@@ -16,7 +16,9 @@ class MissionController {
     }
 
     public function frontIndex() {
-        $missions = $this->mission->getAll();
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $statut = isset($_GET['statut']) ? trim($_GET['statut']) : '';
+        $missions = $this->mission->getAll($search, $statut);
         $popularMissions = $this->mission->getPopular(3);
         require_once __DIR__ . '/../View/frontoffice/missions.php';
     }

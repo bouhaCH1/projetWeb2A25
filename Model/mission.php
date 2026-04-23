@@ -18,9 +18,32 @@ class Mission {
     }
 
     // READ ALL
-    public function getAll() {
-        $query = "SELECT * FROM " . $this->table . " ORDER BY created_at DESC";
+    public function getAll($search = '', $statut = '') {
+        $query = "SELECT * FROM " . $this->table;
+        $conditions = [];
+
+        if (!empty($search)) {
+            $conditions[] = "(titre LIKE :search OR description LIKE :search OR competences LIKE :search)";
+        }
+        if (!empty($statut)) {
+            $conditions[] = "statut = :statut";
+        }
+
+        if (!empty($conditions)) {
+            $query .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query .= " ORDER BY created_at DESC";
         $stmt = $this->conn->prepare($query);
+
+        if (!empty($search)) {
+            $searchParam = '%' . $search . '%';
+            $stmt->bindParam(':search', $searchParam);
+        }
+        if (!empty($statut)) {
+            $stmt->bindParam(':statut', $statut);
+        }
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

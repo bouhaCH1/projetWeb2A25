@@ -30,22 +30,22 @@ ob_start();
                     <div class="row">
                         <div class="col-lg-4 align-self-center">
                             <fieldset>
-                                <input type="text" name="search" class="searchText" placeholder="Rechercher une mission..." autocomplete="on">
+                                <input type="text" name="search" class="searchText" placeholder="Rechercher une mission..." autocomplete="on" value="<?= htmlspecialchars($search ?? '') ?>">
                             </fieldset>
                         </div>
                         <div class="col-lg-4 align-self-center">
                             <fieldset>
                                 <select name="statut" class="form-select" aria-label="Statut">
-                                    <option selected value="">Tous les statuts</option>
-                                    <option value="ouverte">Ouverte</option>
-                                    <option value="en_cours">En cours</option>
-                                    <option value="terminee">Terminée</option>
+                                    <option value="" <?= empty($statut) ? 'selected' : '' ?>>Tous les statuts</option>
+                                    <option value="ouverte" <?= (isset($statut) && $statut == 'ouverte') ? 'selected' : '' ?>>Ouverte</option>
+                                    <option value="en_cours" <?= (isset($statut) && $statut == 'en_cours') ? 'selected' : '' ?>>En cours</option>
+                                    <option value="terminee" <?= (isset($statut) && $statut == 'terminee') ? 'selected' : '' ?>>Terminée</option>
                                 </select>
                             </fieldset>
                         </div>
                         <div class="col-lg-4">
                             <fieldset>
-                                <button class="main-button"><i class="fa fa-search"></i> Rechercher</button>
+                                <button type="submit" class="main-button"><i class="fa fa-search"></i> Rechercher</button>
                             </fieldset>
                         </div>
                     </div>
