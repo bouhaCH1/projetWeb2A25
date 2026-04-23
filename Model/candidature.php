@@ -10,6 +10,7 @@ class Candidature {
     public $email;
     public $telephone;
     public $motivation;
+    public $cv;
 
     public function __construct($db) {
         $this->conn = $db;
@@ -17,8 +18,8 @@ class Candidature {
 
     public function create() {
         $query = "INSERT INTO " . $this->table . "
-                  (mission_id, nom, prenom, email, telephone, motivation)
-                  VALUES (:mission_id, :nom, :prenom, :email, :telephone, :motivation)";
+                  (mission_id, nom, prenom, email, telephone, motivation, cv)
+                  VALUES (:mission_id, :nom, :prenom, :email, :telephone, :motivation, :cv)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':mission_id', $this->mission_id, PDO::PARAM_INT);
         $stmt->bindParam(':nom', $this->nom);
@@ -26,6 +27,7 @@ class Candidature {
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':telephone', $this->telephone);
         $stmt->bindParam(':motivation', $this->motivation);
+        $stmt->bindParam(':cv', $this->cv);
         return $stmt->execute();
     }
 
@@ -80,7 +82,7 @@ class Candidature {
 
     public function update() {
         $query = "UPDATE " . $this->table . "
-                  SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone, motivation = :motivation
+                  SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone, motivation = :motivation, cv = :cv
                   WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':nom', $this->nom);
@@ -88,6 +90,7 @@ class Candidature {
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':telephone', $this->telephone);
         $stmt->bindParam(':motivation', $this->motivation);
+        $stmt->bindParam(':cv', $this->cv);
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
         return $stmt->execute();
     }
@@ -97,6 +100,15 @@ class Candidature {
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
+    }
+
+    public function countByMission($missionId) {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table . " WHERE mission_id = :mission_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':mission_id', $missionId, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] ?? 0;
     }
 }
 ?>

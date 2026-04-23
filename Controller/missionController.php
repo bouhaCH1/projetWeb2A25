@@ -17,6 +17,7 @@ class MissionController {
 
     public function frontIndex() {
         $missions = $this->mission->getAll();
+        $popularMissions = $this->mission->getPopular(3);
         require_once __DIR__ . '/../View/frontoffice/missions.php';
     }
 
@@ -89,11 +90,40 @@ class MissionController {
                 $this->candidature->telephone = trim($_POST['telephone']);
                 $this->candidature->motivation = trim($_POST['motivation']);
 
-                if ($this->candidature->create()) {
+                // Handle CV upload
+                $cvPath = '';
+                if (isset($_FILES['cv']) && $_FILES['cv']['error'] === UPLOAD_ERR_OK) {
+                    $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                    $fileType = $_FILES['cv']['type'];
+                    $fileSize = $_FILES['cv']['size'];
+                    $maxSize = 5 * 1024 * 1024; // 5MB
+
+                    if (!in_array($fileType, $allowedTypes)) {
+                        $errors['cv'] = "Format de fichier non autorisé. Utilisez PDF, DOC ou DOCX.";
+                    } elseif ($fileSize > $maxSize) {
+                        $errors['cv'] = "Le fichier ne doit pas dépasser 5MB.";
+                    } else {
+                        $uploadDir = __DIR__ . '/../uploads/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0777, true);
+                        }
+                        $fileName = uniqid('cv_') . '_' . basename($_FILES['cv']['name']);
+                        $cvPath = $fileName;
+                        if (!move_uploaded_file($_FILES['cv']['tmp_name'], $uploadDir . $cvPath)) {
+                            $errors['cv'] = "Erreur lors du téléchargement du fichier.";
+                            $cvPath = '';
+                        }
+                    }
+                }
+                $this->candidature->cv = $cvPath;
+
+                if (empty($errors) && $this->candidature->create()) {
                     header('Location: index.php?action=missions&applied=1');
                     exit;
                 }
-                $errors['general'] = "Impossible d'envoyer la candidature pour le moment.";
+                if (empty($errors)) {
+                    $errors['general'] = "Impossible d'envoyer la candidature pour le moment.";
+                }
             }
         }
 
@@ -122,7 +152,35 @@ class MissionController {
                 $this->candidature->email = trim($_POST['email']);
                 $this->candidature->telephone = trim($_POST['telephone']);
                 $this->candidature->motivation = trim($_POST['motivation']);
-                if ($this->candidature->update()) {
+
+                // Handle CV upload
+                $cvPath = $candidatureData['cv'] ?? '';
+                if (isset($_FILES['cv']) && $_FILES['cv']['error'] === UPLOAD_ERR_OK) {
+                    $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                    $fileType = $_FILES['cv']['type'];
+                    $fileSize = $_FILES['cv']['size'];
+                    $maxSize = 5 * 1024 * 1024; // 5MB
+
+                    if (!in_array($fileType, $allowedTypes)) {
+                        $errors['cv'] = "Format de fichier non autorisé. Utilisez PDF, DOC ou DOCX.";
+                    } elseif ($fileSize > $maxSize) {
+                        $errors['cv'] = "Le fichier ne doit pas dépasser 5MB.";
+                    } else {
+                        $uploadDir = __DIR__ . '/../uploads/';
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0777, true);
+                        }
+                        $fileName = uniqid('cv_') . '_' . basename($_FILES['cv']['name']);
+                        $cvPath = $fileName;
+                        if (!move_uploaded_file($_FILES['cv']['tmp_name'], $uploadDir . $cvPath)) {
+                            $errors['cv'] = "Erreur lors du téléchargement du fichier.";
+                            $cvPath = $candidatureData['cv'] ?? '';
+                        }
+                    }
+                }
+                $this->candidature->cv = $cvPath;
+
+                if (empty($errors) && $this->candidature->update()) {
                     header('Location: index.php?action=front_candidatures&updated=1');
                     exit;
                 }

@@ -10,7 +10,6 @@ switch ($action) {
         $controller->index();
         break;
     case 'create':
-        // Backoffice create (same action name as before)
         $controller->create();
         break;
     case 'edit':
@@ -31,26 +30,20 @@ switch ($action) {
     case 'front_create':
         $controller->frontCreate();
         break;
-    case 'front_edit':
-        $controller->frontEdit();
-        break;
-    case 'front_delete':
-        $controller->frontDelete();
-        break;
     case 'front_apply':
         $controller->frontApply();
         break;
-    case 'front_candidatures':
-        $controller->frontCandidatures();
+    case 'front_edit':
+        $controller->frontEdit();
         break;
     case 'front_edit_candidature':
         $controller->frontEditCandidature();
         break;
-    case 'front_delete_candidature':
-        $controller->frontDeleteCandidature();
-        break;
     case 'front_missions':
         $controller->frontMissions();
+        break;
+    case 'front_candidatures':
+        $controller->frontCandidatures();
         break;
     case 'missions':
     case 'home':
@@ -58,4 +51,3 @@ switch ($action) {
         $controller->frontIndex();
         break;
 }
-?>

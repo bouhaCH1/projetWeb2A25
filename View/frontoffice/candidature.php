@@ -30,7 +30,7 @@ ob_start();
                     <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 10px; margin-bottom: 20px;"><?= htmlspecialchars($errors['general']) ?></div>
                 <?php endif; ?>
 
-                <form method="POST" action="index.php?action=front_apply&id=<?= (int)$missionData['id'] ?>" novalidate>
+                <form method="POST" action="index.php?action=front_apply&id=<?= (int)$missionData['id'] ?>" novalidate enctype="multipart/form-data">
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3 mb-md-0">
                             <label style="font-weight: 600; color: #2b2b2b; margin-bottom: 8px; display: block;">Nom <span style="color: #fa5b0f;">*</span></label>
@@ -73,6 +73,14 @@ ob_start();
                                   style="border-radius: 10px; padding: 12px 15px; border: 1px solid #ddd; width: 100%;"
                                   onkeypress="return /^[a-zA-Z\séèêëàâäùûüôöîïç,.!?;:'"()-]+$/.test(String.fromCharCode(event.which))"><?= isset($_POST['motivation']) ? htmlspecialchars($_POST['motivation']) : '' ?></textarea>
                         <div class="invalid-feedback"><?= isset($errors['motivation']) ? htmlspecialchars($errors['motivation']) : '' ?></div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label style="font-weight: 600; color: #2b2b2b; margin-bottom: 8px; display: block;">CV (PDF, DOC, DOCX)</label>
+                        <input type="file" name="cv" class="form-control"
+                               style="border-radius: 10px; padding: 12px 15px; border: 1px solid #ddd;"
+                               accept=".pdf,.doc,.docx">
+                        <small style="color: #888; font-size: 13px;">Formats acceptés: PDF, DOC, DOCX (Max 5MB)</small>
                     </div>
 
                     <div class="d-flex gap-3">

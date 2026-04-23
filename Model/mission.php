@@ -76,5 +76,19 @@ class Mission {
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function getPopular($limit = 5) {
+        $query = "SELECT m.*, COUNT(c.id) as application_count
+                  FROM " . $this->table . " m
+                  LEFT JOIN candidature c ON m.id = c.mission_id
+                  GROUP BY m.id
+                  HAVING application_count > 0
+                  ORDER BY application_count DESC
+                  LIMIT :limit";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
