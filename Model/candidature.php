@@ -18,8 +18,8 @@ class Candidature {
 
     public function create() {
         $query = "INSERT INTO " . $this->table . "
-                  (mission_id, nom, prenom, email, telephone, motivation, cv)
-                  VALUES (:mission_id, :nom, :prenom, :email, :telephone, :motivation, :cv)";
+                  (mission_id, nom, prenom, email, telephone, motivation)
+                  VALUES (:mission_id, :nom, :prenom, :email, :telephone, :motivation)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':mission_id', $this->mission_id, PDO::PARAM_INT);
         $stmt->bindParam(':nom', $this->nom);
@@ -27,7 +27,6 @@ class Candidature {
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':telephone', $this->telephone);
         $stmt->bindParam(':motivation', $this->motivation);
-        $stmt->bindParam(':cv', $this->cv);
         return $stmt->execute();
     }
 
@@ -82,7 +81,7 @@ class Candidature {
 
     public function update() {
         $query = "UPDATE " . $this->table . "
-                  SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone, motivation = :motivation, cv = :cv
+                  SET nom = :nom, prenom = :prenom, email = :email, telephone = :telephone, motivation = :motivation
                   WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':nom', $this->nom);
@@ -90,7 +89,6 @@ class Candidature {
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':telephone', $this->telephone);
         $stmt->bindParam(':motivation', $this->motivation);
-        $stmt->bindParam(':cv', $this->cv);
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
         return $stmt->execute();
     }
