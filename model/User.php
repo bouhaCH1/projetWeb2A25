@@ -139,10 +139,6 @@ class User {
         return ['success' => true, 'message' => 'Compte supprimé.'];
     }
 
-    /**
-     * Returns counts of non-admin users grouped by role.
-     * Used by the admin dashboard overview.
-     */
     public function getStats(): array {
         $stmt = $this->pdo->query(
             "SELECT role, COUNT(*) AS cnt FROM users WHERE role != 'admin' GROUP BY role"

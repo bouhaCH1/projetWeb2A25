@@ -19,31 +19,31 @@
 
       <label>Prénom *</label>
       <?php if (!empty($fieldErrors['first_name'])): ?>
-        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['first_name']) ?></div>
+        <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['first_name']) ?></div>
       <?php endif; ?>
       <input type="text" name="first_name" value="<?= htmlspecialchars($_SESSION['old']['first_name'] ?? '') ?>">
 
       <label>Nom *</label>
       <?php if (!empty($fieldErrors['last_name'])): ?>
-        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['last_name']) ?></div>
+        <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['last_name']) ?></div>
       <?php endif; ?>
       <input type="text" name="last_name" value="<?= htmlspecialchars($_SESSION['old']['last_name'] ?? '') ?>">
 
       <label>Adresse E-mail *</label>
       <?php if (!empty($fieldErrors['email'])): ?>
-        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['email']) ?></div>
+        <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['email']) ?></div>
       <?php endif; ?>
       <input type="text" id="email" name="email" value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>">
 
       <label>Numéro de téléphone</label>
       <?php if (!empty($fieldErrors['phone'])): ?>
-        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['phone']) ?></div>
+        <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['phone']) ?></div>
       <?php endif; ?>
       <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($_SESSION['old']['phone'] ?? '') ?>">
 
       <label>Je suis un(e) *</label>
       <?php if (!empty($fieldErrors['role'])): ?>
-        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['role']) ?></div>
+        <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['role']) ?></div>
       <?php endif; ?>
       <select id="role" name="role">
         <option value="">-- Sélectionner --</option>
@@ -53,13 +53,13 @@
 
       <label>Mot de passe * <small style="color:#aaa;font-weight:400;">(Min. 8 car., 1 majuscule, 1 chiffre)</small></label>
       <?php if (!empty($fieldErrors['password'])): ?>
-        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['password']) ?></div>
+        <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['password']) ?></div>
       <?php endif; ?>
       <input type="password" id="password" name="password">
 
       <label>Confirmer le mot de passe *</label>
       <?php if (!empty($fieldErrors['confirm_password'])): ?>
-        <div style="margin-top:6px;margin-bottom:4px;color:#c0392b;font-size:.78rem;font-weight:600;"><?= htmlspecialchars($fieldErrors['confirm_password']) ?></div>
+        <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['confirm_password']) ?></div>
       <?php endif; ?>
       <input type="password" id="confirm_password" name="confirm_password">
 

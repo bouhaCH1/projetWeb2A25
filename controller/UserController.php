@@ -28,10 +28,13 @@ class UserController {
 
         if (!empty($errors)) {
             $fieldErrors = $this->extractRegisterFieldErrors($errors);
-            $_SESSION['errors'] = array_values(array_filter(
-                $errors,
-                static fn (string $error): bool => !in_array($error, $fieldErrors, true)
-            ));
+            $used = array_values($fieldErrors);
+            $_SESSION['errors'] = [];
+            foreach ($errors as $err) {
+                if (!in_array($err, $used, true)) {
+                    $_SESSION['errors'][] = $err;
+                }
+            }
             $_SESSION['field_errors'] = $fieldErrors;
             $_SESSION['old'] = [
                 'first_name' => $first_name,
@@ -68,7 +71,6 @@ class UserController {
         require_once __DIR__ . '/../View/user/login.php';
     }
 
-    // ── Connexion administrateur (page dédiée) ──────────────────────────
     public function showAdminLogin(): void {
         require_once __DIR__ . '/../View/admin/login.php';
     }
@@ -124,7 +126,6 @@ class UserController {
         exit;
     }
 
-    // ── Gérer le fonctionnement de la connexion ─────────────────────────
     public function login(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=login');
@@ -155,7 +156,6 @@ class UserController {
         $result = $user->login();
 
         if ($result['success']) {
-            // Les comptes admin utilisent la page de connexion dédiée
             if ($user->role === 'admin') {
                 $_SESSION['errors'] = ['Les comptes administrateurs doivent se connecter via la page de connexion administrateur.'];
                 header('Location: index.php?action=admin_login');

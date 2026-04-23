@@ -4,8 +4,8 @@ session_start();
 
 require_once __DIR__ . '/UserController.php';
 
-$action        = $_GET['action'] ?? 'home';
-$controller    = new UserController();
+$action = $_GET['action'] ?? 'home';
+$controller = new UserController();
 
 switch ($action) {
 

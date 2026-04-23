@@ -18,17 +18,15 @@
   <link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/owl.css">
 
   <style>
-    /* ── WorkWave overrides on top of Plot Listing ── */
     body { font-family: 'Montserrat', sans-serif; }
 
-    /* Alerts */
     .ww-alert { padding: 12px 18px; border-radius: 6px; margin-bottom: 18px; font-size: .88rem; }
     .ww-alert ul { margin: 0; padding-left: 18px; }
     .ww-alert-danger  { background: rgba(220,60,60,.1);  border:1px solid rgba(220,60,60,.35);  color:#c0392b; }
     .ww-alert-success { background: rgba(39,174,96,.1);  border:1px solid rgba(39,174,96,.35);  color:#1e8449; }
     .ww-alert-warning { background: rgba(243,156,18,.1); border:1px solid rgba(243,156,18,.35); color:#9a6200; }
+    .ww-field-err { margin-top: 6px; margin-bottom: 4px; color: #c0392b; font-size: .78rem; font-weight: 600; }
 
-    /* Public form card */
     .ww-form-section {
       min-height: calc(100vh - 80px);
       display: flex;
@@ -125,10 +123,7 @@
     }
     .ww-btn-secondary:hover { background: #e4e8ef; color: #222; }
 
-    /* Hide the default Plot Listing logo image — we use our own text logo in the HTML */
     .main-nav .logo img { display: none; }
-    
-    /* Dynamic text colors based on page type */
     .header-area .logo { color: <?= $isHome ? '#fff' : '#1a1a2e' ?> !important; }
     .header-area.background-header .logo { color: #1a1a2e !important; }
     <?php if (!$isHome): ?>
