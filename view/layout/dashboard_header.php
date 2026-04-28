@@ -206,6 +206,10 @@ table tbody tr:hover td { background: rgba(255,255,255,.025); }
     .stat-grid { grid-template-columns: repeat(2, 1fr); }
     .action-grid { grid-template-columns: 1fr; }
 }
+/* Inline field errors */
+.field-err { margin-top: 5px; color: #ff6b6b; font-size: .76rem; font-weight: 600; }
+input.input-error, select.input-error { border-color: rgba(220,60,60,.7) !important; }
+
 </style>
 </head>
 <body>

@@ -290,6 +290,13 @@ table tbody tr:hover td { background: rgba(239,111,49,.03); }
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .action-grid { grid-template-columns: 1fr; }
 }
+/* Inline field errors */
+.field-err { margin-top: 5px; color: #c0392b; font-size: .76rem; font-weight: 700; }
+input.input-error, select.input-error { border-color: rgba(220,60,60,.7) !important; box-shadow: 0 0 0 3px rgba(220,60,60,.1); }
+
+/* dsh-card alias (used by profile.php) */
+.dsh-card { background: #fff; border: 1.5px solid var(--pl-border); border-radius: 12px; padding: 24px 26px; margin-bottom: 22px; }
+
 </style>
 </head>
 <body>

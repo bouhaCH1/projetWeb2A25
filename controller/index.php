@@ -21,12 +21,7 @@ switch ($action) {
     case 'login_submit':
         $controller->login();
         break;
-    case 'admin_login':
-        $controller->showAdminLogin();
-        break;
-    case 'admin_login_submit':
-        $controller->adminLogin();
-        break;
+
     case 'profile':
         $controller->showProfile();
         break;

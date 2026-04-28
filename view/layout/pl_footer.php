@@ -25,7 +25,7 @@
               <ul>
                 <li><a href="#">Publier une offre</a></li>
                 <li><a href="#">Trouver des talents</a></li>
-                <li><a href="/workwave/Controller/index.php?action=admin_login" style="color:#aaa;font-size:.85rem;">Admin</a></li>
+                <li><a href="/workwave/Controller/index.php?action=login" style="color:#aaa;font-size:.85rem;">Se connecter</a></li>
               </ul>
             </div>
           </div>

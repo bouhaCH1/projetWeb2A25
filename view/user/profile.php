@@ -15,13 +15,7 @@ if ($isAdmin) {
     </div>
 </div>
 
-<?php if (!empty($_SESSION['errors'])): ?>
-    <div class="alert alert-danger"><ul>
-        <?php foreach ($_SESSION['errors'] as $e): ?>
-            <li><?= htmlspecialchars($e) ?></li>
-        <?php endforeach; unset($_SESSION['errors']); ?>
-    </ul></div>
-<?php endif; ?>
+<?php $fieldErrors = $_SESSION['field_errors'] ?? []; unset($_SESSION['field_errors']); ?>
 <?php if (!empty($_SESSION['success'])): ?>
     <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
 <?php endif; ?>
@@ -55,16 +49,25 @@ if ($isAdmin) {
           method="POST" enctype="multipart/form-data" novalidate>
 
         <label>Prénom</label>
-        <input type="text" id="first_name" name="first_name" value="<?= htmlspecialchars($data['first_name']) ?>">
+        <input type="text" id="first_name" name="first_name" value="<?= htmlspecialchars($data['first_name']) ?>" class="<?= !empty($fieldErrors['first_name']) ? 'input-error' : '' ?>">
+        <?php if (!empty($fieldErrors['first_name'])): ?>
+            <div class="field-err"><?= htmlspecialchars($fieldErrors['first_name']) ?></div>
+        <?php endif; ?>
 
         <label>Nom</label>
-        <input type="text" id="last_name" name="last_name" value="<?= htmlspecialchars($data['last_name']) ?>">
+        <input type="text" id="last_name" name="last_name" value="<?= htmlspecialchars($data['last_name']) ?>" class="<?= !empty($fieldErrors['last_name']) ? 'input-error' : '' ?>">
+        <?php if (!empty($fieldErrors['last_name'])): ?>
+            <div class="field-err"><?= htmlspecialchars($fieldErrors['last_name']) ?></div>
+        <?php endif; ?>
 
         <label>E-mail <small style="color:#555;font-weight:400;">(ne peut pas être modifié)</small></label>
         <input type="text" value="<?= htmlspecialchars($data['email']) ?>" disabled>
 
         <label>Téléphone <small style="color:#555;font-weight:400;">(facultatif)</small></label>
-        <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($data['phone'] ?? '') ?>">
+        <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($data['phone'] ?? '') ?>" class="<?= !empty($fieldErrors['phone']) ? 'input-error' : '' ?>">
+        <?php if (!empty($fieldErrors['phone'])): ?>
+            <div class="field-err"><?= htmlspecialchars($fieldErrors['phone']) ?></div>
+        <?php endif; ?>
 
         <label>Photo de profil <small style="color:#555;font-weight:400;">(JPG, PNG, GIF — max 2 Mo)</small></label>
         <input type="file" name="profile_pic" accept="image/*">

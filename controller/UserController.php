@@ -27,15 +27,7 @@ class UserController {
         );
 
         if (!empty($errors)) {
-            $fieldErrors = $this->extractRegisterFieldErrors($errors);
-            $used = array_values($fieldErrors);
-            $_SESSION['errors'] = [];
-            foreach ($errors as $err) {
-                if (!in_array($err, $used, true)) {
-                    $_SESSION['errors'][] = $err;
-                }
-            }
-            $_SESSION['field_errors'] = $fieldErrors;
+            $_SESSION['field_errors'] = $this->extractRegisterFieldErrors($errors);
             $_SESSION['old'] = [
                 'first_name' => $first_name,
                 'last_name'  => $last_name,
@@ -135,16 +127,16 @@ class UserController {
         $email    = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
-        $errors = [];
+        $fieldErrors = [];
         if (empty($email)) {
-            $errors[] = 'L\'adresse e-mail est requise.';
+            $fieldErrors['email'] = 'L\'adresse e-mail est requise.';
         }
         if (empty($password)) {
-            $errors[] = 'Le mot de passe est requis.';
+            $fieldErrors['password'] = 'Le mot de passe est requis.';
         }
 
-        if (!empty($errors)) {
-            $_SESSION['errors'] = $errors;
+        if (!empty($fieldErrors)) {
+            $_SESSION['field_errors'] = $fieldErrors;
             header('Location: index.php?action=login');
             exit;
         }
@@ -156,19 +148,15 @@ class UserController {
         $result = $user->login();
 
         if ($result['success']) {
-            if ($user->role === 'admin') {
-                $_SESSION['errors'] = ['Les comptes administrateurs doivent se connecter via la page de connexion administrateur.'];
-                header('Location: index.php?action=admin_login');
-                exit;
-            }
-
             $_SESSION['user_id']         = $user->id;
             $_SESSION['user_first_name'] = $user->first_name;
             $_SESSION['user_last_name']  = $user->last_name;
             $_SESSION['user_role']       = $user->role;
             $_SESSION['user_pic']        = $user->profile_pic;
 
-            if ($user->role === 'employer') {
+            if ($user->role === 'admin') {
+                header('Location: index.php?action=admin_dashboard');
+            } elseif ($user->role === 'employer') {
                 header('Location: index.php?action=dashboard_employer');
             } else {
                 header('Location: index.php?action=dashboard_seeker');
@@ -194,25 +182,23 @@ class UserController {
         $last_name  = trim($_POST['last_name'] ?? '');
         $phone      = trim($_POST['phone'] ?? '');
 
-        $errors = [];
+        $fieldErrors = [];
         if (empty($first_name)) {
-            $errors[] = 'Le prénom est requis.';
+            $fieldErrors['first_name'] = 'Le prénom est requis.';
+        } elseif (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $first_name)) {
+            $fieldErrors['first_name'] = 'Le prénom est invalide (lettres uniquement, min. 2 caractères).';
         }
         if (empty($last_name)) {
-            $errors[] = 'Le nom est requis.';
-        }
-        if (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $first_name)) {
-            $errors[] = 'Le prénom est invalide.';
-        }
-        if (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $last_name)) {
-            $errors[] = 'Le nom est invalide.';
+            $fieldErrors['last_name'] = 'Le nom est requis.';
+        } elseif (!preg_match('/^[a-zA-ZÀ-ÿ\s\-]{2,}$/', $last_name)) {
+            $fieldErrors['last_name'] = 'Le nom est invalide (lettres uniquement, min. 2 caractères).';
         }
         if (!empty($phone) && !preg_match('/^\+?[0-9\s\-]{7,15}$/', $phone)) {
-            $errors[] = 'Le numéro de téléphone est invalide.';
+            $fieldErrors['phone'] = 'Le numéro de téléphone est invalide.';
         }
 
-        if (!empty($errors)) {
-            $_SESSION['errors'] = $errors;
+        if (!empty($fieldErrors)) {
+            $_SESSION['field_errors'] = $fieldErrors;
             header('Location: index.php?action=profile');
             exit;
         }
@@ -305,7 +291,7 @@ class UserController {
         );
 
         if (!empty($errors)) {
-            $_SESSION['errors'] = $errors;
+            $_SESSION['field_errors'] = $this->extractRegisterFieldErrors($errors);
             $_SESSION['old'] = [
                 'first_name' => $first_name,
                 'last_name'  => $last_name,
@@ -376,19 +362,19 @@ class UserController {
         $phone      = trim($_POST['phone'] ?? '');
         $role       = trim($_POST['role'] ?? '');
 
-        $errors = [];
+        $fieldErrors = [];
         if (empty($first_name)) {
-            $errors[] = 'Le prénom est requis.';
+            $fieldErrors['first_name'] = 'Le prénom est requis.';
         }
         if (empty($last_name)) {
-            $errors[] = 'Le nom est requis.';
+            $fieldErrors['last_name'] = 'Le nom est requis.';
         }
         if (!in_array($role, ['job_seeker', 'employer'])) {
-            $errors[] = 'Rôle sélectionné invalide.';
+            $fieldErrors['role'] = 'Rôle sélectionné invalide.';
         }
 
-        if (!empty($errors)) {
-            $_SESSION['errors'] = $errors;
+        if (!empty($fieldErrors)) {
+            $_SESSION['field_errors'] = $fieldErrors;
             header('Location: index.php?action=admin_edit_user&id=' . $id);
             exit;
         }

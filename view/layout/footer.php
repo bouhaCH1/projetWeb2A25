@@ -28,7 +28,6 @@
             </div>
             <div class="footer-bottom">
                 <p class="footer-copy">&copy; 2026 WorkWave. Tous droits réservés. Design basé sur <a href="https://templatemo.com" target="_blank" style="color: var(--gold-light);">TemplateMo</a></p>
-                <p class="footer-copy" style="margin-top:8px;"><a href="/workwave/Controller/index.php?action=admin_login" style="color:#666;font-size:0.85rem;">Connexion administrateur</a></p>
             </div>
         </div>
     </footer>

@@ -26,6 +26,8 @@
     .ww-alert-success { background: rgba(39,174,96,.1);  border:1px solid rgba(39,174,96,.35);  color:#1e8449; }
     .ww-alert-warning { background: rgba(243,156,18,.1); border:1px solid rgba(243,156,18,.35); color:#9a6200; }
     .ww-field-err { margin-top: 6px; margin-bottom: 4px; color: #c0392b; font-size: .78rem; font-weight: 600; }
+    .ww-form-card input.ww-input-error,
+    .ww-form-card select.ww-input-error { border-color: rgba(220,60,60,.7) !important; box-shadow: 0 0 0 3px rgba(220,60,60,.1); }
 
     .ww-form-section {
       min-height: calc(100vh - 80px);
