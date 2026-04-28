@@ -21,6 +21,12 @@ switch ($action) {
     case 'login_submit':
         $controller->login();
         break;
+    case 'forgot_password':
+        $controller->showForgotPassword();
+        break;
+    case 'forgot_password_submit':
+        $controller->processForgotPassword();
+        break;
 
     case 'profile':
         $controller->showProfile();

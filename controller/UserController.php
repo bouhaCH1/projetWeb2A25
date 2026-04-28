@@ -168,6 +168,35 @@ class UserController {
         exit;
     }
 
+    public function showForgotPassword(): void {
+        require_once __DIR__ . '/../View/user/forgot_password.php';
+    }
+
+    public function processForgotPassword(): void {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?action=forgot_password');
+            exit;
+        }
+
+        $email = trim($_POST['email'] ?? '');
+
+        if (empty($email)) {
+            $_SESSION['field_errors'] = ['email' => 'L\'adresse e-mail est requise.'];
+            header('Location: index.php?action=forgot_password');
+            exit;
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['field_errors'] = ['email' => 'Format d\'e-mail invalide.'];
+            header('Location: index.php?action=forgot_password');
+            exit;
+        }
+
+        // En pratique, on générerait un token et on enverrait un email ici.
+        // Pour ce projet, on affiche simplement un message de succès.
+        $_SESSION['success'] = 'Si cette adresse existe, un email contenant les instructions a été envoyé.';
+        header('Location: index.php?action=forgot_password');
+        exit;
+    }
+
     public function showProfile(): void {
         $this->requireLogin();
         $user = new User();
@@ -349,8 +378,13 @@ class UserController {
 
     public function adminListUsers(): void {
         $this->requireAdmin();
+        
+        $search = trim($_GET['search'] ?? '');
+        $sort   = trim($_GET['sort'] ?? 'created_at_desc');
+
         $user  = new User();
-        $users = $user->getAll();
+        $users = $user->getAll($search, $sort);
+        
         require_once __DIR__ . '/../View/admin/users_list.php';
     }
 

@@ -26,6 +26,37 @@ include __DIR__ . '/../layout/dashboard_header.php';
     </ul></div>
 <?php endif; ?>
 
+<div class="dsh-card" style="margin-bottom: 20px; padding: 15px 24px;">
+    <form method="GET" action="/workwave/Controller/index.php" style="display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap;">
+        <input type="hidden" name="action" value="admin_users">
+        
+        <div style="flex:1; min-width:200px;">
+            <label style="margin-top:0; font-size:.7rem; color:#888;">Rechercher</label>
+            <input type="text" name="search" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" placeholder="Nom, e-mail..." style="margin-top:4px;">
+        </div>
+        
+        <div style="width:200px;">
+            <label style="margin-top:0; font-size:.7rem; color:#888;">Trier par</label>
+            <select name="sort" style="margin-top:4px;">
+                <?php $currentSort = $_GET['sort'] ?? 'created_at_desc'; ?>
+                <option value="created_at_desc" <?= $currentSort === 'created_at_desc' ? 'selected' : '' ?>>Plus récents</option>
+                <option value="created_at_asc" <?= $currentSort === 'created_at_asc' ? 'selected' : '' ?>>Plus anciens</option>
+                <option value="name_asc" <?= $currentSort === 'name_asc' ? 'selected' : '' ?>>Nom (A-Z)</option>
+                <option value="name_desc" <?= $currentSort === 'name_desc' ? 'selected' : '' ?>>Nom (Z-A)</option>
+                <option value="role_asc" <?= $currentSort === 'role_asc' ? 'selected' : '' ?>>Rôle (A-Z)</option>
+                <option value="role_desc" <?= $currentSort === 'role_desc' ? 'selected' : '' ?>>Rôle (Z-A)</option>
+            </select>
+        </div>
+        
+        <div>
+            <button type="submit" class="btn btn-primary" style="padding:10px 18px; margin-bottom: 2px;">Filtrer</button>
+            <?php if(!empty($_GET['search']) || !empty($_GET['sort'])): ?>
+                <a href="/workwave/Controller/index.php?action=admin_users" class="btn btn-secondary" style="padding:10px 18px; margin-bottom: 2px;">Réinitialiser</a>
+            <?php endif; ?>
+        </div>
+    </form>
+</div>
+
 <div class="dsh-table-wrap">
     <table>
         <thead>

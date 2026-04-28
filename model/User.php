@@ -76,11 +76,43 @@ class User {
         return $stmt->fetch();
     }
 
-    public function getAll(): array {
-        $stmt = $this->pdo->query(
-            "SELECT id, first_name, last_name, email, phone, role, created_at
-             FROM users WHERE role != 'admin' ORDER BY created_at DESC"
-        );
+    public function getAll(string $search = '', string $sort = 'created_at_desc'): array {
+        $sql = "SELECT id, first_name, last_name, email, phone, role, created_at
+                FROM users WHERE role != 'admin'";
+        
+        $params = [];
+        if ($search !== '') {
+            $sql .= " AND (first_name LIKE :search1 OR last_name LIKE :search2 OR email LIKE :search3)";
+            $searchTerm = '%' . $search . '%';
+            $params[':search1'] = $searchTerm;
+            $params[':search2'] = $searchTerm;
+            $params[':search3'] = $searchTerm;
+        }
+
+        switch ($sort) {
+            case 'name_asc':
+                $sql .= " ORDER BY first_name ASC, last_name ASC";
+                break;
+            case 'name_desc':
+                $sql .= " ORDER BY first_name DESC, last_name DESC";
+                break;
+            case 'role_asc':
+                $sql .= " ORDER BY role ASC, created_at DESC";
+                break;
+            case 'role_desc':
+                $sql .= " ORDER BY role DESC, created_at DESC";
+                break;
+            case 'created_at_asc':
+                $sql .= " ORDER BY created_at ASC";
+                break;
+            case 'created_at_desc':
+            default:
+                $sql .= " ORDER BY created_at DESC";
+                break;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
 

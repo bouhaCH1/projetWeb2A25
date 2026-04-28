@@ -2,8 +2,8 @@
 
 <div class="ww-form-section">
   <div class="ww-form-card">
-    <h1>Bon retour</h1>
-    <p class="ww-subtitle">Connectez-vous à votre compte WorkWave</p>
+    <h1>Mot de passe oublié ?</h1>
+    <p class="ww-subtitle">Entrez votre adresse e-mail pour recevoir un lien de réinitialisation.</p>
 
     <?php $fieldErrors = $_SESSION['field_errors'] ?? []; unset($_SESSION['field_errors']); ?>
 
@@ -19,25 +19,15 @@
       </div>
     <?php endif; ?>
 
-    <form id="loginForm" action="/workwave/Controller/index.php?action=login_submit" method="POST" novalidate>
+    <form id="forgotPasswordForm" action="/workwave/Controller/index.php?action=forgot_password_submit" method="POST" novalidate>
       <label>Adresse E-mail</label>
       <input type="text" id="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" class="<?= !empty($fieldErrors['email']) ? 'ww-input-error' : '' ?>">
       <?php if (!empty($fieldErrors['email'])): ?>
         <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['email']) ?></div>
       <?php endif; ?>
 
-      <label>Mot de passe</label>
-      <input type="password" id="password" name="password" class="<?= !empty($fieldErrors['password']) ? 'ww-input-error' : '' ?>">
-      <?php if (!empty($fieldErrors['password'])): ?>
-        <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['password']) ?></div>
-      <?php endif; ?>
-
-      <div style="text-align: right; margin-top: -10px; margin-bottom: 20px;">
-          <a href="/workwave/Controller/index.php?action=forgot_password" style="font-size: .8rem; color: var(--pl-orange); text-decoration: none;">Mot de passe oublié ?</a>
-      </div>
-
-      <button type="submit" class="ww-btn-primary">Se connecter</button>
-      <a href="/workwave/Controller/index.php?action=register" class="ww-btn-secondary">Pas de compte ? S'inscrire</a>
+      <button type="submit" class="ww-btn-primary" style="margin-top: 15px;">Envoyer le lien de réinitialisation</button>
+      <a href="/workwave/Controller/index.php?action=login" class="ww-btn-secondary">Retour à la connexion</a>
     </form>
   </div>
 </div>
