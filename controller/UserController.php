@@ -197,6 +197,23 @@ class UserController {
             $fieldErrors['phone'] = 'Le numéro de téléphone est invalide.';
         }
 
+        $new_password = $_POST['new_password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+
+        if (!empty($new_password)) {
+            if (strlen($new_password) < 8) {
+                $fieldErrors['new_password'] = 'Le mot de passe doit comporter au moins 8 caractères.';
+            } elseif (!preg_match('/[A-Z]/', $new_password)) {
+                $fieldErrors['new_password'] = 'Le mot de passe doit contenir au moins une lettre majuscule.';
+            } elseif (!preg_match('/[0-9]/', $new_password)) {
+                $fieldErrors['new_password'] = 'Le mot de passe doit contenir au moins un chiffre.';
+            }
+
+            if ($new_password !== $confirm_password) {
+                $fieldErrors['confirm_password'] = 'Les mots de passe ne correspondent pas.';
+            }
+        }
+
         if (!empty($fieldErrors)) {
             $_SESSION['field_errors'] = $fieldErrors;
             header('Location: index.php?action=profile');
@@ -243,6 +260,13 @@ class UserController {
             $_SESSION['user_last_name']  = $user->last_name;
             $_SESSION['user_pic']        = $user->profile_pic;
             $_SESSION['success']         = $result['message'];
+
+            if (!empty($new_password)) {
+                $pwdResult = $user->changePassword($new_password);
+                if ($pwdResult['success']) {
+                    $_SESSION['success'] .= ' ' . $pwdResult['message'];
+                }
+            }
         } else {
             $_SESSION['errors'] = [$result['message']];
         }

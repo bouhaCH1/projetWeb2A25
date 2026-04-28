@@ -72,6 +72,20 @@ if ($isAdmin) {
         <label>Photo de profil <small style="color:#555;font-weight:400;">(JPG, PNG, GIF — max 2 Mo)</small></label>
         <input type="file" name="profile_pic" accept="image/*">
 
+        <hr style="border: 0; border-top: 1px solid #1c1c1c; margin: 24px 0;">
+
+        <label>Nouveau mot de passe <small style="color:#555;font-weight:400;">(Laissez vide si inchangé)</small></label>
+        <input type="password" id="new_password" name="new_password" class="<?= !empty($fieldErrors['new_password']) ? 'input-error' : '' ?>">
+        <?php if (!empty($fieldErrors['new_password'])): ?>
+            <div class="field-err"><?= htmlspecialchars($fieldErrors['new_password']) ?></div>
+        <?php endif; ?>
+
+        <label>Confirmer le nouveau mot de passe</label>
+        <input type="password" id="confirm_password" name="confirm_password" class="<?= !empty($fieldErrors['confirm_password']) ? 'input-error' : '' ?>">
+        <?php if (!empty($fieldErrors['confirm_password'])): ?>
+            <div class="field-err"><?= htmlspecialchars($fieldErrors['confirm_password']) ?></div>
+        <?php endif; ?>
+
         <br><br>
         <button type="submit" class="btn btn-primary">Sauvegarder les modifications</button>
     </form>
