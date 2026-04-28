@@ -469,6 +469,21 @@ class UserController {
         exit;
     }
 
+    public function adminToggleUserStatus(): void {
+        $this->requireAdmin();
+        $id = (int) ($_GET['id'] ?? 0);
+        $user = new User();
+        $result = $user->toggleStatus($id);
+
+        if ($result['success']) {
+            $_SESSION['success'] = $result['message'];
+        } else {
+            $_SESSION['errors'] = [$result['message']];
+        }
+        header('Location: index.php?action=admin_users');
+        exit;
+    }
+
     private function requireLogin(): void {
         if (empty($_SESSION['user_id'])) {
             header('Location: index.php?action=login');

@@ -28,8 +28,17 @@ include __DIR__ . '/../layout/dashboard_header.php';
         <div class="stat-card-value"><?= $stats['employer'] ?></div>
         <div class="stat-card-sub">Entreprises recrutant</div>
     </div>
-
-
+    <div class="stat-card" style="border-left: 4px solid var(--dsh-orange);">
+        <div class="stat-card-label">Nouveaux ce mois-ci</div>
+        <div class="stat-card-value" style="display:flex; align-items:center; gap:8px;">
+            <?= $stats['new_this_month'] ?? 0 ?>
+            <?php if (($stats['new_this_month'] ?? 0) > 0): ?>
+                <span style="font-size:.8rem; background:#27ae60; color:#fff; padding:2px 8px; border-radius:12px; font-weight:600;">+ Nouveaux</span>
+            <?php endif; ?>
+        </div>
+        <div class="stat-card-sub">Inscriptions récentes</div>
+    </div>
+</div>
 <!-- Flash messages -->
 <?php if (!empty($_SESSION['success'])): ?>
     <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>

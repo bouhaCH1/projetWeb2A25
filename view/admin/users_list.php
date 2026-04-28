@@ -7,12 +7,17 @@ $pageTitle = 'Gérer les utilisateurs';
 include __DIR__ . '/../layout/dashboard_header.php';
 ?>
 
-<div class="page-header">
+<div class="page-header" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:15px; align-items:center;">
     <div>
         <div class="page-header-title">Gérer les utilisateurs</div>
         <div class="page-header-sub">Tous les candidats et employeurs enregistrés</div>
     </div>
-    <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary">+ Ajouter un utilisateur</a>
+    <div style="display:flex; gap:10px;">
+        <button onclick="exportTableToCSV('utilisateurs.csv')" class="btn btn-secondary" style="background:#27ae60; color:#fff; border:none;">CSV</button>
+        <button onclick="exportTableToExcel('usersTable', 'utilisateurs')" class="btn btn-secondary" style="background:#207245; color:#fff; border:none;">Excel</button>
+        <button onclick="exportTableToPDF()" class="btn btn-secondary" style="background:#c0392b; color:#fff; border:none;">PDF</button>
+        <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary">+ Ajouter un utilisateur</a>
+    </div>
 </div>
 
 <?php if (!empty($_SESSION['success'])): ?>
@@ -57,8 +62,8 @@ include __DIR__ . '/../layout/dashboard_header.php';
     </form>
 </div>
 
-<div class="dsh-table-wrap">
-    <table>
+<div class="dsh-table-wrap" id="exportContent">
+    <table id="usersTable">
         <thead>
             <tr>
                 <th>#</th>
@@ -66,6 +71,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
                 <th>E-mail</th>
                 <th>Téléphone</th>
                 <th>Rôle</th>
+                <th>Statut</th>
                 <th>Enregistré le</th>
                 <th>Actions</th>
             </tr>
@@ -89,12 +95,28 @@ include __DIR__ . '/../layout/dashboard_header.php';
                         ?>
                     </span>
                 </td>
+                <td>
+                    <?php if (($u['status'] ?? 'active') === 'active'): ?>
+                        <span style="color:#27ae60; font-weight:bold; font-size:.8rem;">Actif</span>
+                    <?php else: ?>
+                        <span style="color:#c0392b; font-weight:bold; font-size:.8rem;">Suspendu</span>
+                    <?php endif; ?>
+                </td>
                 <td style="color:#555;"><?= htmlspecialchars(substr((string)$u['created_at'], 0, 10)) ?></td>
                 <td>
                     <a href="/workwave/Controller/index.php?action=admin_edit_user&id=<?= $u['id'] ?>"
-                       class="btn btn-warning btn-sm">Modifier</a>
+                       class="btn btn-warning btn-sm" style="margin-bottom:4px;">Modifier</a>
+                    <?php if (($u['status'] ?? 'active') === 'active'): ?>
+                        <a href="/workwave/Controller/index.php?action=admin_toggle_user&id=<?= $u['id'] ?>"
+                           class="btn btn-danger btn-sm" style="margin-bottom:4px;"
+                           onclick="return confirm('Suspendre cet utilisateur ? Il ne pourra plus se connecter.')">Suspendre</a>
+                    <?php else: ?>
+                        <a href="/workwave/Controller/index.php?action=admin_toggle_user&id=<?= $u['id'] ?>"
+                           class="btn btn-success btn-sm" style="background:#27ae60; color:#fff; border:none; margin-bottom:4px;"
+                           onclick="return confirm('Réactiver cet utilisateur ?')">Activer</a>
+                    <?php endif; ?>
                     <a href="/workwave/Controller/index.php?action=admin_delete_user&id=<?= $u['id'] ?>"
-                       class="btn btn-danger btn-sm"
+                       class="btn btn-danger btn-sm" style="margin-bottom:4px;"
                        onclick="return confirm('Supprimer cet utilisateur définitivement ?')">Supprimer</a>
                 </td>
             </tr>
@@ -104,5 +126,75 @@ include __DIR__ . '/../layout/dashboard_header.php';
     </table>
 </div>
 <p style="margin-top:12px;color:#444;font-size:.78rem;">* Les comptes administrateurs sont exclus de cette liste.</p>
+
+<!-- html2pdf library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    function downloadCSV(csv, filename) {
+        let csvFile = new Blob([csv], {type: "text/csv"});
+        let downloadLink = document.createElement("a");
+        downloadLink.download = filename;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+    }
+
+    function exportTableToCSV(filename) {
+        let csv = [];
+        let rows = document.querySelectorAll("#usersTable tr");
+        for (let i = 0; i < rows.length; i++) {
+            let row = [], cols = rows[i].querySelectorAll("td, th");
+            for (let j = 0; j < cols.length - 1; j++) { // Exclude Actions column
+                let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "").trim();
+                row.push('"' + data + '"');
+            }
+            csv.push(row.join(","));
+        }
+        downloadCSV(csv.join("\n"), filename);
+    }
+
+    function exportTableToExcel(tableID, filename = ''){
+        let tableSelect = document.getElementById(tableID);
+        // Clone table to remove actions column
+        let clone = tableSelect.cloneNode(true);
+        let rows = clone.rows;
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].deleteCell(-1); // Delete last cell (Actions)
+        }
+        let tableHTML = clone.outerHTML.replace(/ /g, '%20');
+        
+        let dataType = 'application/vnd.ms-excel';
+        filename = filename?filename+'.xls':'excel_data.xls';
+        
+        let downloadLink = document.createElement("a");
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob){
+            let blob = new Blob(['\ufeff', tableHTML], { type: dataType });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+            downloadLink.download = filename;
+            downloadLink.click();
+        }
+    }
+
+    function exportTableToPDF() {
+        let element = document.getElementById('exportContent').cloneNode(true);
+        // Remove actions column
+        let rows = element.querySelectorAll('tr');
+        rows.forEach(row => row.lastElementChild.remove());
+
+        let opt = {
+            margin:       0.5,
+            filename:     'utilisateurs.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
 
 <?php include __DIR__ . '/../layout/dashboard_footer.php'; ?>

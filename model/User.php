@@ -12,6 +12,7 @@ class User {
     public string $phone = '';
     public string $role = 'job_seeker';
     public string $profile_pic = '';
+    public string $status = 'active';
     public string $created_at = '';
 
     private PDO $pdo;
@@ -48,18 +49,23 @@ class User {
 
     public function login(): array {
         $stmt = $this->pdo->prepare(
-            'SELECT id, first_name, last_name, email, password, role, profile_pic
+            'SELECT id, first_name, last_name, email, password, role, profile_pic, status
              FROM users WHERE email = :email LIMIT 1'
         );
         $stmt->execute([':email' => $this->email]);
         $row = $stmt->fetch();
 
         if ($row !== false && password_verify($this->password, $row['password'])) {
+            if ($row['status'] === 'suspended') {
+                return ['success' => false, 'message' => 'Ce compte a été suspendu par un administrateur.'];
+            }
+
             $this->id          = (int) $row['id'];
             $this->first_name  = $row['first_name'];
             $this->last_name   = $row['last_name'];
             $this->role        = $row['role'];
             $this->profile_pic = $row['profile_pic'] ?? '';
+            $this->status      = $row['status'];
 
             return ['success' => true, 'message' => 'Connexion réussie.'];
         }
@@ -69,7 +75,7 @@ class User {
 
     public function getById(int $id) {
         $stmt = $this->pdo->prepare(
-            'SELECT id, first_name, last_name, email, phone, role, profile_pic, created_at
+            'SELECT id, first_name, last_name, email, phone, role, profile_pic, status, created_at
              FROM users WHERE id = :id LIMIT 1'
         );
         $stmt->execute([':id' => $id]);
@@ -77,7 +83,7 @@ class User {
     }
 
     public function getAll(string $search = '', string $sort = 'created_at_desc'): array {
-        $sql = "SELECT id, first_name, last_name, email, phone, role, created_at
+        $sql = "SELECT id, first_name, last_name, email, phone, role, status, created_at
                 FROM users WHERE role != 'admin'";
         
         $params = [];
@@ -171,15 +177,43 @@ class User {
         return ['success' => true, 'message' => 'Compte supprimé.'];
     }
 
+    public function toggleStatus(int $id): array {
+        $user = $this->getById($id);
+        if (!$user) {
+            return ['success' => false, 'message' => 'Utilisateur introuvable.'];
+        }
+        if ($user['role'] === 'admin') {
+            return ['success' => false, 'message' => 'Impossible de suspendre un administrateur.'];
+        }
+
+        $newStatus = ($user['status'] === 'active') ? 'suspended' : 'active';
+        $stmt = $this->pdo->prepare("UPDATE users SET status=:status WHERE id=:id");
+        $stmt->execute([':status' => $newStatus, ':id' => $id]);
+
+        $msg = ($newStatus === 'active') ? 'Compte réactivé avec succès.' : 'Compte suspendu avec succès.';
+        return ['success' => true, 'message' => $msg];
+    }
+
     public function getStats(): array {
         $stmt = $this->pdo->query(
             "SELECT role, COUNT(*) AS cnt FROM users WHERE role != 'admin' GROUP BY role"
         );
-        $stats = ['job_seeker' => 0, 'employer' => 0, 'total' => 0];
+        $stats = ['job_seeker' => 0, 'employer' => 0, 'total' => 0, 'new_this_month' => 0];
         foreach ($stmt->fetchAll() as $row) {
             $stats[$row['role']] = (int) $row['cnt'];
             $stats['total']     += (int) $row['cnt'];
         }
+
+        $stmtMonth = $this->pdo->query(
+            "SELECT COUNT(*) AS new_this_month FROM users 
+             WHERE role != 'admin' AND MONTH(created_at) = MONTH(CURRENT_DATE()) 
+             AND YEAR(created_at) = YEAR(CURRENT_DATE())"
+        );
+        $monthRow = $stmtMonth->fetch();
+        if ($monthRow) {
+            $stats['new_this_month'] = (int) $monthRow['new_this_month'];
+        }
+
         return $stats;
     }
 
