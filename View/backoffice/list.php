@@ -6,141 +6,192 @@ $pageIcon   = 'list';
 ob_start();
 ?>
 
-<section class="bg-secondary rounded p-4 fade-in">
+<style>
+    .mission-list-container {
+        background: rgba(18, 22, 31, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+
+    .table-premium {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        color: #cfd6e6;
+    }
+
+    .table-premium thead th {
+        background: transparent;
+        border: none;
+        color: #ff936d;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        padding: 15px 20px;
+    }
+
+    .table-premium tbody tr {
+        background: rgba(255, 255, 255, 0.03);
+        transition: all 0.3s ease;
+    }
+
+    .table-premium tbody tr:hover {
+        background: rgba(255, 107, 53, 0.08);
+        transform: scale(1.01);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .table-premium td {
+        border: none;
+        padding: 20px;
+        vertical-align: middle;
+    }
+
+    .table-premium td:first-child { border-radius: 12px 0 0 12px; }
+    .table-premium td:last-child { border-radius: 0 12px 12px 0; }
+
+    .id-badge {
+        background: rgba(255, 107, 53, 0.1);
+        color: #ff936d;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .premium-badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    .btn-action {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-3px);
+        filter: brightness(1.2);
+    }
+
+    .empty-state-forge {
+        padding: 60px 0;
+        text-align: center;
+    }
+
+    .empty-state-icon-forge {
+        background: linear-gradient(135deg, #ff6b35, #e63946);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="mission-list-container fade-in">
     <header class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="h6 mb-0 d-flex align-items-center">
-            <i class="fas fa-briefcase me-2 text-primary"></i>
-            <span>Liste des Missions</span>
-        </h1>
-        <a href="index.php?action=create" class="btn btn-primary btn-sm pulse-on-hover" title="Créer une nouvelle mission">
-            <i class="fas fa-plus me-1"></i> 
-            <span>Nouvelle Mission</span>
+        <div>
+            <h1 class="h4 text-white fw-800 mb-1">
+                <i class="fas fa-layer-group text-primary me-2"></i>
+                Gestion des Missions
+            </h1>
+            <p class="text-muted mb-0">Pilotez et suivez l'ensemble de vos projets en cours.</p>
+        </div>
+        <a href="index.php?action=create" class="btn btn-primary px-4 py-2 fw-bold pulse-on-hover">
+            <i class="fas fa-plus me-2"></i> Nouvelle Mission
         </a>
     </header>
 
     <?php if (empty($missions)): ?>
-        <article class="text-center py-5 empty-state">
-            <div class="empty-state-icon mb-3">
-                <i class="fas fa-inbox fa-4x text-light"></i>
+        <div class="empty-state-forge slide-in-up">
+            <div class="empty-state-icon-forge">
+                <i class="fas fa-ghost fa-5x"></i>
             </div>
-            <h2 class="h5 text-primary mb-3">Aucune mission</h2>
-            <p class="text-light mb-4">Commencez par ajouter votre première mission.</p>
-            <a href="index.php?action=create" class="btn btn-primary btn-sm fade-in">
-                <i class="fas fa-plus me-1"></i> 
-                <span>Ajouter une mission</span>
+            <h2 class="h5 text-white mb-3">Le vide sidéral...</h2>
+            <p class="text-muted mb-4">Aucune mission n'a été forgée pour le moment.</p>
+            <a href="index.php?action=create" class="btn btn-outline-primary px-4">
+                Lancer une expédition
             </a>
-        </article>
+        </div>
     <?php else: ?>
-        <div class="table-responsive slide-in-left">
-            <table class="table text-start align-middle table-bordered table-hover mb-0" role="table">
+        <div class="table-responsive">
+            <table class="table table-premium mb-0">
                 <thead>
-                    <tr class="text-white">
-                        <th scope="col">#</th>
-                        <th scope="col">Titre</th>
-                        <th scope="col">Budget</th>
-                        <th scope="col">Catégorie</th>
-                        <th scope="col">Niveau</th>
-                        <th scope="col">Date début</th>
-                        <th scope="col">Date fin</th>
-                        <th scope="col">Statut</th>
-                        <th scope="col">Compétences</th>
-                        <th scope="col" class="text-center">Actions</th>
+                    <tr>
+                        <th>ID</th>
+                        <th>Détails de la Mission</th>
+                        <th>Budget</th>
+                        <th>Statut</th>
+                        <th>Période</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($missions as $m): ?>
-                    <tr class="table-row-hover">
-                        <td scope="row">
-                            <strong class="text-primary">#<?= htmlspecialchars($m['id']) ?></strong>
+                    <tr>
+                        <td>
+                            <span class="id-badge">#<?= htmlspecialchars($m['id']) ?></span>
                         </td>
                         <td>
-                            <strong class="mission-title"><?= htmlspecialchars($m['titre']) ?></strong>
+                            <div class="d-flex flex-column">
+                                <strong class="text-white mb-1"><?= htmlspecialchars($m['titre']) ?></strong>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <small class="badge bg-dark text-muted fw-normal" style="font-size: 0.65rem;">
+                                        <?= htmlspecialchars($m['categorie'] ?? 'Sans catégorie') ?>
+                                    </small>
+                                    <small class="text-muted" style="font-size: 0.75rem;">
+                                        <i class="fas fa-code me-1"></i>
+                                        <?= htmlspecialchars(substr($m['competences'], 0, 30)) ?><?= strlen($m['competences']) > 30 ? '...' : '' ?>
+                                    </small>
+                                </div>
+                            </div>
                         </td>
                         <td>
-                            <span class="budget-amount text-primary fw-bold">
-                                <?= number_format($m['budget'], 0, ',', ' ') ?> EUR
-                            </span>
-                        </td>
-                        <td>
-                            <?php 
-                            $categorieLabels = [
-                                'developpement' => 'Développement Web',
-                                'mobile' => 'Mobile',
-                                'design' => 'Design & UX',
-                                'marketing' => 'Marketing',
-                                'data' => 'Data',
-                                'autre' => 'Autre'
-                            ];
-                            $categorie = $m['categorie'] ?? '';
-                            ?>
-                            <span class="badge bg-info"><?= $categorieLabels[$categorie] ?? '-' ?></span>
-                        </td>
-                        <td>
-                            <?php 
-                            $niveauLabels = [
-                                'debutant' => 'Débutant',
-                                'intermediaire' => 'Intermédiaire',
-                                'avance' => 'Avancé',
-                                'expert' => 'Expert'
-                            ];
-                            $niveau = $m['niveau'] ?? '';
-                            ?>
-                            <span class="badge bg-secondary"><?= $niveauLabels[$niveau] ?? '-' ?></span>
-                        </td>
-                        <td>
-                            <time datetime="<?= $m['date_debut'] ?>">
-                                <?= date('d/m/Y', strtotime($m['date_debut'])) ?>
-                            </time>
-                        </td>
-                        <td>
-                            <time datetime="<?= $m['date_fin'] ?>">
-                                <?= date('d/m/Y', strtotime($m['date_fin'])) ?>
-                            </time>
+                            <div class="text-primary fw-800">
+                                <?= number_format($m['budget'], 0, ',', ' ') ?> <small>EUR</small>
+                            </div>
                         </td>
                         <td>
                             <?php 
                             $badgeClass = 'bg-secondary';
-                            $statusText = ucfirst(str_replace('_', ' ', $m['statut']));
+                            $statusText = 'Inconnu';
                             switch($m['statut']) {
-                                case 'ouverte': 
-                                    $badgeClass = 'bg-success'; 
-                                    break;
-                                case 'en_cours': 
-                                    $badgeClass = 'bg-warning'; 
-                                    break;
-                                case 'terminee': 
-                                    $badgeClass = 'bg-secondary'; 
-                                    break;
+                                case 'ouverte': $badgeClass = 'bg-success bg-opacity-10 text-success border border-success border-opacity-25'; $statusText = 'Ouverte'; break;
+                                case 'en_cours': $badgeClass = 'bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25'; $statusText = 'En cours'; break;
+                                case 'terminee': $badgeClass = 'bg-info bg-opacity-10 text-info border border-info border-opacity-25'; $statusText = 'Terminée'; break;
                             }
                             ?>
-                            <span class="badge <?= $badgeClass ?>" title="Statut: <?= $statusText ?>">
+                            <span class="premium-badge <?= $badgeClass ?>">
                                 <?= $statusText ?>
                             </span>
                         </td>
                         <td>
-                            <small class="text-light d-block"><?= htmlspecialchars($m['competences']) ?></small>
+                            <div class="d-flex flex-column text-muted" style="font-size: 0.8rem;">
+                                <span><i class="fas fa-calendar-day me-1"></i> <?= date('d/m/Y', strtotime($m['date_debut'])) ?></span>
+                                <span><i class="fas fa-hourglass-end me-1"></i> <?= date('d/m/Y', strtotime($m['date_fin'])) ?></span>
+                            </div>
                         </td>
                         <td>
-                            <div class="action-buttons d-flex gap-1 justify-content-center" role="group">
-                                <a href="index.php?action=edit&id=<?= $m['id'] ?>" 
-                                   class="btn btn-sm btn-primary" 
-                                   title="Modifier la mission #<?= $m['id'] ?>"
-                                   aria-label="Modifier">
-                                    <i class="fas fa-edit"></i>
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a href="index.php?action=edit&id=<?= $m['id'] ?>" class="btn-action bg-primary bg-opacity-10 text-primary" title="Modifier">
+                                    <i class="fas fa-pen"></i>
                                 </a>
-                                <a href="index.php?action=candidatures&mission_id=<?= $m['id'] ?>" 
-                                   class="btn btn-sm btn-info" 
-                                   title="Voir les candidatures pour <?= htmlspecialchars($m['titre']) ?>"
-                                   aria-label="Candidatures">
-                                    <i class="fas fa-user-check"></i>
+                                <a href="index.php?action=candidatures&mission_id=<?= $m['id'] ?>" class="btn-action bg-info bg-opacity-10 text-info" title="Candidatures">
+                                    <i class="fas fa-users"></i>
                                 </a>
-                                <form method="POST" action="index.php?action=delete&id=<?= $m['id'] ?>" 
-                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');"
-                                      style="display: inline;">
-                                    <button type="submit" 
-                                            class="btn btn-sm btn-danger" 
-                                            title="Supprimer la mission #<?= $m['id'] ?>"
-                                            aria-label="Supprimer">
+                                <form method="POST" action="index.php?action=delete&id=<?= $m['id'] ?>" onsubmit="return confirm('Supprimer définitivement cette mission ?');">
+                                    <button type="submit" class="btn-action bg-danger bg-opacity-10 text-danger border-0">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -151,15 +202,8 @@ ob_start();
                 </tbody>
             </table>
         </div>
-        
-        <footer class="mt-3 text-center">
-            <small class="text-light">
-                <i class="fas fa-info-circle me-1"></i>
-                <?= count($missions) ?> mission<?= count($missions) > 1 ? 's' : '' ?> trouvée<?= count($missions) > 1 ? 's' : '' ?>
-            </small>
-        </footer>
     <?php endif; ?>
-</section>
+</div>
 <?php
 $content = ob_get_clean();
 require_once 'layout.php';
