@@ -7,42 +7,48 @@ $pageTitle = 'Gérer les utilisateurs';
 include __DIR__ . '/../layout/dashboard_header.php';
 ?>
 
-<div class="page-header" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:15px; align-items:center;">
+<div class="d-flex align-items-center justify-content-between mb-4">
     <div>
-        <div class="page-header-title">Gérer les utilisateurs</div>
-        <div class="page-header-sub">Tous les candidats et employeurs enregistrés</div>
+        <h6 class="mb-0">Gérer les utilisateurs</h6>
+        <small>Tous les candidats et employeurs enregistrés</small>
     </div>
-    <div style="display:flex; gap:10px;">
-        <button onclick="exportTableToCSV('utilisateurs.csv')" class="btn btn-secondary" style="background:#27ae60; color:#fff; border:none;">CSV</button>
-        <button onclick="exportTableToExcel('usersTable', 'utilisateurs')" class="btn btn-secondary" style="background:#207245; color:#fff; border:none;">Excel</button>
-        <button onclick="exportTableToPDF()" class="btn btn-secondary" style="background:#c0392b; color:#fff; border:none;">PDF</button>
-        <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary">+ Ajouter un utilisateur</a>
+    <div class="d-flex gap-2">
+        <button onclick="exportTableToCSV('utilisateurs.csv')" class="btn btn-success"><i class="fa fa-file-csv me-2"></i>CSV</button>
+        <button onclick="exportTableToExcel('usersTable', 'utilisateurs')" class="btn btn-success" style="background:#207245;"><i class="fa fa-file-excel me-2"></i>Excel</button>
+        <button onclick="exportTableToPDF()" class="btn btn-danger"><i class="fa fa-file-pdf me-2"></i>PDF</button>
+        <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary"><i class="fa fa-plus me-2"></i>Ajouter</a>
     </div>
 </div>
 
 <?php if (!empty($_SESSION['success'])): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fa fa-check-circle me-2"></i><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 <?php endif; ?>
 <?php if (!empty($_SESSION['errors'])): ?>
-    <div class="alert alert-danger"><ul>
-        <?php foreach ($_SESSION['errors'] as $e): ?>
-            <li><?= htmlspecialchars($e) ?></li>
-        <?php endforeach; unset($_SESSION['errors']); ?>
-    </ul></div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <ul class="mb-0">
+            <?php foreach ($_SESSION['errors'] as $e): ?>
+                <li><?= htmlspecialchars($e) ?></li>
+            <?php endforeach; unset($_SESSION['errors']); ?>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 <?php endif; ?>
 
-<div class="dsh-card" style="margin-bottom: 20px; padding: 15px 24px;">
-    <form method="GET" action="/workwave/Controller/index.php" style="display:flex; gap:15px; align-items:flex-end; flex-wrap:wrap;">
+<div class="bg-secondary rounded p-4 mb-4">
+    <form method="GET" action="/workwave/Controller/index.php" class="row g-3 align-items-end">
         <input type="hidden" name="action" value="admin_users">
         
-        <div style="flex:1; min-width:200px;">
-            <label style="margin-top:0; font-size:.7rem; color:#888;">Rechercher</label>
-            <input type="text" name="search" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" placeholder="Nom, e-mail..." style="margin-top:4px;">
+        <div class="col-md-5">
+            <label class="form-label text-muted mb-1">Rechercher</label>
+            <input type="text" name="search" class="form-control bg-dark border-0" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" placeholder="Nom, e-mail...">
         </div>
         
-        <div style="width:200px;">
-            <label style="margin-top:0; font-size:.7rem; color:#888;">Trier par</label>
-            <select name="sort" style="margin-top:4px;">
+        <div class="col-md-4">
+            <label class="form-label text-muted mb-1">Trier par</label>
+            <select name="sort" class="form-select bg-dark border-0">
                 <?php $currentSort = $_GET['sort'] ?? 'created_at_desc'; ?>
                 <option value="created_at_desc" <?= $currentSort === 'created_at_desc' ? 'selected' : '' ?>>Plus récents</option>
                 <option value="created_at_asc" <?= $currentSort === 'created_at_asc' ? 'selected' : '' ?>>Plus anciens</option>
@@ -53,93 +59,84 @@ include __DIR__ . '/../layout/dashboard_header.php';
             </select>
         </div>
         
-        <div>
-            <button type="submit" class="btn btn-primary" style="padding:10px 18px; margin-bottom: 2px;">Filtrer</button>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100 mb-2">Filtrer</button>
             <?php if(!empty($_GET['search']) || !empty($_GET['sort'])): ?>
-                <a href="/workwave/Controller/index.php?action=admin_users" class="btn btn-secondary" style="padding:10px 18px; margin-bottom: 2px;">Réinitialiser</a>
+                <a href="/workwave/Controller/index.php?action=admin_users" class="btn btn-outline-primary w-100">Réinitialiser</a>
             <?php endif; ?>
         </div>
     </form>
 </div>
 
-<div class="dsh-table-wrap" id="exportContent">
-    <table id="usersTable">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Nom</th>
-                <th>E-mail</th>
-                <th>Téléphone</th>
-                <th>Rôle</th>
-                <th>Statut</th>
-                <th>Enregistré le</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php if (empty($users)): ?>
-            <tr><td colspan="7" style="text-align:center;color:#555;padding:24px;">Aucun utilisateur trouvé.</td></tr>
-        <?php else: ?>
-            <?php foreach ($users as $u): ?>
-            <tr>
-                <td style="color:#555;"><?= $u['id'] ?></td>
-                <td style="color:#e0e0e0;font-weight:500;">
-                    <?= htmlspecialchars($u['first_name'] . ' ' . $u['last_name']) ?>
-                    <?php if (($u['is_verified'] ?? 0) == 1): ?>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#3498db" stroke="#fff" stroke-width="2" style="vertical-align:middle; margin-left:4px;"><polygon points="12 2 15.09 5.09 19.5 5.5 20.91 9.91 24 12 20.91 14.09 19.5 18.5 15.09 18.91 12 22 8.91 18.91 4.5 18.5 3.09 14.09 0 12 3.09 9.91 4.5 5.5 8.91 5.09 12 2"></polygon><polyline points="9 12 11 14 15 10"></polyline></svg>
-                    <?php endif; ?>
-                </td>
-                <td><?= htmlspecialchars($u['email']) ?></td>
-                <td><?= htmlspecialchars($u['phone'] ?? '—') ?></td>
-                <td>
-                    <span class="badge <?= $u['role'] === 'employer' ? 'badge-employer' : 'badge-seeker' ?>">
-                        <?php
-                        if ($u['role'] === 'job_seeker') echo 'Candidat';
-                        elseif ($u['role'] === 'employer') echo 'Employeur';
-                        else echo htmlspecialchars($u['role']);
-                        ?>
-                    </span>
-                </td>
-                <td>
-                    <?php if (($u['status'] ?? 'active') === 'active'): ?>
-                        <span style="color:#27ae60; font-weight:bold; font-size:.8rem;">Actif</span>
-                    <?php else: ?>
-                        <span style="color:#c0392b; font-weight:bold; font-size:.8rem;">Suspendu</span>
-                    <?php endif; ?>
-                </td>
-                <td style="color:#555;"><?= htmlspecialchars(substr((string)$u['created_at'], 0, 10)) ?></td>
-                <td>
-                    <a href="/workwave/Controller/index.php?action=admin_edit_user&id=<?= $u['id'] ?>"
-                       class="btn btn-warning btn-sm" style="margin-bottom:4px;">Modifier</a>
-                    <?php if (($u['status'] ?? 'active') === 'active'): ?>
-                        <a href="/workwave/Controller/index.php?action=admin_toggle_user&id=<?= $u['id'] ?>"
-                           class="btn btn-danger btn-sm" style="margin-bottom:4px;"
-                           onclick="return confirm('Suspendre cet utilisateur ? Il ne pourra plus se connecter.')">Suspendre</a>
-                    <?php else: ?>
-                        <a href="/workwave/Controller/index.php?action=admin_toggle_user&id=<?= $u['id'] ?>"
-                           class="btn btn-success btn-sm" style="background:#27ae60; color:#fff; border:none; margin-bottom:4px;"
-                           onclick="return confirm('Réactiver cet utilisateur ?')">Activer</a>
-                    <?php endif; ?>
-                    <?php if (($u['is_verified'] ?? 0) == 1): ?>
-                        <a href="/workwave/Controller/index.php?action=admin_toggle_verify&id=<?= $u['id'] ?>"
-                           class="btn btn-secondary btn-sm" style="margin-bottom:4px;"
-                           onclick="return confirm('Retirer la certification de cet utilisateur ?')">Retirer Certif.</a>
-                    <?php else: ?>
-                        <a href="/workwave/Controller/index.php?action=admin_toggle_verify&id=<?= $u['id'] ?>"
-                           class="btn btn-primary btn-sm" style="background:#3498db; color:#fff; border:none; margin-bottom:4px;"
-                           onclick="return confirm('Certifier cet utilisateur (badge bleu) ?')">Certifier</a>
-                    <?php endif; ?>
-                    <a href="/workwave/Controller/index.php?action=admin_delete_user&id=<?= $u['id'] ?>"
-                       class="btn btn-danger btn-sm" style="margin-bottom:4px;"
-                       onclick="return confirm('Supprimer cet utilisateur définitivement ?')">Supprimer</a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        </tbody>
-    </table>
+<div class="bg-secondary rounded p-4">
+    <div class="table-responsive" id="exportContent">
+        <table class="table text-start align-middle table-hover mb-0" id="usersTable">
+            <thead>
+                <tr class="text-white">
+                    <th scope="col">#</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Téléphone</th>
+                    <th scope="col">Rôle</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col">Enregistré le</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php if (empty($users)): ?>
+                <tr><td colspan="8" class="text-center py-4">Aucun utilisateur trouvé.</td></tr>
+            <?php else: ?>
+                <?php foreach ($users as $u): ?>
+                <tr>
+                    <td><?= $u['id'] ?></td>
+                    <td class="fw-bold">
+                        <?= htmlspecialchars($u['first_name'] . ' ' . $u['last_name']) ?>
+                        <?php if (($u['is_verified'] ?? 0) == 1): ?>
+                            <i class="fa fa-check-circle text-info ms-1" title="Certifié"></i>
+                        <?php endif; ?>
+                    </td>
+                    <td><?= htmlspecialchars($u['email']) ?></td>
+                    <td><?= htmlspecialchars($u['phone'] ?? '—') ?></td>
+                    <td>
+                        <?php if ($u['role'] === 'employer'): ?>
+                            <span class="badge bg-warning text-dark">Employeur</span>
+                        <?php else: ?>
+                            <span class="badge bg-info text-dark">Candidat</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if (($u['status'] ?? 'active') === 'active'): ?>
+                            <span class="text-success"><i class="fa fa-circle text-success me-1" style="font-size: 8px;"></i>Actif</span>
+                        <?php else: ?>
+                            <span class="text-danger"><i class="fa fa-circle text-danger me-1" style="font-size: 8px;"></i>Suspendu</span>
+                        <?php endif; ?>
+                    </td>
+                    <td><?= htmlspecialchars(substr((string)$u['created_at'], 0, 10)) ?></td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="/workwave/Controller/index.php?action=admin_edit_user&id=<?= $u['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
+                            <?php if (($u['status'] ?? 'active') === 'active'): ?>
+                                <a href="/workwave/Controller/index.php?action=admin_toggle_user&id=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Suspendre cet utilisateur ? Il ne pourra plus se connecter.')"><i class="fa fa-ban"></i></a>
+                            <?php else: ?>
+                                <a href="/workwave/Controller/index.php?action=admin_toggle_user&id=<?= $u['id'] ?>" class="btn btn-sm btn-success" onclick="return confirm('Réactiver cet utilisateur ?')"><i class="fa fa-check"></i></a>
+                            <?php endif; ?>
+                            <?php if (($u['is_verified'] ?? 0) == 1): ?>
+                                <a href="/workwave/Controller/index.php?action=admin_toggle_verify&id=<?= $u['id'] ?>" class="btn btn-sm btn-secondary" onclick="return confirm('Retirer la certification de cet utilisateur ?')"><i class="fa fa-times-circle"></i></a>
+                            <?php else: ?>
+                                <a href="/workwave/Controller/index.php?action=admin_toggle_verify&id=<?= $u['id'] ?>" class="btn btn-sm btn-info text-white" onclick="return confirm('Certifier cet utilisateur (badge bleu) ?')"><i class="fa fa-check-circle"></i></a>
+                            <?php endif; ?>
+                            <a href="/workwave/Controller/index.php?action=admin_delete_user&id=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cet utilisateur définitivement ?')"><i class="fa fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+    <small class="text-muted d-block mt-3">* Les comptes administrateurs sont exclus de cette liste.</small>
 </div>
-<p style="margin-top:12px;color:#444;font-size:.78rem;">* Les comptes administrateurs sont exclus de cette liste.</p>
 
 <!-- html2pdf library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

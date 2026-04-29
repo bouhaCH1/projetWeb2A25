@@ -2,185 +2,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="WorkWave - Find your next career opportunity or hire top talent.">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <title>WorkWave</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkWave</title>
+    <!-- Bootstrap -->
+    <link href="/workwave/View/assets/plot-listing/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/fontawesome.css">
+    
+    <!-- Graph Page CSS -->
+    <link rel="stylesheet" href="/workwave/View/assets/template_user/templatemo-graph-page.css">
 
-  <!-- Bootstrap -->
-  <link href="/workwave/View/assets/plot-listing/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Plot Listing CSS -->
-  <link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/fontawesome.css">
-  <link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/templatemo-plot-listing.css">
-  <link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/animated.css">
-  <link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/owl.css">
-
-  <style>
-    body { font-family: 'Montserrat', sans-serif; }
-
-    .ww-alert { padding: 12px 18px; border-radius: 6px; margin-bottom: 18px; font-size: .88rem; }
-    .ww-alert ul { margin: 0; padding-left: 18px; }
-    .ww-alert-danger  { background: rgba(220,60,60,.1);  border:1px solid rgba(220,60,60,.35);  color:#c0392b; }
-    .ww-alert-success { background: rgba(39,174,96,.1);  border:1px solid rgba(39,174,96,.35);  color:#1e8449; }
-    .ww-alert-warning { background: rgba(243,156,18,.1); border:1px solid rgba(243,156,18,.35); color:#9a6200; }
-    .ww-field-err { margin-top: 6px; margin-bottom: 4px; color: #c0392b; font-size: .78rem; font-weight: 600; }
-    .ww-form-card input.ww-input-error,
-    .ww-form-card select.ww-input-error { border-color: rgba(220,60,60,.7) !important; box-shadow: 0 0 0 3px rgba(220,60,60,.1); }
-
-    .ww-form-section {
-      min-height: calc(100vh - 80px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 100px 15px 60px;
-      background: #f8f9fa;
-    }
-    .ww-form-card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 40px rgba(0,0,0,.10);
-      padding: 44px 48px;
-      width: 100%;
-      max-width: 480px;
-    }
-    .ww-form-card h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #1a1a2e;
-      margin-bottom: 6px;
-      letter-spacing: -.5px;
-    }
-    .ww-form-card .ww-subtitle {
-      color: #777;
-      font-size: .88rem;
-      margin-bottom: 28px;
-    }
-    .ww-form-card label {
-      display: block;
-      margin-top: 16px;
-      font-size: .78rem;
-      font-weight: 700;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-    }
-    .ww-form-card input[type="text"],
-    .ww-form-card input[type="password"],
-    .ww-form-card input[type="file"],
-    .ww-form-card select,
-    .ww-form-card textarea {
-      width: 100%;
-      padding: 11px 14px;
-      margin-top: 5px;
-      background: #f4f6f8;
-      color: #1a1a2e;
-      border: 1.5px solid #e0e4ea;
-      border-radius: 8px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: .88rem;
-      transition: border-color .2s, box-shadow .2s;
-      box-sizing: border-box;
-    }
-    .ww-form-card input:focus,
-    .ww-form-card select:focus {
-      outline: none;
-      border-color: #ef6f31;
-      box-shadow: 0 0 0 3px rgba(239,111,49,.12);
-    }
-    .ww-btn-primary {
-      display: inline-block;
-      margin-top: 22px;
-      width: 100%;
-      padding: 13px;
-      background: linear-gradient(135deg, #ef6f31, #d45a1e);
-      color: #fff;
-      font-weight: 700;
-      font-size: .92rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: opacity .2s, transform .1s;
-      letter-spacing: .3px;
-      text-align: center;
-      text-decoration: none;
-    }
-    .ww-btn-primary:hover { opacity: .92; transform: translateY(-1px); color: #fff; }
-    .ww-btn-secondary {
-      display: inline-block;
-      margin-top: 12px;
-      width: 100%;
-      padding: 11px;
-      background: #f0f2f5;
-      color: #444;
-      font-weight: 600;
-      font-size: .88rem;
-      border: 1.5px solid #dde1e7;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background .18s;
-      text-align: center;
-      text-decoration: none;
-    }
-    .ww-btn-secondary:hover { background: #e4e8ef; color: #222; }
-
-    .main-nav .logo img { display: none; }
-    .header-area .logo { color: <?= $isHome ? '#fff' : '#1a1a2e' ?> !important; }
-    .header-area.background-header .logo { color: #1a1a2e !important; }
-    <?php if (!$isHome): ?>
-    .header-area .main-nav .nav li a { color: #1a1a2e !important; }
-    <?php endif; ?>
-  </style>
+    <style>
+        .ww-form-section {
+          min-height: calc(100vh - 80px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 100px 15px 60px;
+          background: #0f111a;
+        }
+        .ww-form-card {
+          background: rgba(26, 29, 41, 0.8);
+          border: 1px solid rgba(0, 255, 204, 0.1);
+          border-radius: 12px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(10px);
+          padding: 44px 48px;
+          width: 100%;
+          max-width: 480px;
+        }
+        .ww-form-card h1 {
+          font-size: 1.6rem;
+          font-weight: 800;
+          color: #fff;
+          margin-bottom: 6px;
+        }
+        .ww-form-card .ww-subtitle {
+          color: #a0a0a0;
+          font-size: .88rem;
+          margin-bottom: 28px;
+        }
+        .ww-form-card label {
+          display: block;
+          margin-top: 16px;
+          font-size: .78rem;
+          font-weight: 700;
+          color: #00ffcc;
+          text-transform: uppercase;
+        }
+        .ww-form-card input[type="text"],
+        .ww-form-card input[type="password"],
+        .ww-form-card input[type="file"],
+        .ww-form-card select,
+        .ww-form-card textarea {
+          width: 100%;
+          padding: 11px 14px;
+          margin-top: 5px;
+          background: rgba(255, 255, 255, 0.05);
+          color: #fff;
+          border: 1px solid rgba(0, 255, 204, 0.2);
+          border-radius: 8px;
+          font-size: .88rem;
+          transition: border-color .2s, box-shadow .2s;
+        }
+        .ww-form-card input:focus,
+        .ww-form-card select:focus {
+          outline: none;
+          border-color: #00ffcc;
+          box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+        .ww-btn-primary {
+          display: inline-block;
+          margin-top: 22px;
+          width: 100%;
+          padding: 13px;
+          background: linear-gradient(135deg, #00ffcc 0%, #00b3ff 100%);
+          color: #000;
+          font-weight: 700;
+          font-size: .92rem;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          text-align: center;
+          text-decoration: none;
+        }
+        .ww-btn-primary:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
+            color: #000;
+        }
+        .ww-btn-secondary {
+          display: inline-block;
+          margin-top: 12px;
+          width: 100%;
+          padding: 11px;
+          background: transparent;
+          color: #00ffcc;
+          font-weight: 600;
+          font-size: .88rem;
+          border: 1px solid #00ffcc;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background .18s;
+          text-align: center;
+          text-decoration: none;
+        }
+        .ww-btn-secondary:hover { background: rgba(0, 255, 204, 0.1); color: #00ffcc; }
+        
+        .ww-alert { padding: 12px 18px; border-radius: 6px; margin-bottom: 18px; font-size: .88rem; }
+        .ww-alert ul { margin: 0; padding-left: 18px; }
+        .ww-alert-danger  { background: rgba(255,107,107,.1); border:1px solid rgba(255,107,107,.35); color:#ff6b6b; }
+        .ww-alert-success { background: rgba(0,255,204,.1);  border:1px solid rgba(0,255,204,.35);  color:#00ffcc; }
+        .ww-field-err { margin-top: 6px; margin-bottom: 4px; color: #ff6b6b; font-size: .78rem; font-weight: 600; }
+        
+        /* Navbar specific override for PHP routing */
+        #navbar .nav-links li a.active {
+            color: #00ffcc;
+        }
+    </style>
 </head>
 <body>
-
-<!-- Preloader -->
-<div id="js-preloader" class="js-preloader">
-  <div class="preloader-inner">
-    <span class="dot"></span>
-    <div class="dots"><span></span><span></span><span></span></div>
-  </div>
-</div>
-
-<!-- Header -->
-<header class="header-area header-sticky">
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <nav class="main-nav">
-          <!-- Logo -->
-          <a href="/workwave/Controller/index.php" class="logo" style="font-weight:800;font-size:1.4rem;letter-spacing:-.5px;font-family:'Montserrat',sans-serif;">
-            Work<span style="color:#ef6f31;">Wave</span>
-          </a>
-          <!-- Menu -->
-          <ul class="nav">
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="/workwave/Controller/index.php" class="logo" style="text-decoration: none;">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 13h2v8H3zm4-8h2v13H7zm4-2h2v15h-2zm4 4h2v11h-2zm4-2h2v13h-2z"/>
+                    </svg>
+                </div>
+                <span class="logo-text">WorkWave</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
+                <?php if (!empty($_SESSION['user_id'])): ?>
+                    <li><a href="/workwave/Controller/index.php?action=profile" class="<?= ($_GET['action'] ?? '') === 'profile' ? 'active' : '' ?>">Mon Profil</a></li>
+                    <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
+                        <li><a href="/workwave/Controller/index.php?action=dashboard_seeker" class="<?= ($_GET['action'] ?? '') === 'dashboard_seeker' ? 'active' : '' ?>">Tableau de bord</a></li>
+                    <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
+                        <li><a href="/workwave/Controller/index.php?action=dashboard_employer" class="<?= ($_GET['action'] ?? '') === 'dashboard_employer' ? 'active' : '' ?>">Tableau de bord</a></li>
+                    <?php endif; ?>
+                    <li><a href="/workwave/Controller/index.php?action=logout" style="color: #ff6b6b;">Déconnexion</a></li>
+                <?php else: ?>
+                    <li><a href="/workwave/Controller/index.php?action=login" class="<?= ($_GET['action'] ?? '') === 'login' ? 'active' : '' ?>">Connexion</a></li>
+                    <li><a href="/workwave/Controller/index.php?action=register" class="cta-button" style="padding: 8px 20px; font-size: 14px; text-decoration: none;">S'inscrire</a></li>
+                <?php endif; ?>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <ul class="nav-links-mobile" id="navLinksMobile">
             <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
             <?php if (!empty($_SESSION['user_id'])): ?>
-              <li><a href="/workwave/Controller/index.php?action=profile">Mon Profil</a></li>
-              <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
-                <li><a href="/workwave/Controller/index.php?action=dashboard_seeker">Tableau de bord</a></li>
-              <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
-                <li><a href="/workwave/Controller/index.php?action=dashboard_employer">Tableau de bord</a></li>
-              <?php endif; ?>
-              <li>
-                <div class="main-white-button">
-                  <a href="/workwave/Controller/index.php?action=logout"><i class="fa fa-sign-out"></i> Déconnexion</a>
-                </div>
-              </li>
+                <li><a href="/workwave/Controller/index.php?action=profile">Mon Profil</a></li>
+                <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
+                    <li><a href="/workwave/Controller/index.php?action=dashboard_seeker">Tableau de bord</a></li>
+                <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
+                    <li><a href="/workwave/Controller/index.php?action=dashboard_employer">Tableau de bord</a></li>
+                <?php endif; ?>
+                <li><a href="/workwave/Controller/index.php?action=logout" style="color: #ff6b6b;">Déconnexion</a></li>
             <?php else: ?>
-              <li><a href="/workwave/Controller/index.php?action=login">Connexion</a></li>
-              <li>
-                <div class="main-white-button">
-                  <a href="/workwave/Controller/index.php?action=register"><i class="fa fa-plus"></i> S'inscrire</a>
-                </div>
-              </li>
+                <li><a href="/workwave/Controller/index.php?action=login">Connexion</a></li>
+                <li><a href="/workwave/Controller/index.php?action=register" style="color: #00ffcc;">S'inscrire</a></li>
             <?php endif; ?>
-          </ul>
-          <a class='menu-trigger'><span>Menu</span></a>
-        </nav>
-      </div>
-    </div>
-  </div>
-</header>
-<!-- End Header -->
+        </ul>
+    </nav>
+    <div style="padding-top: 80px;"></div>

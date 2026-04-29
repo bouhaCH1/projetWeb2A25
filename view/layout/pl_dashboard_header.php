@@ -9,480 +9,224 @@ $pageTitle   = $pageTitle ?? 'Dashboard';
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title><?= htmlspecialchars($pageTitle) ?> — WorkWave</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($pageTitle) ?> — WorkWave</title>
+    <!-- Bootstrap -->
+    <link href="/workwave/View/assets/plot-listing/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/fontawesome.css">
+    
+    <!-- Graph Page CSS -->
+    <link rel="stylesheet" href="/workwave/View/assets/template_user/templatemo-graph-page.css">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .ww-form-section {
+          min-height: calc(100vh - 80px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 100px 15px 60px;
+          background: #0f111a;
+        }
+        .ww-form-card, .dsh-card {
+          background: rgba(26, 29, 41, 0.8);
+          border: 1px solid rgba(0, 255, 204, 0.1);
+          border-radius: 12px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(10px);
+          padding: 44px 48px;
+          width: 100%;
+          max-width: 480px;
+          margin: 0 auto 30px auto;
+        }
+        .ww-form-card h1, .page-header-title {
+          font-size: 1.6rem;
+          font-weight: 800;
+          color: #fff;
+          margin-bottom: 6px;
+        }
+        .ww-form-card .ww-subtitle, .page-header-sub {
+          color: #a0a0a0;
+          font-size: .88rem;
+          margin-bottom: 28px;
+        }
+        .ww-form-card label, .dsh-card label {
+          display: block;
+          margin-top: 16px;
+          font-size: .78rem;
+          font-weight: 700;
+          color: #00ffcc;
+          text-transform: uppercase;
+        }
+        .ww-form-card input[type="text"],
+        .ww-form-card input[type="password"],
+        .ww-form-card input[type="file"],
+        .ww-form-card select,
+        .ww-form-card textarea,
+        .dsh-card input, .dsh-card select, .dsh-card textarea {
+          width: 100%;
+          padding: 11px 14px;
+          margin-top: 5px;
+          background: rgba(255, 255, 255, 0.05);
+          color: #fff;
+          border: 1px solid rgba(0, 255, 204, 0.2);
+          border-radius: 8px;
+          font-size: .88rem;
+          transition: border-color .2s, box-shadow .2s;
+        }
+        .ww-form-card input:focus,
+        .ww-form-card select:focus,
+        .dsh-card input:focus, .dsh-card select:focus {
+          outline: none;
+          border-color: #00ffcc;
+          box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+        .ww-btn-primary, .btn-primary {
+          display: inline-block;
+          margin-top: 22px;
+          width: 100%;
+          padding: 13px;
+          background: linear-gradient(135deg, #00ffcc 0%, #00b3ff 100%);
+          color: #000;
+          font-weight: 700;
+          font-size: .92rem;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          text-align: center;
+          text-decoration: none;
+        }
+        .ww-btn-primary:hover, .btn-primary:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
+            color: #000;
+        }
+        .ww-btn-secondary {
+          display: inline-block;
+          margin-top: 12px;
+          width: 100%;
+          padding: 11px;
+          background: transparent;
+          color: #00ffcc;
+          font-weight: 600;
+          font-size: .88rem;
+          border: 1px solid #00ffcc;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background .18s;
+          text-align: center;
+          text-decoration: none;
+        }
+        .ww-btn-secondary:hover { background: rgba(0, 255, 204, 0.1); color: #00ffcc; }
+        
+        .alert { padding: 12px 18px; border-radius: 6px; margin-bottom: 18px; font-size: .88rem; }
+        .alert ul { margin: 0; padding-left: 18px; }
+        .alert-danger  { background: rgba(255,107,107,.1); border:1px solid rgba(255,107,107,.35); color:#ff6b6b; }
+        .alert-success { background: rgba(0,255,204,.1);  border:1px solid rgba(0,255,204,.35);  color:#00ffcc; }
+        .field-err { margin-top: 6px; margin-bottom: 4px; color: #ff6b6b; font-size: .78rem; font-weight: 600; }
+        
+        /* Navbar specific override for PHP routing */
+        #navbar .nav-links li a.active {
+            color: #00ffcc;
+        }
 
-<!-- Bootstrap -->
-<link href="/workwave/View/assets/plot-listing/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<!-- Plot Listing CSS -->
-<link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/fontawesome.css">
-<link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/templatemo-plot-listing.css">
-<link rel="stylesheet" href="/workwave/View/assets/plot-listing/css/animated.css">
+        /* Adjustments for Dashboard structure */
+        body { background: #0f111a; color: #e0e0e0; }
+        .page-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Stat Cards */
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card {
+            background: rgba(26, 29, 41, 0.8);
+            border: 1px solid rgba(0, 255, 204, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 204, 0.1);
+        }
+        .stat-card-label { font-size: 14px; color: #a0a0a0; margin-bottom: 10px; }
+        .stat-card-value { font-size: 32px; font-weight: bold; color: #00ffcc; margin-bottom: 5px; }
+        .stat-card-sub { font-size: 12px; color: #666; }
 
-<style>
-/* ═══════════════════════════════════════════════════════
-   WorkWave — Plot Listing Dashboard (Seeker / Employer)
-═══════════════════════════════════════════════════════ */
-
-/* Colors */
-:root {
-  --pl-orange:    #ef6f31;
-  --pl-orange-dk: #d45a1e;
-  --pl-dark:      #1a1a2e;
-  --pl-mid:       #2a2a4a;
-  --pl-light:     #f4f6f9;
-  --pl-border:    #e0e4ea;
-  --pl-text:      #444;
-  --pl-muted:     #888;
-  --pl-white:     #ffffff;
-}
-
-body.dark-mode {
-  --pl-light:     #121212;
-  --pl-text:      #e0e0e0;
-  --pl-white:     #1e1e1e;
-  --pl-border:    #2a2a2a;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: var(--pl-light);
-  color: var(--pl-text);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-a { color: var(--pl-orange); text-decoration: none; }
-a:hover { color: var(--pl-orange-dk); }
-
-/* ── Layout ──────────────────────────────────────── */
-.pld-wrapper { display: flex; min-height: 100vh; }
-
-/* ── Sidebar ─────────────────────────────────────── */
-.pld-sidebar {
-  width: 250px;
-  height: 100vh;
-  background: var(--pl-dark);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0; left: 0;
-  z-index: 500;
-  transition: transform .3s ease;
-}
-
-/* Logo strip */
-.pld-logo-wrap {
-  padding: 26px 22px 20px;
-  border-bottom: 1px solid rgba(255,255,255,.07);
-}
-.pld-logo {
-  font-size: 1.45rem;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -.5px;
-}
-.pld-logo span { color: var(--pl-orange); }
-.pld-role-chip {
-  display: inline-block;
-  margin-top: 7px;
-  font-size: .6rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--pl-orange);
-  background: rgba(239,111,49,.12);
-  padding: 3px 10px;
-  border-radius: 20px;
-  border: 1px solid rgba(239,111,49,.25);
-}
-
-/* User strip */
-.pld-user-strip {
-  padding: 16px 22px;
-  border-bottom: 1px solid rgba(255,255,255,.07);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.pld-avatar {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, var(--pl-orange), var(--pl-orange-dk));
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 1rem; color: #fff; overflow: hidden;
-}
-.pld-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.pld-user-name  { font-size: .82rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; display:flex; align-items:center; gap:4px; }
-.pld-user-role  { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: 1px; text-transform: capitalize; }
-
-/* Nav */
-.pld-nav { flex: 1; padding: 14px 0; overflow-y: auto; min-height: 0; }
-.pld-nav-label {
-  font-size: .58rem; text-transform: uppercase; letter-spacing: 2px;
-  color: rgba(255,255,255,.25); padding: 10px 22px 4px;
-}
-.pld-nav-link {
-  display: flex; align-items: center; gap: 12px;
-  padding: 11px 22px;
-  color: rgba(255,255,255,.55);
-  font-size: .82rem; font-weight: 500;
-  border-left: 3px solid transparent;
-  transition: all .18s;
-}
-.pld-nav-link svg { flex-shrink: 0; opacity: .7; }
-.pld-nav-link:hover  { color: #fff; background: rgba(255,255,255,.05); border-left-color: rgba(239,111,49,.4); }
-.pld-nav-link.active { color: var(--pl-orange); background: rgba(239,111,49,.1); border-left-color: var(--pl-orange); font-weight: 700; }
-.pld-nav-link.active svg { opacity: 1; }
-
-/* Sidebar foot */
-.pld-sidebar-foot {
-  padding: 16px 22px;
-  border-top: 1px solid rgba(255,255,255,.07);
-}
-.pld-logout {
-  display: flex; align-items: center; gap: 10px;
-  color: rgba(255,255,255,.35); font-size: .82rem;
-  transition: color .18s;
-}
-.pld-logout:hover { color: #ff6b6b; }
-
-/* ── Main ─────────────────────────────────────────── */
-.pld-main {
-  margin-left: 250px;
-  flex: 1;
-  display: flex; flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Topbar */
-.pld-topbar {
-  background: #fff;
-  border-bottom: 1.5px solid var(--pl-border);
-  padding: 0 30px; height: 62px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 16px rgba(0,0,0,.06);
-}
-.pld-topbar-left { display: flex; align-items: center; gap: 14px; }
-.pld-topbar-title {
-  font-size: 1.05rem; font-weight: 800;
-  color: var(--pl-dark); letter-spacing: -.3px;
-}
-.pld-burger {
-  display: none; background: none;
-  border: 1.5px solid var(--pl-border); color: #888;
-  padding: 6px 8px; border-radius: 6px; cursor: pointer;
-  align-items: center;
-}
-.pld-topbar-right { display: flex; align-items: center; gap: 10px; }
-.pld-topbar-link {
-  font-size: .78rem; color: var(--pl-muted); padding: 6px 14px;
-  border: 1.5px solid var(--pl-border); border-radius: 6px;
-  transition: all .18s; font-weight: 600;
-}
-.pld-topbar-link:hover { color: var(--pl-dark); border-color: #b0b8c8; }
-.pld-topbar-btn {
-  font-size: .78rem; font-weight: 700;
-  background: var(--pl-orange); color: #fff;
-  padding: 7px 16px; border-radius: 6px;
-  transition: opacity .18s;
-}
-.pld-topbar-btn:hover { opacity: .88; color: #fff; }
-
-/* Content */
-.pld-content { padding: 30px 34px; flex: 1; }
-
-/* ── Components ──────────────────────────────────── */
-
-/* Alerts */
-.alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 18px; font-size: .85rem; }
-.alert ul { margin: 0; padding-left: 18px; }
-.alert-danger  { background: rgba(220,60,60,.08);  border: 1px solid rgba(220,60,60,.25);  color: #c0392b; }
-.alert-success { background: rgba(39,174,96,.08);  border: 1px solid rgba(39,174,96,.25);  color: #1e8449; }
-.alert-warning { background: rgba(243,156,18,.08); border: 1px solid rgba(243,156,18,.25); color: #9a6200; }
-
-/* Buttons */
-.btn { display: inline-block; padding: 9px 18px; border-radius: 7px; font-size: .82rem; font-weight: 600; border: none; cursor: pointer; transition: all .18s; text-align: center; font-family: 'Montserrat', sans-serif; }
-.btn-primary   { background: var(--pl-orange); color: #fff; }
-.btn-primary:hover { background: var(--pl-orange-dk); color: #fff; }
-.btn-secondary { background: #f0f2f5; color: #555; border: 1.5px solid var(--pl-border); }
-.btn-secondary:hover { background: #e4e8ef; color: #222; }
-.btn-danger    { background: rgba(220,53,53,.08); color: #c0392b; border: 1px solid rgba(220,53,53,.2); }
-.btn-danger:hover { background: rgba(220,53,53,.15); }
-.btn-outline   { background: transparent; color: var(--pl-orange); border: 1.5px solid rgba(239,111,49,.4); }
-.btn-outline:hover { background: rgba(239,111,49,.07); color: var(--pl-orange); }
-.btn-sm { padding: 5px 11px; font-size: .75rem; }
-
-/* Forms */
-form label { display: block; margin-top: 16px; font-size: .75rem; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: .6px; }
-input[type="text"], input[type="password"], input[type="file"], select, textarea {
-  width: 100%; padding: 10px 14px; margin-top: 5px;
-  background: #f4f6f9; color: var(--pl-dark);
-  border: 1.5px solid var(--pl-border); border-radius: 8px;
-  font-family: 'Montserrat', sans-serif; font-size: .88rem;
-  transition: border-color .2s, box-shadow .2s;
-}
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--pl-orange); box-shadow: 0 0 0 3px rgba(239,111,49,.12); }
-input:disabled { opacity: .5; cursor: not-allowed; }
-
-/* Tables */
-.pld-table-wrap { overflow-x: auto; border-radius: 10px; border: 1.5px solid var(--pl-border); }
-table { width: 100%; border-collapse: collapse; }
-table th { background: var(--pl-light); color: #777; padding: 12px 16px; text-align: left; font-size: .68rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; white-space: nowrap; }
-table td { padding: 12px 16px; border-top: 1px solid var(--pl-border); color: #555; font-size: .85rem; vertical-align: middle; }
-table tbody tr:hover td { background: rgba(239,111,49,.03); }
-
-/* Stat cards */
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 26px; }
-.stat-card { background: var(--pl-white); border: 1px solid var(--pl-border); border-radius: 10px; padding: 22px 24px; box-shadow: 0 4px 20px rgba(0,0,0,.03); }
-.stat-card-label { font-size: .65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--pl-muted); margin-bottom: 8px; font-weight: 600; }
-.stat-card-value { font-family: 'Montserrat', sans-serif; font-size: 2.2rem; color: var(--pl-orange); line-height: 1; font-weight: 800; }
-.stat-card-sub { font-size: .72rem; color: var(--pl-text); margin-top: 6px; opacity: .8; }
-
-/* Section cards */
-.pld-card { background: #fff; border: 1.5px solid var(--pl-border); border-radius: 12px; padding: 24px 26px; margin-bottom: 22px; }
-.pld-content { flex: 1; padding: 35px 45px; overflow-y: auto; background: var(--pl-light); }
-.page-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px; }
-.page-header-title { font-size: 1.6rem; font-weight: 800; color: var(--pl-dark); margin-bottom: 5px; }
-
-/* Badges */
-.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .68rem; font-weight: 700; }
-.badge-employer { background: rgba(239,111,49,.12); color: var(--pl-orange); border: 1px solid rgba(239,111,49,.3); }
-.badge-seeker   { background: rgba(52,152,219,.1); color: #2980b9; border: 1px solid rgba(52,152,219,.25); }
-.badge-admin    { background: rgba(220,60,60,.1); color: #c0392b; border: 1px solid rgba(220,60,60,.25); }
-
-/* Quick-action cards */
-.action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.action-card {
-  background: #fff; border: 1.5px solid var(--pl-border); border-radius: 12px;
-  padding: 22px 24px; display: flex; flex-direction: column; gap: 10px;
-  transition: border-color .2s, box-shadow .2s; color: inherit;
-}
-.action-card:hover { border-color: var(--pl-orange); box-shadow: 0 4px 20px rgba(239,111,49,.1); color: inherit; }
-.action-card-icon {
-  width: 42px; height: 42px; border-radius: 10px;
-  background: rgba(239,111,49,.1); display: flex; align-items: center; justify-content: center;
-  color: var(--pl-orange);
-}
-.action-card-title { font-size: .9rem; font-weight: 700; color: var(--pl-dark); }
-.action-card-desc  { font-size: .77rem; color: var(--pl-muted); }
-
-/* Page header */
-.page-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 26px; }
-.page-header-title { font-size: 1.6rem; color: var(--pl-dark); font-weight: 800; letter-spacing: -.5px; }
-.page-header-sub   { font-size: .82rem; color: var(--pl-muted); margin-top: 4px; }
-
-/* CSS variable aliases used by existing views */
-:root {
-  --gold-light: var(--pl-orange);
-  --border-color: var(--pl-border);
-  --card-bg: #fff;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .pld-sidebar { transform: translateX(-100%); }
-  .pld-sidebar.open { transform: translateX(0); box-shadow: 4px 0 30px rgba(0,0,0,.15); }
-  .pld-main { margin-left: 0; }
-  .pld-content { padding: 18px 16px; }
-  .pld-burger { display: flex; }
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  .action-grid { grid-template-columns: 1fr; }
-}
-/* Inline field errors */
-.field-err { margin-top: 5px; color: #c0392b; font-size: .76rem; font-weight: 700; }
-input.input-error, select.input-error { border-color: rgba(220,60,60,.7) !important; box-shadow: 0 0 0 3px rgba(220,60,60,.1); }
-
-/* dsh-card alias (used by profile.php) */
-.dsh-card { background: #fff; border: 1.5px solid var(--pl-border); border-radius: 12px; padding: 24px 26px; margin-bottom: 22px; }
-
-</style>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const body = document.body;
-
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-mode');
-        themeIcon.innerHTML = '<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path><circle cx="12" cy="12" r="5"/>';
-    }
-
-    themeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        const isDark = body.classList.contains('dark-mode');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        themeIcon.innerHTML = isDark ? 
-            '<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path><circle cx="12" cy="12" r="5"/>' : 
-            '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-    });
-});
-</script>
+        /* Action Cards */
+        .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .action-card {
+            background: rgba(26, 29, 41, 0.8);
+            border: 1px solid rgba(0, 255, 204, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 204, 0.1);
+            border-color: #00ffcc;
+        }
+        .action-card-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        .action-card-title { font-size: 18px; font-weight: bold; color: #fff; margin-bottom: 10px; }
+        .action-card-desc { font-size: 14px; color: #a0a0a0; }
+    </style>
 </head>
 <body>
-<div class="pld-wrapper">
-
-<!-- ═══════════ SIDEBAR ═══════════ -->
-<aside class="pld-sidebar" id="pldSidebar">
-
-  <div class="pld-logo-wrap">
-    <a href="/workwave/Controller/index.php" class="pld-logo">Work<span>Wave</span></a><br>
-    <?php if ($role === 'employer'): ?>
-      <span class="pld-role-chip">Employeur</span>
-    <?php else: ?>
-      <span class="pld-role-chip">Candidat</span>
-    <?php endif; ?>
-  </div>
-
-  <div class="pld-user-strip">
-    <div class="pld-avatar">
-      <?php if (!empty($userPic)): ?>
-        <img src="/workwave/<?= htmlspecialchars($userPic) ?>" alt="avatar">
-      <?php else: ?>
-        <?= $userInitial ?>
-      <?php endif; ?>
-    </div>
-    <div>
-      <div class="pld-user-name">
-          <?= $userName ?>
-          <?php if (($_SESSION['user_verified'] ?? 0) == 1): ?>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#3498db" stroke="#fff" stroke-width="2" style="flex-shrink:0;"><polygon points="12 2 15.09 5.09 19.5 5.5 20.91 9.91 24 12 20.91 14.09 19.5 18.5 15.09 18.91 12 22 8.91 18.91 4.5 18.5 3.09 14.09 0 12 3.09 9.91 4.5 5.5 8.91 5.09 12 2"></polygon><polyline points="9 12 11 14 15 10"></polyline></svg>
-          <?php endif; ?>
-      </div>
-      <div class="pld-user-role"><?php
-        if ($role === 'job_seeker') echo 'Candidat';
-        elseif ($role === 'employer') echo 'Employeur';
-        elseif ($role === 'admin') echo 'Administrateur';
-        else echo htmlspecialchars($role);
-      ?></div>
-    </div>
-  </div>
-
-  <nav class="pld-nav">
-    <?php if ($role === 'employer'): ?>
-
-      <div class="pld-nav-label">Mon Compte</div>
-      <a href="/workwave/Controller/index.php?action=dashboard_employer"
-         class="pld-nav-link <?= $action === 'dashboard_employer' ? 'active' : '' ?>">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Tableau de bord
-      </a>
-      <a href="/workwave/Controller/index.php?action=profile"
-         class="pld-nav-link <?= $action === 'profile' ? 'active' : '' ?>">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
-        Profil de l'entreprise
-      </a>
-
-      <div class="pld-nav-label">Recrutement (Bientôt disponible)</div>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Publier une offre
-      </a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-        Gérer les offres
-      </a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Candidatures
-      </a>
-
-      <div class="pld-nav-label">Paramètres</div>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibilité</a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> Notifications</a>
-      <a href="/workwave/Controller/index.php?action=security" class="pld-nav-link <?= $action === 'security' ? 'active' : '' ?>">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Sécurité & Confidentialité
-      </a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Langue et Région</a>
-
-      <div class="pld-nav-label">Plus</div>
-      <a href="/workwave/Controller/index.php" class="pld-nav-link">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        Site public
-      </a>
-
-    <?php else: /* job_seeker */ ?>
-
-      <div class="pld-nav-label">Mon Compte</div>
-      <a href="/workwave/Controller/index.php?action=dashboard_seeker"
-         class="pld-nav-link <?= $action === 'dashboard_seeker' ? 'active' : '' ?>">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Tableau de bord
-      </a>
-      <a href="/workwave/Controller/index.php?action=profile"
-         class="pld-nav-link <?= $action === 'profile' ? 'active' : '' ?>">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a8 8 0 0116 0v2"/></svg>
-        Mon Profil
-      </a>
-
-      <div class="pld-nav-label">Emplois (Bientôt disponible)</div>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-        Mes candidatures
-      </a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-        Emplois sauvegardés
-      </a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Messages
-      </a>
-
-      <div class="pld-nav-label">Paramètres</div>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibilité</a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> Notifications</a>
-      <a href="/workwave/Controller/index.php?action=security" class="pld-nav-link <?= $action === 'security' ? 'active' : '' ?>">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Sécurité & Confidentialité
-      </a>
-      <a href="#" class="pld-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Langue et Région</a>
-
-      <div class="pld-nav-label">Plus</div>
-      <a href="/workwave/Controller/index.php" class="pld-nav-link">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-        Site public
-      </a>
-
-    <?php endif; ?>
-  </nav>
-
-    <div class="pld-sidebar-foot" style="display:flex; justify-content:space-between; align-items:center;">
-      <a href="/workwave/Controller/index.php?action=logout" class="pld-logout">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Déconnexion
-      </a>
-      
-      <!-- Dark Mode Toggle -->
-      <button id="themeToggle" style="background:none; border:none; color:rgba(255,255,255,.5); cursor:pointer;" title="Mode sombre/clair">
-          <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-      </button>
-    </div>
-  </aside>
-
-<!-- ═══════════ MAIN ═══════════ -->
-<div class="pld-main">
-  <!-- Topbar -->
-  <div class="pld-topbar">
-    <div class="pld-topbar-left">
-      <button class="pld-burger" id="pldBurger" aria-label="Toggle menu">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <div class="pld-topbar-title"><?= htmlspecialchars($pageTitle) ?></div>
-    </div>
-    <div class="pld-topbar-right">
-      <a href="/workwave/Controller/index.php" class="pld-topbar-link">← Site public</a>
-    </div>
-  </div>
-  <!-- Content starts here -->
-  <div class="pld-content">
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="/workwave/Controller/index.php" class="logo" style="text-decoration: none;">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 13h2v8H3zm4-8h2v13H7zm4-2h2v15h-2zm4 4h2v11h-2zm4-2h2v13h-2z"/>
+                    </svg>
+                </div>
+                <span class="logo-text">WorkWave</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
+                <?php if (!empty($_SESSION['user_id'])): ?>
+                    <li><a href="/workwave/Controller/index.php?action=profile" class="<?= ($_GET['action'] ?? '') === 'profile' ? 'active' : '' ?>">Mon Profil</a></li>
+                    <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
+                        <li><a href="/workwave/Controller/index.php?action=dashboard_seeker" class="<?= ($_GET['action'] ?? '') === 'dashboard_seeker' ? 'active' : '' ?>">Tableau de bord</a></li>
+                    <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
+                        <li><a href="/workwave/Controller/index.php?action=dashboard_employer" class="<?= ($_GET['action'] ?? '') === 'dashboard_employer' ? 'active' : '' ?>">Tableau de bord</a></li>
+                    <?php endif; ?>
+                    <li><a href="/workwave/Controller/index.php?action=logout" style="color: #ff6b6b;">Déconnexion</a></li>
+                <?php else: ?>
+                    <li><a href="/workwave/Controller/index.php?action=login" class="<?= ($_GET['action'] ?? '') === 'login' ? 'active' : '' ?>">Connexion</a></li>
+                    <li><a href="/workwave/Controller/index.php?action=register" class="cta-button" style="padding: 8px 20px; font-size: 14px; text-decoration: none;">S'inscrire</a></li>
+                <?php endif; ?>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <ul class="nav-links-mobile" id="navLinksMobile">
+            <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
+            <?php if (!empty($_SESSION['user_id'])): ?>
+                <li><a href="/workwave/Controller/index.php?action=profile">Mon Profil</a></li>
+                <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
+                    <li><a href="/workwave/Controller/index.php?action=dashboard_seeker">Tableau de bord</a></li>
+                <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
+                    <li><a href="/workwave/Controller/index.php?action=dashboard_employer">Tableau de bord</a></li>
+                <?php endif; ?>
+                <li><a href="/workwave/Controller/index.php?action=logout" style="color: #ff6b6b;">Déconnexion</a></li>
+            <?php else: ?>
+                <li><a href="/workwave/Controller/index.php?action=login">Connexion</a></li>
+                <li><a href="/workwave/Controller/index.php?action=register" style="color: #00ffcc;">S'inscrire</a></li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+    
+    <div style="padding-top: 100px; padding-bottom: 60px;" class="container">

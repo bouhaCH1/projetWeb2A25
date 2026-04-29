@@ -3,81 +3,101 @@ $pageTitle = 'Tableau de bord Admin';
 include __DIR__ . '/../layout/dashboard_header.php';
 ?>
 
-<div class="page-header">
-    <div>
-        <div class="page-header-title">Vue d'ensemble</div>
-        <div class="page-header-sub">Statistiques de la plateforme et actions rapides</div>
-    </div>
-    <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary">+ Ajouter un utilisateur</a>
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h6 class="mb-0">Vue d'ensemble - Statistiques de la plateforme</h6>
+    <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary m-2">+ Ajouter un utilisateur</a>
 </div>
 
-<!-- Stats row -->
-<div class="stat-grid">
-    <div class="stat-card">
-        <div class="stat-card-label">Utilisateurs totaux</div>
-        <div class="stat-card-value"><?= $stats['total'] ?></div>
-        <div class="stat-card-sub">Comptes enregistrés</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-card-label">Candidats</div>
-        <div class="stat-card-value"><?= $stats['job_seeker'] ?></div>
-        <div class="stat-card-sub">Candidats actifs</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-card-label">Employeurs</div>
-        <div class="stat-card-value"><?= $stats['employer'] ?></div>
-        <div class="stat-card-sub">Entreprises recrutant</div>
-    </div>
-    <div class="stat-card" style="border-left: 4px solid var(--dsh-orange);">
-        <div class="stat-card-label">Nouveaux ce mois-ci</div>
-        <div class="stat-card-value" style="display:flex; align-items:center; gap:8px;">
-            <?= $stats['new_this_month'] ?? 0 ?>
-            <?php if (($stats['new_this_month'] ?? 0) > 0): ?>
-                <span style="font-size:.8rem; background:#27ae60; color:#fff; padding:2px 8px; border-radius:12px; font-weight:600;">+ Nouveaux</span>
-            <?php endif; ?>
-        </div>
-        <div class="stat-card-sub">Inscriptions récentes</div>
-    </div>
-</div>
 <!-- Flash messages -->
 <?php if (!empty($_SESSION['success'])): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fa fa-exclamation-circle me-2"></i><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 <?php endif; ?>
 <?php if (!empty($_SESSION['errors'])): ?>
-    <div class="alert alert-danger"><ul>
-        <?php foreach ($_SESSION['errors'] as $e): ?>
-            <li><?= htmlspecialchars($e) ?></li>
-        <?php endforeach; unset($_SESSION['errors']); ?>
-    </ul></div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <ul>
+            <?php foreach ($_SESSION['errors'] as $e): ?>
+                <li><?= htmlspecialchars($e) ?></li>
+            <?php endforeach; unset($_SESSION['errors']); ?>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 <?php endif; ?>
 
-<!-- Quick actions -->
-<div class="dsh-card">
-    <div class="dsh-card-head">
-        <div class="dsh-card-title">Actions rapides</div>
+<!-- Stats row -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+            <i class="fa fa-users fa-3x text-primary"></i>
+            <div class="ms-3 text-end">
+                <p class="mb-2">Utilisateurs totaux</p>
+                <h6 class="mb-0 fs-4"><?= $stats['total'] ?></h6>
+            </div>
+        </div>
     </div>
-    <div class="action-grid">
-        <a href="/workwave/Controller/index.php?action=admin_users" class="action-card">
-            <div class="action-card-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75"/><path d="M21 21v-2a4 4 0 00-3-3.85"/></svg>
+    <div class="col-sm-6 col-xl-3">
+        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+            <i class="fa fa-user-tie fa-3x text-primary"></i>
+            <div class="ms-3 text-end">
+                <p class="mb-2">Candidats</p>
+                <h6 class="mb-0 fs-4"><?= $stats['job_seeker'] ?></h6>
             </div>
-            <div class="action-card-title">Gérer les utilisateurs</div>
-            <div class="action-card-desc">Afficher, modifier ou supprimer des comptes</div>
-        </a>
-        <a href="/workwave/Controller/index.php?action=admin_add_user" class="action-card">
-            <div class="action-card-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4"/><line x1="17" y1="11" x2="17" y2="17"/><line x1="14" y1="14" x2="20" y2="14"/></svg>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+            <i class="fa fa-building fa-3x text-primary"></i>
+            <div class="ms-3 text-end">
+                <p class="mb-2">Employeurs</p>
+                <h6 class="mb-0 fs-4"><?= $stats['employer'] ?></h6>
             </div>
-            <div class="action-card-title">Ajouter un utilisateur</div>
-            <div class="action-card-desc">Créer manuellement un compte candidat ou employeur</div>
-        </a>
-        <a href="/workwave/Controller/index.php" class="action-card">
-            <div class="action-card-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4" style="border-left: 4px solid #eb1616;">
+            <i class="fa fa-user-plus fa-3x text-primary"></i>
+            <div class="ms-3 text-end">
+                <p class="mb-2">Nouveaux ce mois-ci</p>
+                <h6 class="mb-0 fs-4">
+                    <?= $stats['new_this_month'] ?? 0 ?>
+                    <?php if (($stats['new_this_month'] ?? 0) > 0): ?>
+                        <span class="badge bg-success ms-2">+ Nouveaux</span>
+                    <?php endif; ?>
+                </h6>
             </div>
-            <div class="action-card-title">Site public</div>
-            <div class="action-card-desc">Aller sur la page d'accueil publique</div>
-        </a>
+        </div>
+    </div>
+</div>
+
+<!-- Quick actions -->
+<div class="bg-secondary text-center rounded p-4 mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h6 class="mb-0">Actions rapides</h6>
+    </div>
+    <div class="row g-4">
+        <div class="col-sm-12 col-md-4">
+            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition: .3s; cursor: pointer;" onclick="window.location.href='/workwave/Controller/index.php?action=admin_users'" onmouseover="this.classList.add('bg-secondary');this.classList.remove('bg-dark');" onmouseout="this.classList.add('bg-dark');this.classList.remove('bg-secondary');">
+                <i class="fa fa-users-cog fa-3x text-primary mb-3"></i>
+                <h6 class="mb-2">Gérer les utilisateurs</h6>
+                <p class="mb-0 text-muted">Afficher, modifier ou supprimer des comptes</p>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition: .3s; cursor: pointer;" onclick="window.location.href='/workwave/Controller/index.php?action=admin_add_user'" onmouseover="this.classList.add('bg-secondary');this.classList.remove('bg-dark');" onmouseout="this.classList.add('bg-dark');this.classList.remove('bg-secondary');">
+                <i class="fa fa-user-plus fa-3x text-primary mb-3"></i>
+                <h6 class="mb-2">Ajouter un utilisateur</h6>
+                <p class="mb-0 text-muted">Créer manuellement un compte</p>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition: .3s; cursor: pointer;" onclick="window.location.href='/workwave/Controller/index.php'" onmouseover="this.classList.add('bg-secondary');this.classList.remove('bg-dark');" onmouseout="this.classList.add('bg-dark');this.classList.remove('bg-secondary');">
+                <i class="fa fa-globe fa-3x text-primary mb-3"></i>
+                <h6 class="mb-2">Site public</h6>
+                <p class="mb-0 text-muted">Aller sur la page d'accueil publique</p>
+            </div>
+        </div>
     </div>
 </div>
 

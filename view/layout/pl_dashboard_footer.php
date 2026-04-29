@@ -1,28 +1,29 @@
-  </div><!-- /.pld-content -->
-</div><!-- /.pld-main -->
-</div><!-- /.pld-wrapper -->
+    </div><!-- /.container -->
 
-<!-- Scripts -->
-<script src="/workwave/View/assets/plot-listing/vendor/jquery/jquery.min.js"></script>
-<script src="/workwave/View/assets/plot-listing/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content" style="text-align: center; padding: 30px; background: rgba(26, 29, 41, 0.8); border-top: 1px solid rgba(0, 255, 204, 0.1); margin-top: 40px;">
+            <p class="copyright" style="color: #a0a0a0; font-size: 14px;">© 2026 WorkWave. Tous droits réservés. Connecter les talents aux opportunités. 
+            | Designed by <a href="https://templatemo.com" rel="nofollow noopener" target="_blank" style="color: #00ffcc; text-decoration: none;">TemplateMo</a></p>
+        </div>
+    </footer>
 
-<script>
-// Mobile sidebar toggle
-(function() {
-  const burger  = document.getElementById('pldBurger');
-  const sidebar = document.getElementById('pldSidebar');
-  if (!burger || !sidebar) return;
-  burger.addEventListener('click', function() {
-    sidebar.classList.toggle('open');
-  });
-  // Close on outside click
-  document.addEventListener('click', function(e) {
-    if (!sidebar.contains(e.target) && !burger.contains(e.target)) {
-      sidebar.classList.remove('open');
-    }
-  });
-})();
-</script>
+    <!-- Graph Page Scripts -->
+    <script src="/workwave/View/assets/template_user/templatemo-graph-script.js"></script>
 
+    <!-- Custom Script for Navbar active states and mobile menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const navLinksMobile = document.getElementById('navLinksMobile');
+
+            if (hamburger && navLinksMobile) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navLinksMobile.classList.toggle('active');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
