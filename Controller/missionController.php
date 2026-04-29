@@ -19,7 +19,6 @@ class MissionController {
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
         $statut = isset($_GET['statut']) ? trim($_GET['statut']) : '';
         $missions = $this->mission->getAll($search, $statut);
-        $popularMissions = $this->mission->getPopular(3);
         require_once __DIR__ . '/../View/frontoffice/missions.php';
     }
 
@@ -65,11 +64,12 @@ class MissionController {
     }
 
     public function frontDelete() {
+        die("frontDelete reached: " . ($_GET['id'] ?? 'no id'));
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if ($id > 0) {
             $this->mission->delete($id);
         }
-        header('Location: index.php?action=missions&deleted=1');
+        header('Location: index.php?action=front_missions&deleted=1');
         exit;
     }
 

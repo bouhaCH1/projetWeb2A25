@@ -6,8 +6,8 @@ ob_start();
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="alert alert-success" style="background: #00bdfe; color: white; border: none; border-radius: 10px; padding: 15px;">
-                <i class="fa fa-check-circle"></i> Mission publiée avec succès.
+            <div class="cyber-alert cyber-alert-success">
+                <i class="fa fa-check-circle"></i> Mission publiee avec succes.
             </div>
         </div>
     </div>
@@ -17,8 +17,8 @@ ob_start();
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="alert alert-success" style="background: #00bdfe; color: white; border: none; border-radius: 10px; padding: 15px;">
-                <i class="fa fa-check-circle"></i> Mission mise à jour avec succès.
+            <div class="cyber-alert cyber-alert-success">
+                <i class="fa fa-check-circle"></i> Mission mise a jour avec succes.
             </div>
         </div>
     </div>
@@ -28,78 +28,69 @@ ob_start();
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="alert alert-success" style="background: #00bdfe; color: white; border: none; border-radius: 10px; padding: 15px;">
-                <i class="fa fa-check-circle"></i> Mission supprimée avec succès.
+            <div class="cyber-alert cyber-alert-warning">
+                <i class="fa fa-check-circle"></i> Mission supprimee avec succes.
             </div>
         </div>
     </div>
 </div>
 <?php endif; ?>
 
-<!-- ***** Page Banner Area Start ***** -->
-<div class="page-banner" style="background: linear-gradient(135deg, #00bdfe 0%, #2b2b2b 100%); padding: 100px 0 50px;">
+<!-- ===== Page Banner ===== -->
+<div class="cyber-banner">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="top-text header-text text-center">
-                    <h6 style="color: rgba(255,255,255,0.8);">Gestion</h6>
-                    <h2 style="color: white;">Mes Missions Publiées</h2>
-                </div>
+                <h6>Gestion</h6>
+                <h2>Mes Missions Publiees</h2>
             </div>
         </div>
     </div>
 </div>
-<!-- ***** Page Banner Area End ***** -->
 
-<div class="recent-listing" style="padding: 60px 0;">
+<div style="padding: 60px 0;">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-heading">
                     <h2>Vos Missions</h2>
-                    <h6>Gérez vos missions</h6>
+                    <h6>Gerez vos missions</h6>
                 </div>
                 <div class="mb-4">
-                    <div class="main-white-button">
-                        <a href="index.php?action=front_create"><i class="fa fa-plus"></i> Publier une nouvelle mission</a>
-                    </div>
+                    <a href="index.php?action=front_create" class="cyber-btn"><i class="fa fa-plus"></i> Publier une nouvelle mission</a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <?php if (empty($missions)): ?>
-                    <div class="text-center" style="padding: 50px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                        <i class="fa fa-info-circle" style="font-size: 48px; color: #00bdfe; margin-bottom: 20px;"></i>
-                        <h4>Aucune mission publiée</h4>
-                        <p style="color: #666; margin-bottom: 20px;">Commencez par publier votre première mission.</p>
-                        <div class="main-white-button">
-                            <a href="index.php?action=front_create"><i class="fa fa-bullhorn"></i> Publier une mission</a>
-                        </div>
+                    <div class="cyber-empty">
+                        <i class="fa fa-info-circle"></i>
+                        <h4>Aucune mission publiee</h4>
+                        <p>Commencez par publier votre premiere mission.</p>
+                        <a href="index.php?action=front_create" class="cyber-btn"><i class="fa fa-bullhorn"></i> Publier une mission</a>
                     </div>
                 <?php else: ?>
                     <div class="row">
                         <?php foreach ($missions as $mission): ?>
                             <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="listing-item" style="background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                                    <div class="left-image" style="height: 150px; background: linear-gradient(135deg, #00bdfe 0%, #2b2b2b 100%); display: flex; align-items: center; justify-content: center;">
-                                        <i class="fa fa-briefcase" style="font-size: 48px; color: rgba(255,255,255,0.3);"></i>
+                                <div class="cyber-card">
+                                    <div class="cyber-card-image" style="height: 150px;">
+                                        <i class="fa fa-briefcase"></i>
                                     </div>
-                                    <div class="right-content align-self-center" style="padding: 20px;">
-                                        <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 10px;"><?php echo htmlspecialchars($mission['titre']); ?></h4>
-                                        <p style="color: #666; font-size: 14px; margin-bottom: 10px;"><?php echo htmlspecialchars(substr($mission['description'], 0, 80)) . '...'; ?></p>
-                                        <span class="badge" style="background: #00bdfe; color: white; padding: 5px 10px; border-radius: 20px; margin-bottom: 10px; display: inline-block;">
+                                    <div class="cyber-card-body">
+                                        <h4><?php echo htmlspecialchars($mission['titre']); ?></h4>
+                                        <p><?php echo htmlspecialchars(substr($mission['description'], 0, 80)) . '...'; ?></p>
+                                        <span class="cyber-badge cyber-badge-green" style="margin-bottom: 10px; display: inline-block;">
                                             <?php echo htmlspecialchars($mission['statut']); ?>
                                         </span>
-                                        <span class="details" style="display: block; margin-bottom: 10px; font-size: 13px; color: #888;">
+                                        <div class="cyber-meta">
                                             <i class="fa fa-calendar"></i> Du <?php echo date('d/m/Y', strtotime($mission['date_debut'])); ?> au <?php echo date('d/m/Y', strtotime($mission['date_fin'])); ?>
-                                        </span>
-                                        <span class="price" style="display: block; margin-bottom: 15px; font-weight: 600; color: #00bdfe;">
-                                            <i class="fa fa-euro"></i> <?php echo number_format($mission['budget'], 0, ',', ' '); ?> €
-                                        </span>
+                                        </div>
+                                        <div class="cyber-price" style="margin-bottom: 15px;">
+                                            <i class="fa fa-euro" style="font-size: 14px;"></i> <?php echo number_format($mission['budget'], 0, ',', ' '); ?> EUR
+                                        </div>
                                         <div style="display: flex; gap: 10px;">
-                                            <div class="main-white-button" style="flex: 1;">
-                                                <a href="index.php?action=front_edit&id=<?php echo $mission['id']; ?>"><i class="fa fa-edit"></i> Modifier</a>
-                                            </div>
-                                            <a href="index.php?action=front_delete&id=<?php echo $mission['id']; ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?')" class="main-button" style="background: #dc3545; text-decoration: none; color: white; padding: 10px 15px; border-radius: 25px; display: inline-flex; align-items: center; justify-content: center;">
+                                            <a href="index.php?action=front_edit&id=<?php echo $mission['id']; ?>" class="cyber-btn" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px 15px;"><i class="fa fa-edit"></i> Modifier</a>
+                                            <a href="index.php?action=front_delete&id=<?php echo $mission['id']; ?>" onclick="return confirm('Etes-vous sur de vouloir supprimer cette mission ?')" class="cyber-btn-danger" style="padding: 10px 15px; border-radius: 25px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px;">
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         </div>

@@ -2,48 +2,43 @@
 ob_start();
 ?>
 
-<!-- ***** Page Banner Area Start ***** -->
-<div class="page-banner" style="background: linear-gradient(135deg, #00bdfe 0%, #2b2b2b 100%); padding: 100px 0 50px;">
+<!-- ===== Page Banner ===== -->
+<div class="cyber-banner">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="top-text header-text text-center">
-                    <h6 style="color: rgba(255,255,255,0.8);">Candidature</h6>
-                    <h2 style="color: white;">Postuler à la mission</h2>
-                </div>
+                <h6>Candidature</h6>
+                <h2>Postuler a la mission</h2>
             </div>
         </div>
     </div>
 </div>
-<!-- ***** Page Banner Area End ***** -->
 
 <div class="container" style="padding: 60px 0;">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div style="background: white; border-radius: 15px; padding: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
-                <div style="background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 30px; border-left: 4px solid #00bdfe;">
-                    <h5 style="margin-bottom: 5px; color: #2b2b2b; font-weight: 600;"><?= htmlspecialchars($missionData['titre']) ?></h5>
-                    <small style="color: #00bdfe;"><i class="fa fa-tools"></i> <?= htmlspecialchars($missionData['competences']) ?></small>
+            <div class="cyber-form-card">
+                <div class="form-info">
+                    <h5><?= htmlspecialchars($missionData['titre']) ?></h5>
+                    <small><i class="fa fa-tools"></i> <?= htmlspecialchars($missionData['competences']) ?></small>
                 </div>
 
                 <?php if (isset($errors['general'])): ?>
-                    <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 10px; margin-bottom: 20px;"><?= htmlspecialchars($errors['general']) ?></div>
+                    <div class="cyber-alert cyber-alert-danger"><?= htmlspecialchars($errors['general']) ?></div>
                 <?php endif; ?>
 
                 <form method="POST" action="index.php?action=front_apply&id=<?= (int)$missionData['id'] ?>" novalidate enctype="multipart/form-data">
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3 mb-md-0">
-                            <label style="font-weight: 600; color: #2b2b2b; margin-bottom: 8px; display: block;">Nom <span style="color: #fa5b0f;">*</span></label>
-                            <input type="text" name="nom" class="form-control <?= isset($errors['nom']) ? 'is-invalid' : '' ?>"
-                                style="border-radius: 10px; padding: 12px 15px; border: 1px solid #ddd;"
+                            <label>Nom <span class="required">*</span></label>
+                            <input type="text" name="nom" class="<?= isset($errors['nom']) ? 'is-invalid' : '' ?>"
                                 value="<?= isset($_POST['nom']) ? htmlspecialchars($_POST['nom']) : '' ?>"
                                 onkeypress="return /^[a-zA-Z\séèêëàâäùûüôöîïç]+$/.test(String.fromCharCode(event.which))">
                             <div class="invalid-feedback"><?= isset($errors['nom']) ? htmlspecialchars($errors['nom']) : '' ?></div>
                         </div>
                         <div class="col-md-6">
-                            <label style="font-weight: 600; color: #2b2b2b; margin-bottom: 8px; display: block;">Prénom <span style="color: #fa5b0f;">*</span></label>
-                            <input type="text" name="prenom" class="form-control <?= isset($errors['prenom']) ? 'is-invalid' : '' ?>"
-                                style="border-radius: 10px; padding: 12px 15px; border: 1px solid #ddd;"
+                            <label>Prenom <span class="required">*</span></label>
+                            <input type="text" name="prenom" class="<?= isset($errors['prenom']) ? 'is-invalid' : '' ?>"
                                 value="<?= isset($_POST['prenom']) ? htmlspecialchars($_POST['prenom']) : '' ?>"
                                 onkeypress="return /^[a-zA-Z\séèêëàâäùûüôöîïç]+$/.test(String.fromCharCode(event.which))">
                             <div class="invalid-feedback"><?= isset($errors['prenom']) ? htmlspecialchars($errors['prenom']) : '' ?></div>
@@ -52,42 +47,37 @@ ob_start();
 
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3 mb-md-0">
-                            <label style="font-weight: 600; color: #2b2b2b; margin-bottom: 8px; display: block;">Email <span style="color: #fa5b0f;">*</span></label>
-                            <input type="email" name="email" class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>"
-                                style="border-radius: 10px; padding: 12px 15px; border: 1px solid #ddd;"
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" name="email" class="<?= isset($errors['email']) ? 'is-invalid' : '' ?>"
                                 value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
                             <div class="invalid-feedback"><?= isset($errors['email']) ? htmlspecialchars($errors['email']) : '' ?></div>
                         </div>
                         <div class="col-md-6">
-                            <label style="font-weight: 600; color: #2b2b2b; margin-bottom: 8px; display: block;">Téléphone <span style="color: #fa5b0f;">*</span></label>
-                            <input type="text" name="telephone" class="form-control <?= isset($errors['telephone']) ? 'is-invalid' : '' ?>"
-                                style="border-radius: 10px; padding: 12px 15px; border: 1px solid #ddd;"
+                            <label>Telephone <span class="required">*</span></label>
+                            <input type="text" name="telephone" class="<?= isset($errors['telephone']) ? 'is-invalid' : '' ?>"
                                 value="<?= isset($_POST['telephone']) ? htmlspecialchars($_POST['telephone']) : '' ?>">
                             <div class="invalid-feedback"><?= isset($errors['telephone']) ? htmlspecialchars($errors['telephone']) : '' ?></div>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label style="font-weight: 600; color: #2b2b2b; margin-bottom: 8px; display: block;">Motivation <span style="color: #fa5b0f;">*</span></label>
-                        <textarea name="motivation" rows="5" class="form-control <?= isset($errors['motivation']) ? 'is-invalid' : '' ?>"
-                                  style="border-radius: 10px; padding: 12px 15px; border: 1px solid #ddd; width: 100%;"
+                        <label>Motivation <span class="required">*</span></label>
+                        <textarea name="motivation" rows="5" class="<?= isset($errors['motivation']) ? 'is-invalid' : '' ?>"
                                   onkeypress="return /^[a-zA-Z\séèêëàâäùûüôöîïç,.!?;:'"()-]+$/.test(String.fromCharCode(event.which))"><?= isset($_POST['motivation']) ? htmlspecialchars($_POST['motivation']) : '' ?></textarea>
                         <div class="invalid-feedback"><?= isset($errors['motivation']) ? htmlspecialchars($errors['motivation']) : '' ?></div>
                     </div>
 
                     <div class="mb-4">
-                        <label style="font-weight: 600; color: #2b2b2b; margin-bottom: 8px; display: block;">CV (PDF, DOC, DOCX)</label>
-                        <input type="file" name="cv" class="form-control"
-                               style="border-radius: 10px; padding: 12px 15px; border: 1px solid #ddd;"
-                               accept=".pdf,.doc,.docx">
-                        <small style="color: #888; font-size: 13px;">Formats acceptés: PDF, DOC, DOCX (Max 5MB)</small>
+                        <label>CV (PDF, DOC, DOCX)</label>
+                        <input type="file" name="cv" accept=".pdf,.doc,.docx">
+                        <small style="color: var(--text-dim); font-size: 13px;">Formats acceptes: PDF, DOC, DOCX (Max 5MB)</small>
                     </div>
 
                     <div class="d-flex gap-3">
-                        <button type="submit" class="main-button" style="border: none; cursor: pointer;">
+                        <button type="submit" class="cyber-btn" style="border: none; cursor: pointer;">
                             <i class="fa fa-paper-plane"></i> Envoyer ma candidature
                         </button>
-                        <a href="index.php?action=missions" class="main-button" style="background: #2b2b2b; text-decoration: none; color: white; display: inline-block; padding: 12px 25px; border-radius: 25px;">
+                        <a href="index.php?action=missions" class="cyber-btn cyber-btn-outline">
                             <i class="fa fa-arrow-left"></i> Retour
                         </a>
                     </div>
