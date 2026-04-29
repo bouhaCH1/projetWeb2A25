@@ -20,6 +20,19 @@ class MissionController {
         $statut = isset($_GET['statut']) ? trim($_GET['statut']) : '';
         $sort = isset($_GET['sort']) ? $_GET['sort'] : 'date_desc';
         $missions = $this->mission->getAll($search, $statut, $sort);
+        
+        // Statistics
+        $stats = [
+            'total_missions' => $this->mission->countAll(),
+            'ouverte' => $this->mission->countByStatut('ouverte'),
+            'en_cours' => $this->mission->countByStatut('en_cours'),
+            'terminee' => $this->mission->countByStatut('terminee'),
+            'total_candidatures' => $this->candidature->countAll(),
+            'en_attente' => $this->candidature->countByStatut('en_attente'),
+            'acceptee' => $this->candidature->countByStatut('acceptee'),
+            'refusee' => $this->candidature->countByStatut('refusee')
+        ];
+        
         require_once __DIR__ . '/../View/frontoffice/missions.php';
     }
 

@@ -30,7 +30,7 @@ class Candidature {
         return $stmt->execute();
     }
 
-    public function getAllWithMission($missionId = null) {
+    public function getAllWithMission($missionId = null, $sort = 'date_desc') {
         $query = "SELECT c.*, m.titre AS mission_titre
                   FROM " . $this->table . " c
                   INNER JOIN mission m ON m.id = c.mission_id";
@@ -39,7 +39,12 @@ class Candidature {
             $query .= " WHERE c.mission_id = :mission_id";
         }
 
-        $query .= " ORDER BY c.created_at DESC";
+        switch ($sort) {
+            case 'name_asc': $query .= " ORDER BY c.prenom ASC, c.nom ASC"; break;
+            case 'name_desc': $query .= " ORDER BY c.prenom DESC, c.nom DESC"; break;
+            case 'date_desc':
+            default: $query .= " ORDER BY c.created_at DESC"; break;
+        }
         $stmt = $this->conn->prepare($query);
 
         if ($missionId !== null) {
@@ -58,11 +63,17 @@ class Candidature {
         return $stmt->execute();
     }
 
-    public function getAll() {
+    public function getAll($sort = 'date_desc') {
         $query = "SELECT c.*, m.titre AS mission_titre
                   FROM " . $this->table . " c
-                  INNER JOIN mission m ON m.id = c.mission_id
-                  ORDER BY c.created_at DESC";
+                  INNER JOIN mission m ON m.id = c.mission_id";
+        
+        switch ($sort) {
+            case 'name_asc': $query .= " ORDER BY c.prenom ASC, c.nom ASC"; break;
+            case 'name_desc': $query .= " ORDER BY c.prenom DESC, c.nom DESC"; break;
+            case 'date_desc':
+            default: $query .= " ORDER BY c.created_at DESC"; break;
+        }
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -104,6 +115,23 @@ class Candidature {
         $query = "SELECT COUNT(*) as count FROM " . $this->table . " WHERE mission_id = :mission_id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':mission_id', $missionId, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] ?? 0;
+    }
+
+    public function countAll() {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] ?? 0;
+    }
+
+    public function countByStatut($statut) {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table . " WHERE statut = :statut";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':statut', $statut);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['count'] ?? 0;

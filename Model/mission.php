@@ -65,6 +65,23 @@ class Mission {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function countAll() {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] ?? 0;
+    }
+
+    public function countByStatut($statut) {
+        $query = "SELECT COUNT(*) as count FROM " . $this->table . " WHERE statut = :statut";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':statut', $statut);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] ?? 0;
+    }
+
     // CREATE
     public function create() {
         $query = "INSERT INTO " . $this->table . " 
