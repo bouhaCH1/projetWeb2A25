@@ -34,6 +34,15 @@ switch ($action) {
     case 'profile_update':
         $controller->updateProfile();
         break;
+    case 'security':
+        $controller->showSecurity();
+        break;
+    case 'export_data':
+        $controller->exportData();
+        break;
+    case 'delete_account':
+        $controller->selfDeleteAccount();
+        break;
     case 'logout':
         $controller->logout();
         break;

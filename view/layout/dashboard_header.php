@@ -280,9 +280,11 @@ input.input-error, select.input-error { border-color: rgba(220,60,60,.7) !import
             <div class="dsh-nav-label">Paramètres</div>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Accessibilité</a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> Notifications</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Confidentialité et Sécurité</a>
+            <a href="/workwave/Controller/index.php?action=security" class="dsh-nav-link <?= $action === 'security' ? 'active' : '' ?>">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Sécurité & Confidentialité
+            </a>
             <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Langue et Région</a>
-            <a href="#" class="dsh-nav-link" onclick="event.preventDefault();"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Sécurité du compte</a>
 
         <?php elseif ($role === 'employer'): ?>
             <div class="dsh-nav-label">Mon Compte</div>

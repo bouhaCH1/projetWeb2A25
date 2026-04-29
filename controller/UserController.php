@@ -304,6 +304,61 @@ class UserController {
         exit;
     }
 
+    public function showSecurity(): void {
+        $this->requireLogin();
+        $user = new User();
+        $user->id = (int) $_SESSION['user_id'];
+        $history = $user->getLoginHistory(10);
+        require_once __DIR__ . '/../View/user/security.php';
+    }
+
+    public function exportData(): void {
+        $this->requireLogin();
+        $user = new User();
+        $data = $user->getById((int) $_SESSION['user_id']);
+        
+        if (!$data) {
+            header('Location: index.php?action=security');
+            exit;
+        }
+
+        header('Content-Type: application/json; charset=utf-8');
+        header('Content-Disposition: attachment; filename="mes_donnees_workwave.json"');
+        echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    public function selfDeleteAccount(): void {
+        $this->requireLogin();
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?action=security');
+            exit;
+        }
+
+        $password = $_POST['password'] ?? '';
+        if (empty($password)) {
+            $_SESSION['errors'] = ['Veuillez entrer votre mot de passe pour confirmer la suppression.'];
+            header('Location: index.php?action=security');
+            exit;
+        }
+
+        $user = new User();
+        $user->id = (int) $_SESSION['user_id'];
+        $result = $user->selfDelete($password);
+
+        if ($result['success']) {
+            session_destroy();
+            session_start();
+            $_SESSION['success'] = $result['message'];
+            header('Location: index.php?action=login');
+        } else {
+            $_SESSION['errors'] = [$result['message']];
+            header('Location: index.php?action=security');
+        }
+        exit;
+    }
+
     public function logout(): void {
         session_destroy();
         header('Location: index.php?action=login');

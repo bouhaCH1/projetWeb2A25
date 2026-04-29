@@ -67,6 +67,8 @@ class User {
             $this->profile_pic = $row['profile_pic'] ?? '';
             $this->status      = $row['status'];
 
+            $this->logConnection();
+
             return ['success' => true, 'message' => 'Connexion réussie.'];
         }
 
@@ -175,6 +177,44 @@ class User {
         $stmt = $this->pdo->prepare("DELETE FROM users WHERE id=:id AND role != 'admin'");
         $stmt->execute([':id' => $id]);
         return ['success' => true, 'message' => 'Compte supprimé.'];
+    }
+
+    public function selfDelete(string $password): array {
+        $stmt = $this->pdo->prepare('SELECT password FROM users WHERE id = :id LIMIT 1');
+        $stmt->execute([':id' => $this->id]);
+        $row = $stmt->fetch();
+
+        if ($row && password_verify($password, $row['password'])) {
+            $stmt = $this->pdo->prepare('DELETE FROM users WHERE id=:id');
+            $stmt->execute([':id' => $this->id]);
+            return ['success' => true, 'message' => 'Votre compte a été supprimé définitivement.'];
+        }
+
+        return ['success' => false, 'message' => 'Mot de passe incorrect. Suppression annulée.'];
+    }
+
+    private function logConnection(): void {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
+        $agent = substr($_SERVER['HTTP_USER_AGENT'] ?? 'Unknown', 0, 250);
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO login_history (user_id, ip_address, user_agent) VALUES (:uid, :ip, :ua)'
+        );
+        $stmt->execute([':uid' => $this->id, ':ip' => $ip, ':ua' => $agent]);
+    }
+
+    public function getLoginHistory(int $limit = 5): array {
+        $stmt = $this->pdo->prepare(
+            'SELECT ip_address, user_agent, login_time 
+             FROM login_history 
+             WHERE user_id = :uid 
+             ORDER BY login_time DESC 
+             LIMIT :limit'
+        );
+        // Execute with bindValue for LIMIT to avoid string quoting issues
+        $stmt->bindValue(':uid', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 
     public function toggleStatus(int $id): array {
