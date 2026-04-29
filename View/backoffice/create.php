@@ -8,12 +8,35 @@ ob_start();
 
 <section class="bg-secondary rounded h-100 p-4 fade-in">
     <header class="mb-4">
-        <h1 class="h6 d-flex align-items-center">
-            <i class="fas fa-plus-circle me-2 text-primary"></i>
-            <span>Nouvelle Mission</span>
-        </h1>
-        <p class="text-light mb-0">Créer une nouvelle mission pour les freelancers</p>
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="h6 d-flex align-items-center mb-2">
+                    <i class="fas fa-plus-circle me-2 text-primary"></i>
+                    <span>Nouvelle Mission</span>
+                </h1>
+                <p class="text-light mb-0">Créer une nouvelle mission pour les freelancers</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-light btn-sm" id="saveDraftBtn" title="Sauvegarder comme brouillon">
+                    <i class="fas fa-save me-1"></i> Brouillon
+                </button>
+                <button type="button" class="btn btn-outline-light btn-sm" id="clearFormBtn" title="Vider le formulaire">
+                    <i class="fas fa-eraser me-1"></i> Vider
+                </button>
+            </div>
+        </div>
     </header>
+
+    <!-- Progress Bar -->
+    <div class="progress mb-4" style="height: 6px;">
+        <div class="progress-bar bg-primary" id="formProgress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <!-- Auto-save Status -->
+    <div class="alert alert-info bg-dark border border-info text-light d-none" id="autoSaveStatus">
+        <i class="fas fa-sync-alt me-2 fa-spin"></i>
+        <span id="autoSaveMessage">Brouillon sauvegardé automatiquement</span>
+    </div>
 
     <form id="missionForm" method="POST" action="index.php?action=create" novalidate class="needs-validation" novalidate>
 
@@ -88,10 +111,65 @@ ob_start();
                           placeholder="Décrivez en détail les tâches à accomplir..."
                           pattern="^[a-zA-Z\séèêëàâäùûüôöîïç,.!?;:'"()-]+$"
                           required
-                          aria-describedby="description-help err-description"><?= isset($_POST['description']) ? htmlspecialchars($_POST['description']) : '' ?></textarea>
-                <small id="description-help" class="form-text text-light">Soyez précis sur les livrables attendus et les compétences requises</small>
+                          maxlength="2000"
+                          aria-describedby="description-help err-description description-counter"><?= isset($_POST['description']) ? htmlspecialchars($_POST['description']) : '' ?></textarea>
+                <div class="d-flex justify-content-between">
+                    <small id="description-help" class="form-text text-light">Soyez précis sur les livrables attendus et les compétences requises</small>
+                    <small id="description-counter" class="form-text text-light">0 / 2000 caractères</small>
+                </div>
                 <div class="invalid-feedback" id="err-description">
                     <?= isset($errors['description']) ? $errors['description'] : 'Veuillez entrer une description détaillée' ?>
+                </div>
+            </div>
+
+            <!-- Additional Fields -->
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label for="categorie" class="form-label">
+                        Catégorie 
+                        <span class="text-muted">(optionnel)</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-0">
+                            <i class="fas fa-tag text-primary"></i>
+                        </span>
+                        <select name="categorie" 
+                                id="categorie"
+                                class="form-select bg-dark border-0"
+                                aria-describedby="categorie-help">
+                            <option value="">-- Choisir une catégorie --</option>
+                            <option value="developpement">Développement Web</option>
+                            <option value="mobile">Applications Mobiles</option>
+                            <option value="design">Design & UX</option>
+                            <option value="marketing">Marketing Digital</option>
+                            <option value="data">Data & Analytics</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <small id="categorie-help" class="form-text text-light">Aide à classer la mission</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="niveau" class="form-label">
+                        Niveau de compétence requis 
+                        <span class="text-muted">(optionnel)</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-0">
+                            <i class="fas fa-graduation-cap text-primary"></i>
+                        </span>
+                        <select name="niveau" 
+                                id="niveau"
+                                class="form-select bg-dark border-0"
+                                aria-describedby="niveau-help">
+                            <option value="">-- Choisir un niveau --</option>
+                            <option value="debutant">Débutant</option>
+                            <option value="intermediaire">Intermédiaire</option>
+                            <option value="avance">Avancé</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+                    <small id="niveau-help" class="form-text text-light">Niveau d'expertise attendu</small>
                 </div>
             </div>
         </fieldset>
@@ -235,7 +313,170 @@ ob_start();
 </section>
 
 <?php
-$extraJs = '<script src="../View/public/assets/js/validation.php"></script>';
+$extraJs = '
+<script>
+// Auto-save functionality
+let autoSaveTimer;
+const form = document.getElementById("missionForm");
+const autoSaveStatus = document.getElementById("autoSaveStatus");
+const autoSaveMessage = document.getElementById("autoSaveMessage");
+const progressBar = document.getElementById("formProgress");
+
+// Character counter for description
+const descriptionTextarea = document.getElementById("description");
+const descriptionCounter = document.getElementById("description-counter");
+
+descriptionTextarea.addEventListener("input", function() {
+    const length = this.value.length;
+    const maxLength = this.maxLength;
+    descriptionCounter.textContent = `${length} / ${maxLength} caractères`;
+    
+    if (length > maxLength * 0.9) {
+        descriptionCounter.classList.add("text-warning");
+    } else {
+        descriptionCounter.classList.remove("text-warning");
+    }
+});
+
+// Progress bar update
+function updateProgress() {
+    const inputs = form.querySelectorAll("input[required], textarea[required], select[required]");
+    let filled = 0;
+    
+    inputs.forEach(input => {
+        if (input.value.trim() !== "") {
+            filled++;
+        }
+    });
+    
+    const progress = (filled / inputs.length) * 100;
+    progressBar.style.width = progress + "%";
+    progressBar.setAttribute("aria-valuenow", progress);
+}
+
+// Auto-save to localStorage
+function saveDraft() {
+    const formData = new FormData(form);
+    const draft = {};
+    
+    for (let [key, value] of formData.entries()) {
+        draft[key] = value;
+    }
+    
+    localStorage.setItem("missionDraft", JSON.stringify(draft));
+    
+    // Show auto-save status
+    autoSaveStatus.classList.remove("d-none");
+    autoSaveMessage.textContent = "Brouillon sauvegardé automatiquement";
+    
+    setTimeout(() => {
+        autoSaveStatus.classList.add("d-none");
+    }, 2000);
+}
+
+// Load draft from localStorage
+function loadDraft() {
+    const draft = localStorage.getItem("missionDraft");
+    if (draft) {
+        const data = JSON.parse(draft);
+        
+        Object.keys(data).forEach(key => {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+                input.value = data[key];
+            }
+        });
+        
+        updateProgress();
+        
+        // Update character counter
+        const descriptionLength = descriptionTextarea.value.length;
+        descriptionCounter.textContent = `${descriptionLength} / 2000 caractères`;
+    }
+}
+
+// Clear form
+document.getElementById("clearFormBtn").addEventListener("click", function() {
+    if (confirm("Êtes-vous sûr de vouloir vider le formulaire ?")) {
+        form.reset();
+        localStorage.removeItem("missionDraft");
+        updateProgress();
+        descriptionCounter.textContent = "0 / 2000 caractères";
+    }
+});
+
+// Save draft manually
+document.getElementById("saveDraftBtn").addEventListener("click", function() {
+    saveDraft();
+    autoSaveMessage.textContent = "Brouillon sauvegardé manuellement";
+});
+
+// Auto-save on input change
+form.addEventListener("input", function() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(saveDraft, 1000);
+    updateProgress();
+});
+
+// Form validation
+form.addEventListener("submit", function(e) {
+    if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Show validation feedback
+        const inputs = form.querySelectorAll(":invalid");
+        inputs.forEach(input => {
+            input.classList.add("is-invalid");
+        });
+        
+        // Scroll to first error
+        const firstError = form.querySelector(":invalid");
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+            firstError.focus();
+        }
+    } else {
+        // Clear draft on successful submission
+        localStorage.removeItem("missionDraft");
+    }
+});
+
+// Real-time validation
+const inputs = form.querySelectorAll("input, textarea, select");
+inputs.forEach(input => {
+    input.addEventListener("blur", function() {
+        if (this.checkValidity()) {
+            this.classList.remove("is-invalid");
+            this.classList.add("is-valid");
+        } else {
+            this.classList.remove("is-valid");
+            this.classList.add("is-invalid");
+        }
+    });
+});
+
+// Initialize on page load
+document.addEventListener("DOMContentLoaded", function() {
+    loadDraft();
+    updateProgress();
+});
+
+// Keyboard shortcuts
+document.addEventListener("keydown", function(e) {
+    // Ctrl+S to save draft
+    if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+        saveDraft();
+    }
+    
+    // Ctrl+Enter to submit form
+    if (e.ctrlKey && e.key === "Enter") {
+        e.preventDefault();
+        form.submit();
+    }
+});
+</script>';
 $content = ob_get_clean();
 require_once 'layout.php';
 ?>

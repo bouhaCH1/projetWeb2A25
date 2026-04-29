@@ -705,6 +705,135 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--secondary-hover);
         }
+
+        /* Form Sections */
+        .form-section {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all var(--transition-normal);
+        }
+
+        .form-section:hover {
+            border-color: rgba(235, 22, 22, 0.3);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .form-section legend {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        /* Progress Bar */
+        .progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: var(--gradient-primary);
+            transition: width var(--transition-normal);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            position: sticky;
+            bottom: 0;
+            background: var(--secondary);
+            z-index: 10;
+        }
+
+        /* Empty States */
+        .empty-state {
+            padding: 3rem 1rem;
+        }
+
+        .empty-state-icon {
+            opacity: 0.5;
+            transition: opacity var(--transition-normal);
+        }
+
+        .empty-state:hover .empty-state-icon {
+            opacity: 0.8;
+        }
+
+        /* Table Row Hover */
+        .table-row-hover {
+            transition: background-color var(--transition-fast);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            min-width: 120px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        /* Validation States */
+        .is-valid {
+            border-color: var(--success) !important;
+            background: rgba(40, 167, 69, 0.1) !important;
+        }
+
+        .is-invalid {
+            border-color: var(--danger) !important;
+            background: rgba(220, 53, 69, 0.1) !important;
+        }
+
+        /* Input Group Text */
+        .input-group-text {
+            background: var(--dark) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: var(--light) !important;
+        }
+
+        /* Form Select Dropdown */
+        .form-select option {
+            background: var(--secondary);
+            color: var(--light);
+        }
+
+        /* Button Hover Effects */
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Alert Styles */
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+
+        .alert-info {
+            background: rgba(23, 162, 184, 0.15);
+            color: var(--info);
+        }
+
+        /* Badge Styles */
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 1rem;
+            }
+
+            .form-actions {
+                position: static;
+            }
+        }
     </style>
 </head>
 <body>
