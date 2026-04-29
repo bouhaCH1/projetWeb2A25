@@ -357,7 +357,12 @@ ob_start();
                         <small class="text-muted" id="modalIdLabel">Candidature #0</small>
                     </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="ms-auto d-flex align-items-center gap-3">
+                    <button type="button" class="btn py-2 px-4 rounded-3 fw-800 text-white border-0 shadow-sm" data-bs-dismiss="modal" style="background: linear-gradient(135deg, #ff6b35, #e63946); font-size: 0.8rem;">
+                        <i class="fas fa-arrow-left me-2"></i> RETOUR
+                    </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="row g-4">
@@ -394,16 +399,15 @@ ob_start();
                             <div id="modalMotivation" class="motivation-box flex-grow-1">--</div>
                             
                             <div id="modalCvContainer" class="mt-4 d-none">
-                                <a id="modalCvLink" href="#" target="_blank" class="btn btn-primary w-100 py-3">
-                                    <i class="fas fa-file-pdf me-2"></i> Consulter le CV (PDF)
+                                <a id="modalCvLink" href="#" target="_blank" class="btn btn-primary w-100 py-3 rounded-3 fw-bold">
+                                    <i class="fas fa-file-pdf me-2"></i> Consulter le CV complet
                                 </a>
                             </div>
                         </div>
                     </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer border-0 p-4">
-                <button type="button" class="btn-forge-close w-100" data-bs-dismiss="modal">Fermer la fiche</button>
             </div>
         </div>
     </div>
