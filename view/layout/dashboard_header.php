@@ -39,6 +39,88 @@ $userPicPath = !empty($userPic) ? '/workwave/' . htmlspecialchars($userPic) : '/
 
     <!-- Template Stylesheet -->
     <link href="/workwave/View/assets/darkpan/css/style.css" rel="stylesheet">
+    
+    <style>
+        /* Custom WorkWave Premium Dark Red Theme for Admin Panel */
+        :root {
+            --primary: #e63946 !important; /* Premium Crimson Red */
+            --primary-dark: #b51722 !important;
+            --secondary: #121212 !important; /* Deep dark background for cards, replacing dull grey */
+            --light: #d3d3d3 !important;
+            --dark: #050505 !important; /* True black background */
+        }
+        
+        body, .content {
+            background-color: var(--dark) !important;
+        }
+        
+        /* Remove the dull grey from sidebar and navbar */
+        .bg-secondary, .sidebar, .dropdown-menu {
+            background-color: var(--secondary) !important;
+            border-color: rgba(230, 57, 70, 0.1) !important;
+        }
+
+        /* Subtle red border separating cards/navbar to look sharp */
+        .navbar, .sidebar {
+            border-bottom: 1px solid rgba(230, 57, 70, 0.15) !important;
+            border-right: 1px solid rgba(230, 57, 70, 0.15) !important;
+        }
+        
+        .text-primary {
+            color: var(--primary) !important;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+            border: none !important;
+            color: #fff !important;
+            font-weight: bold !important;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4) !important;
+        }
+        
+        .sidebar .navbar .navbar-nav .nav-link.active,
+        .sidebar .navbar .navbar-nav .nav-link:hover {
+            color: var(--primary) !important;
+            background: rgba(230, 57, 70, 0.08) !important;
+            border-left: 3px solid var(--primary) !important;
+        }
+        
+        /* Premium inputs */
+        .form-control, .form-select {
+            background-color: #0a0a0a !important;
+            border: 1px solid rgba(230, 57, 70, 0.2) !important;
+            color: #fff !important;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 8px rgba(230, 57, 70, 0.3) !important;
+        }
+
+        .table {
+            color: #eaeaea !important;
+        }
+        
+        /* Dropdown fix */
+        .dropdown-item {
+            color: #eaeaea !important;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(230, 57, 70, 0.08) !important;
+            color: var(--primary) !important;
+        }
+
+        /* Card stylings to remove any lingering dull borders */
+        .rounded {
+            border: 1px solid rgba(255,255,255,0.05) !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+        }
+    </style>
 </head>
 
 <body>
