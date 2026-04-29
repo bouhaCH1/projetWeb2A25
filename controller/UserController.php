@@ -162,6 +162,7 @@ class UserController {
             $_SESSION['user_first_name'] = $user->first_name;
             $_SESSION['user_last_name'] = $user->last_name;
             $_SESSION['user_pic'] = $user->profile_pic;
+            $_SESSION['user_verified'] = (int)($user->is_verified ?? 0);
 
             if ($user->role === 'admin') {
                 header('Location: index.php?action=admin_dashboard');
@@ -214,6 +215,7 @@ class UserController {
                 $_SESSION['user_first_name'] = $user['first_name'];
                 $_SESSION['user_last_name'] = $user['last_name'];
                 $_SESSION['user_pic'] = $user['profile_pic'] ?? '';
+                $_SESSION['user_verified'] = (int)($user['is_verified'] ?? 0);
 
                 unset($_SESSION['pending_2fa_user_id']);
                 unset($_SESSION['pending_2fa_role']);
@@ -610,6 +612,21 @@ class UserController {
         $id = (int) ($_GET['id'] ?? 0);
         $user = new User();
         $result = $user->toggleStatus($id);
+
+        if ($result['success']) {
+            $_SESSION['success'] = $result['message'];
+        } else {
+            $_SESSION['errors'] = [$result['message']];
+        }
+        header('Location: index.php?action=admin_users');
+        exit;
+    }
+
+    public function adminToggleVerification(): void {
+        $this->requireAdmin();
+        $id = (int) ($_GET['id'] ?? 0);
+        $user = new User();
+        $result = $user->toggleVerification($id);
 
         if ($result['success']) {
             $_SESSION['success'] = $result['message'];

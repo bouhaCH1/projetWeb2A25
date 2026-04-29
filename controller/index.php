@@ -85,6 +85,9 @@ switch ($action) {
     case 'admin_toggle_user':
         $controller->adminToggleUserStatus();
         break;
+    case 'admin_toggle_verify':
+        $controller->adminToggleVerification();
+        break;
     case 'home':
     default:
         require_once __DIR__ . '/../View/layout/pl_header.php';

@@ -14,6 +14,7 @@ class User {
     public string $profile_pic = '';
     public string $status = 'active';
     public int $two_factor_enabled = 0;
+    public int $is_verified = 0;
     public string $created_at = '';
 
     private PDO $pdo;
@@ -50,7 +51,7 @@ class User {
 
     public function login(): array {
         $stmt = $this->pdo->prepare(
-            'SELECT id, first_name, last_name, email, password, role, profile_pic, status, two_factor_enabled
+            'SELECT id, first_name, last_name, email, password, role, profile_pic, status, two_factor_enabled, is_verified
              FROM users WHERE email = :email LIMIT 1'
         );
         $stmt->execute([':email' => $this->email]);
@@ -66,7 +67,8 @@ class User {
                     'success' => true, 
                     'requires_2fa' => true, 
                     'user_id' => (int)$row['id'],
-                    'role' => $row['role']
+                    'role' => $row['role'],
+                    'is_verified' => (int)$row['is_verified']
                 ];
             }
 
@@ -77,6 +79,7 @@ class User {
             $this->profile_pic = $row['profile_pic'] ?? '';
             $this->status      = $row['status'];
             $this->two_factor_enabled = 0;
+            $this->is_verified = (int)$row['is_verified'];
 
             $this->logConnection();
 
@@ -88,7 +91,7 @@ class User {
 
     public function getById(int $id) {
         $stmt = $this->pdo->prepare(
-            'SELECT id, first_name, last_name, email, phone, role, profile_pic, status, two_factor_enabled, created_at
+            'SELECT id, first_name, last_name, email, phone, role, profile_pic, status, two_factor_enabled, is_verified, created_at
              FROM users WHERE id = :id LIMIT 1'
         );
         $stmt->execute([':id' => $id]);
@@ -96,7 +99,7 @@ class User {
     }
 
     public function getAll(string $search = '', string $sort = 'created_at_desc'): array {
-        $sql = "SELECT id, first_name, last_name, email, phone, role, status, created_at
+        $sql = "SELECT id, first_name, last_name, email, phone, role, status, is_verified, created_at
                 FROM users WHERE role != 'admin'";
         
         $params = [];
@@ -256,6 +259,20 @@ class User {
         $stmt->execute([':state' => $newState, ':id' => $this->id]);
 
         $msg = ($newState === 1) ? 'Authentification à deux facteurs activée.' : 'Authentification à deux facteurs désactivée.';
+        return ['success' => true, 'message' => $msg];
+    }
+
+    public function toggleVerification(int $id): array {
+        $user = $this->getById($id);
+        if (!$user) {
+            return ['success' => false, 'message' => 'Utilisateur introuvable.'];
+        }
+        
+        $newState = ((int)$user['is_verified'] === 1) ? 0 : 1;
+        $stmt = $this->pdo->prepare("UPDATE users SET is_verified=:state WHERE id=:id");
+        $stmt->execute([':state' => $newState, ':id' => $id]);
+
+        $msg = ($newState === 1) ? 'Utilisateur certifié avec succès.' : 'Certification retirée.';
         return ['success' => true, 'message' => $msg];
     }
 

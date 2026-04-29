@@ -120,7 +120,7 @@ a:hover { color: var(--pl-orange-dk); }
   font-weight: 800; font-size: 1rem; color: #fff; overflow: hidden;
 }
 .pld-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.pld-user-name  { font-size: .82rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+.pld-user-name  { font-size: .82rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; display:flex; align-items:center; gap:4px; }
 .pld-user-role  { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: 1px; text-transform: capitalize; }
 
 /* Nav */
@@ -352,7 +352,12 @@ document.addEventListener('DOMContentLoaded', () => {
       <?php endif; ?>
     </div>
     <div>
-      <div class="pld-user-name"><?= $userName ?></div>
+      <div class="pld-user-name">
+          <?= $userName ?>
+          <?php if (($_SESSION['user_verified'] ?? 0) == 1): ?>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#3498db" stroke="#fff" stroke-width="2" style="flex-shrink:0;"><polygon points="12 2 15.09 5.09 19.5 5.5 20.91 9.91 24 12 20.91 14.09 19.5 18.5 15.09 18.91 12 22 8.91 18.91 4.5 18.5 3.09 14.09 0 12 3.09 9.91 4.5 5.5 8.91 5.09 12 2"></polygon><polyline points="9 12 11 14 15 10"></polyline></svg>
+          <?php endif; ?>
+      </div>
       <div class="pld-user-role"><?php
         if ($role === 'job_seeker') echo 'Candidat';
         elseif ($role === 'employer') echo 'Employeur';

@@ -83,7 +83,12 @@ include __DIR__ . '/../layout/dashboard_header.php';
             <?php foreach ($users as $u): ?>
             <tr>
                 <td style="color:#555;"><?= $u['id'] ?></td>
-                <td style="color:#e0e0e0;font-weight:500;"><?= htmlspecialchars($u['first_name'] . ' ' . $u['last_name']) ?></td>
+                <td style="color:#e0e0e0;font-weight:500;">
+                    <?= htmlspecialchars($u['first_name'] . ' ' . $u['last_name']) ?>
+                    <?php if (($u['is_verified'] ?? 0) == 1): ?>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#3498db" stroke="#fff" stroke-width="2" style="vertical-align:middle; margin-left:4px;"><polygon points="12 2 15.09 5.09 19.5 5.5 20.91 9.91 24 12 20.91 14.09 19.5 18.5 15.09 18.91 12 22 8.91 18.91 4.5 18.5 3.09 14.09 0 12 3.09 9.91 4.5 5.5 8.91 5.09 12 2"></polygon><polyline points="9 12 11 14 15 10"></polyline></svg>
+                    <?php endif; ?>
+                </td>
                 <td><?= htmlspecialchars($u['email']) ?></td>
                 <td><?= htmlspecialchars($u['phone'] ?? '—') ?></td>
                 <td>
@@ -114,6 +119,15 @@ include __DIR__ . '/../layout/dashboard_header.php';
                         <a href="/workwave/Controller/index.php?action=admin_toggle_user&id=<?= $u['id'] ?>"
                            class="btn btn-success btn-sm" style="background:#27ae60; color:#fff; border:none; margin-bottom:4px;"
                            onclick="return confirm('Réactiver cet utilisateur ?')">Activer</a>
+                    <?php endif; ?>
+                    <?php if (($u['is_verified'] ?? 0) == 1): ?>
+                        <a href="/workwave/Controller/index.php?action=admin_toggle_verify&id=<?= $u['id'] ?>"
+                           class="btn btn-secondary btn-sm" style="margin-bottom:4px;"
+                           onclick="return confirm('Retirer la certification de cet utilisateur ?')">Retirer Certif.</a>
+                    <?php else: ?>
+                        <a href="/workwave/Controller/index.php?action=admin_toggle_verify&id=<?= $u['id'] ?>"
+                           class="btn btn-primary btn-sm" style="background:#3498db; color:#fff; border:none; margin-bottom:4px;"
+                           onclick="return confirm('Certifier cet utilisateur (badge bleu) ?')">Certifier</a>
                     <?php endif; ?>
                     <a href="/workwave/Controller/index.php?action=admin_delete_user&id=<?= $u['id'] ?>"
                        class="btn btn-danger btn-sm" style="margin-bottom:4px;"

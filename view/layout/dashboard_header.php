@@ -238,7 +238,12 @@ input.input-error, select.input-error { border-color: rgba(220,60,60,.7) !import
             <?php endif; ?>
         </div>
         <div>
-            <div class="dsh-user-name"><?= $userName ?></div>
+            <div class="dsh-user-name">
+                <?= $userName ?>
+                <?php if (($_SESSION['user_verified'] ?? 0) == 1): ?>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#3498db" stroke="#fff" stroke-width="2" style="vertical-align:middle; margin-left:2px;"><polygon points="12 2 15.09 5.09 19.5 5.5 20.91 9.91 24 12 20.91 14.09 19.5 18.5 15.09 18.91 12 22 8.91 18.91 4.5 18.5 3.09 14.09 0 12 3.09 9.91 4.5 5.5 8.91 5.09 12 2"></polygon><polyline points="9 12 11 14 15 10"></polyline></svg>
+                <?php endif; ?>
+            </div>
             <div class="dsh-user-role"><?php
               if ($role === 'job_seeker') echo 'Candidat';
               elseif ($role === 'employer') echo 'Employeur';
