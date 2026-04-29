@@ -110,28 +110,53 @@ ob_start();
                     <h6>Découvrez les opportunités</h6>
                 </div>
                 
-                <!-- Filter & Sort Bar -->
-                <div class="cyber-card mb-5" style="padding: 20px;">
-                    <form method="GET" action="index.php" class="row g-3 align-items-center">
+                <!-- Modern Cyber Filter & Sort Bar -->
+                <div style="background: rgba(10, 14, 39, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(0, 255, 204, 0.2); border-radius: 20px; padding: 25px; margin-bottom: 50px; box-shadow: 0 15px 35px rgba(0,0,0,0.4);">
+                    <form method="GET" action="index.php" class="row g-4 align-items-center">
                         <input type="hidden" name="action" value="missions">
-                        <div class="col-md-5">
-                            <div class="input-group">
-                                <span class="input-group-text bg-dark border-0 text-primary"><i class="fa fa-search"></i></span>
-                                <input type="text" name="search" class="form-control bg-dark border-0 text-white" placeholder="Rechercher une mission..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                        
+                        <!-- Search Box -->
+                        <div class="col-lg-5">
+                            <div style="position: relative;">
+                                <i class="fa fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #00ffcc; opacity: 0.7;"></i>
+                                <input type="text" name="search" 
+                                    style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 15px 15px 15px 50px; color: #fff; outline: none; transition: all 0.3s;"
+                                    placeholder="Rechercher un projet ou une compétence..." 
+                                    onfocus="this.style.borderColor='#00ffcc'; this.style.boxShadow='0 0 15px rgba(0,255,204,0.1)';"
+                                    onblur="this.style.borderColor='rgba(255,255,255,0.1)';"
+                                    value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <select name="sort" class="form-select bg-dark border-0 text-white" onchange="this.form.submit()" style="border-radius: 10px;">
-                                <option value="" <?= (($_GET['sort'] ?? '') === '') ? 'selected' : '' ?>>Trier par...</option>
-                                <option value="title_asc" <?= (($_GET['sort'] ?? '') === 'title_asc') ? 'selected' : '' ?>>A-Z (Titre)</option>
-                                <option value="title_desc" <?= (($_GET['sort'] ?? '') === 'title_desc') ? 'selected' : '' ?>>Z-A (Titre)</option>
-                            </select>
+
+                        <!-- Sort Toggle -->
+                        <div class="col-lg-4">
+                            <div class="d-flex align-items-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 5px 15px;">
+                                <i class="fa fa-sort-alpha-down" style="color: #00ffcc; margin-right: 15px;"></i>
+                                <select name="sort" onchange="this.form.submit()" 
+                                    style="background: transparent; border: none; color: #fff; padding: 10px; width: 100%; outline: none; cursor: pointer; font-size: 14px; font-weight: 600;">
+                                    <option value="date_desc" style="background: #0a0e27;" <?= (($_GET['sort'] ?? '') === 'date_desc') ? 'selected' : '' ?>>Plus récents</option>
+                                    <option value="title_asc" style="background: #0a0e27;" <?= (($_GET['sort'] ?? '') === 'title_asc') ? 'selected' : '' ?>>Ordre A-Z</option>
+                                    <option value="title_desc" style="background: #0a0e27;" <?= (($_GET['sort'] ?? '') === 'title_desc') ? 'selected' : '' ?>>Ordre Z-A</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="cyber-btn w-100" style="padding: 10px;">Filtrer</button>
-                        </div>
-                        <div class="col-md-2">
-                            <a href="index.php?action=missions" class="btn btn-outline-danger w-100" style="border-radius: 25px; padding: 10px;">Reset</a>
+
+                        <!-- Actions -->
+                        <div class="col-lg-3">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="cyber-btn" style="flex: 1; padding: 12px; font-size: 14px;">
+                                    <i class="fa fa-filter me-2"></i> Filtrer
+                                </button>
+                                <?php if(!empty($_GET['search']) || !empty($_GET['sort'])): ?>
+                                    <a href="index.php?action=missions" class="btn" 
+                                       style="width: 45px; height: 45px; border-radius: 12px; background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.2); color: #ff6b6b; display: flex; align-items: center; justify-content: center; transition: 0.3s;"
+                                       onmouseover="this.style.background='rgba(255,107,107,0.2)'"
+                                       onmouseout="this.style.background='rgba(255,107,107,0.1)'"
+                                       title="Réinitialiser">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </form>
                 </div>

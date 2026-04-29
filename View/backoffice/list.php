@@ -100,26 +100,38 @@ ob_start();
 </style>
 
 <div class="mission-list-container fade-in">
-    <header class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h1 class="h4 text-white fw-800 mb-1">
-                <i class="fas fa-layer-group text-primary me-2"></i>
-                Gestion des Missions
-            </h1>
-            <p class="text-muted mb-0">Pilotez et suivez l'ensemble de vos projets en cours.</p>
-        </div>
-        <div class="d-flex gap-3 align-items-center">
-            <form method="GET" action="index.php" class="d-flex gap-2">
-                <input type="hidden" name="action" value="index">
-                <select name="sort" class="form-select bg-dark border-0 text-white" onchange="this.form.submit()" style="border-radius: 10px;">
-                    <option value="date_desc" <?= (($_GET['sort'] ?? '') === 'date_desc') ? 'selected' : '' ?>>Trier par...</option>
-                    <option value="title_asc" <?= (($_GET['sort'] ?? '') === 'title_asc') ? 'selected' : '' ?>>A-Z (Titre)</option>
-                    <option value="title_desc" <?= (($_GET['sort'] ?? '') === 'title_desc') ? 'selected' : '' ?>>Z-A (Titre)</option>
-                </select>
-            </form>
-            <a href="index.php?action=create" class="btn btn-primary px-4 py-2 fw-bold pulse-on-hover">
-                <i class="fas fa-plus me-2"></i> Nouvelle Mission
-            </a>
+    <header class="mb-5">
+        <div class="row align-items-center g-4">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center">
+                    <div style="width: 50px; height: 50px; background: var(--accent-gradient); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-right: 20px; box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);">
+                        <i class="fas fa-layer-group text-white" style="font-size: 1.4rem;"></i>
+                    </div>
+                    <div>
+                        <h1 class="h3 text-white fw-900 mb-0">Gestion des Missions</h1>
+                        <p class="text-muted mb-0 small">Pilotez et suivez l'ensemble de vos projets.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex gap-3 justify-content-md-end align-items-center">
+                    <!-- Styled Sort Dropdown -->
+                    <form method="GET" action="index.php" class="d-flex align-items-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 0 15px;">
+                        <input type="hidden" name="action" value="index">
+                        <i class="fas fa-sort-amount-down text-primary me-2"></i>
+                        <select name="sort" onchange="this.form.submit()" 
+                                style="background: transparent; border: none; color: #fff; padding: 12px 10px; outline: none; cursor: pointer; font-weight: 700; font-size: 0.85rem;">
+                            <option value="date_desc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'date_desc') ? 'selected' : '' ?>>Plus récents</option>
+                            <option value="title_asc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'title_asc') ? 'selected' : '' ?>>Titre (A-Z)</option>
+                            <option value="title_desc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'title_desc') ? 'selected' : '' ?>>Titre (Z-A)</option>
+                        </select>
+                    </form>
+
+                    <a href="index.php?action=create" class="btn btn-primary px-4 py-3 fw-800 rounded-4 pulse-on-hover shadow-lg">
+                        <i class="fas fa-plus me-2"></i> AJOUTER
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 

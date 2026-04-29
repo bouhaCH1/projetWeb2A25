@@ -212,37 +212,52 @@ ob_start();
         </a>
     </header>
 
-    <!-- Filters Section -->
-    <div class="filter-forge">
-        <form method="GET" action="index.php" class="row g-3 align-items-center">
+    <!-- Modern Forge Filter Bar -->
+    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 25px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+        <form method="GET" action="index.php" class="row g-4 align-items-center">
             <input type="hidden" name="action" value="candidatures">
-            <div class="col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text bg-dark border-0 text-primary">
-                        <i class="fas fa-filter"></i>
-                    </span>
-                    <select name="mission_id" class="form-select bg-dark border-0 text-white" id="mission-filter">
-                        <option value="">Toutes les missions</option>
+            
+            <!-- Mission Filter -->
+            <div class="col-lg-5">
+                <div class="d-flex align-items-center" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 0 15px;">
+                    <i class="fas fa-briefcase text-primary me-2"></i>
+                    <select name="mission_id" id="mission-filter" 
+                            style="background: transparent; border: none; color: #fff; padding: 12px 10px; width: 100%; outline: none; cursor: pointer; font-weight: 600;">
+                        <option value="" style="background: #12161f;">Toutes les missions</option>
                         <?php foreach ($missions as $m): ?>
-                            <option value="<?= (int)$m['id'] ?>" <?= ($selectedMissionId === (int)$m['id']) ? 'selected' : '' ?>>
+                            <option value="<?= (int)$m['id'] ?>" style="background: #12161f;" <?= ($selectedMissionId === (int)$m['id']) ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($m['titre']) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
             </div>
-            <div class="col-md-3">
-                <select name="sort" class="form-select bg-dark border-0 text-white" onchange="this.form.submit()">
-                    <option value="date_desc" <?= (($_GET['sort'] ?? '') === 'date_desc') ? 'selected' : '' ?>>Trier par...</option>
-                    <option value="name_asc" <?= (($_GET['sort'] ?? '') === 'name_asc') ? 'selected' : '' ?>>A-Z (Prénom)</option>
-                    <option value="name_desc" <?= (($_GET['sort'] ?? '') === 'name_desc') ? 'selected' : '' ?>>Z-A (Prénom)</option>
-                </select>
+
+            <!-- Sort Toggle -->
+            <div class="col-lg-4">
+                <div class="d-flex align-items-center" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 0 15px;">
+                    <i class="fas fa-sort-alpha-down text-primary me-2"></i>
+                    <select name="sort" onchange="this.form.submit()" 
+                            style="background: transparent; border: none; color: #fff; padding: 12px 10px; width: 100%; outline: none; cursor: pointer; font-weight: 600;">
+                        <option value="date_desc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'date_desc') ? 'selected' : '' ?>>Plus récents</option>
+                        <option value="name_asc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'name_asc') ? 'selected' : '' ?>>Prénom (A-Z)</option>
+                        <option value="name_desc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'name_desc') ? 'selected' : '' ?>>Prénom (Z-A)</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-md-3 d-flex gap-2">
-                <button type="submit" class="btn btn-primary w-100">Filtrer</button>
-                <a href="index.php?action=candidatures" class="btn btn-dark border-0" title="Réinitialiser">
-                    <i class="fas fa-redo"></i>
-                </a>
+
+            <!-- Actions -->
+            <div class="col-lg-3">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-800 rounded-3 shadow-sm">
+                        <i class="fas fa-filter me-2"></i> FILTRER
+                    </button>
+                    <?php if(!empty($_GET['mission_id']) || !empty($_GET['sort'])): ?>
+                        <a href="index.php?action=candidatures" class="btn btn-dark px-3 rounded-3 d-flex align-items-center justify-content-center" title="Reset">
+                            <i class="fas fa-redo"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
             </div>
         </form>
     </div>
@@ -291,7 +306,9 @@ ob_start();
                                 <a href="mailto:<?= htmlspecialchars($c['email']) ?>" class="text-primary text-decoration-none small d-block mb-1">
                                     <i class="fas fa-envelope me-1"></i> Email
                                 </a>
-                                <span class="text-muted small"><i class="fas fa-phone me-1"></i> Contact</span>
+                                <a href="tel:<?= htmlspecialchars($c['telephone']) ?>" class="text-muted text-decoration-none small">
+                                    <i class="fas fa-phone me-1"></i> Contact
+                                </a>
                             </td>
                             <td>
                                 <?php 
@@ -387,13 +404,13 @@ ob_start();
                             <div class="col-12">
                                 <div class="info-card-forge">
                                     <span class="label-forge">Email Professionnel</span>
-                                    <div id="modalEmail" class="value-forge text-break">--</div>
+                                    <a id="modalEmail" href="#" class="value-forge text-break text-decoration-none">--</a>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="info-card-forge">
                                     <span class="label-forge">Téléphone</span>
-                                    <div id="modalPhone" class="value-forge">--</div>
+                                    <a id="modalPhone" href="#" class="value-forge text-decoration-none">--</a>
                                 </div>
                             </div>
                         </div>
@@ -429,7 +446,9 @@ ob_start();
         document.getElementById('modalAvatar').innerText = (data.prenom[0] + data.nom[0]).toUpperCase();
         document.getElementById('modalMission').innerText = data.mission_titre;
         document.getElementById('modalEmail').innerText = data.email;
+        document.getElementById('modalEmail').href = 'mailto:' + data.email;
         document.getElementById('modalPhone').innerText = data.telephone;
+        document.getElementById('modalPhone').href = 'tel:' + data.telephone;
         document.getElementById('modalMotivation').innerText = data.motivation;
         
         // CV handling
