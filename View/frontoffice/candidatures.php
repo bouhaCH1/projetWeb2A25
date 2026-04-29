@@ -7,7 +7,7 @@ ob_start();
     <div class="row">
         <div class="col-12">
             <div class="cyber-alert cyber-alert-success">
-                <i class="fa fa-check-circle"></i> Candidature mise a jour avec succes.
+                <i class="fa fa-check-circle"></i> Candidature mise à jour avec succès.
             </div>
         </div>
     </div>
@@ -18,78 +18,85 @@ ob_start();
     <div class="row">
         <div class="col-12">
             <div class="cyber-alert cyber-alert-warning">
-                <i class="fa fa-check-circle"></i> Candidature supprimee avec succes.
+                <i class="fa fa-check-circle"></i> Candidature supprimée avec succès.
             </div>
         </div>
     </div>
 </div>
 <?php endif; ?>
 
-<!-- ===== Page Banner ===== -->
-<div class="cyber-banner">
+<!-- Hero Section -->
+<section class="hero" style="min-height: 40vh; padding: 80px 0 40px;">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h6>Gestion</h6>
-                <h2>Mes Candidatures</h2>
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 style="font-size: 42px; font-weight: 700; margin-bottom: 15px; background: linear-gradient(135deg, #00ffcc, #00ccff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Mes Candidatures
+                </h1>
+                <p style="color: rgba(255,255,255,0.7); font-size: 16px; margin-bottom: 20px;">
+                    Gérez toutes vos candidatures aux missions
+                </p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<div style="padding: 60px 0;">
+<!-- Candidatures List -->
+<section style="padding: 40px 0;">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="section-heading">
-                    <h2>Candidatures Soumises</h2>
-                    <h6>Gerez vos candidatures aux missions</h6>
+        <?php if (empty($candidatures)): ?>
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="cyber-card" style="text-align: center; padding: 60px 30px;">
+                        <i class="fa fa-info-circle" style="font-size: 64px; color: rgba(0, 255, 204, 0.3); margin-bottom: 20px;"></i>
+                        <h4 style="color: #ffffff; margin-bottom: 10px;">Aucune candidature</h4>
+                        <p style="color: rgba(255,255,255,0.6); margin-bottom: 20px;">Vous n'avez pas encore postulé à des missions.</p>
+                        <a href="index.php?action=missions" class="cyber-btn">
+                            <i class="fa fa-briefcase"></i> Voir les missions
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-12">
-                <?php if (empty($candidatures)): ?>
-                    <div class="cyber-empty">
-                        <i class="fa fa-info-circle"></i>
-                        <h4>Aucune candidature</h4>
-                        <p>Vous n'avez pas encore postule a des missions.</p>
-                        <a href="index.php?action=missions" class="cyber-btn"><i class="fa fa-briefcase"></i> Voir les missions</a>
-                    </div>
-                <?php else: ?>
-                    <div class="row">
-                        <?php foreach ($candidatures as $candidature): ?>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="cyber-card">
-                                    <div class="cyber-card-image" style="height: 150px;">
-                                        <i class="fa fa-user"></i>
-                                    </div>
-                                    <div class="cyber-card-body">
-                                        <h4><?php echo htmlspecialchars($candidature['nom'] . ' ' . $candidature['prenom']); ?></h4>
-                                        <h6 style="color: var(--neon-cyan); margin-bottom: 10px; font-size: 14px;"><?php echo htmlspecialchars($candidature['mission_titre']); ?></h6>
-                                        <div class="cyber-meta">
-                                            <i class="fa fa-envelope"></i> <?php echo htmlspecialchars($candidature['email']); ?>
-                                        </div>
-                                        <div class="cyber-meta">
-                                            <i class="fa fa-phone"></i> <?php echo htmlspecialchars($candidature['telephone']); ?>
-                                        </div>
-                                        <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 15px;">
-                                            <?php echo htmlspecialchars(substr($candidature['motivation'], 0, 80)) . '...'; ?>
-                                        </p>
-                                        <div style="display: flex; gap: 10px;">
-                                            <a href="index.php?action=front_edit_candidature&id=<?php echo $candidature['id']; ?>" class="cyber-btn" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px 15px;"><i class="fa fa-edit"></i> Modifier</a>
-                                            <a href="index.php?action=front_delete_candidature&id=<?php echo $candidature['id']; ?>" onclick="return confirm('Etes-vous sur de vouloir supprimer cette candidature ?')" class="cyber-btn-danger" style="padding: 10px 15px; border-radius: 25px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px;">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </div>
-                                    </div>
+        <?php else: ?>
+            <div class="row">
+                <?php foreach ($candidatures as $candidature): ?>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="cyber-card">
+                            <div style="height: 120px; background: linear-gradient(135deg, rgba(0, 255, 204, 0.1), rgba(0, 204, 255, 0.1)); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                <i class="fa fa-user" style="font-size: 40px; color: rgba(0, 255, 204, 0.3);"></i>
+                            </div>
+                            <div style="padding: 20px;">
+                                <h4 style="color: #ffffff; font-size: 16px; font-weight: 600; margin-bottom: 10px;">
+                                    <?php echo htmlspecialchars($candidature['nom'] . ' ' . $candidature['prenom']); ?>
+                                </h4>
+                                <h6 style="color: #00ccff; margin-bottom: 12px; font-size: 14px;">
+                                    <?php echo htmlspecialchars($candidature['mission_titre']); ?>
+                                </h6>
+                                <div style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 8px;">
+                                    <i class="fa fa-envelope"></i> <?php echo htmlspecialchars($candidature['email']); ?>
+                                </div>
+                                <div style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 12px;">
+                                    <i class="fa fa-phone"></i> <?php echo htmlspecialchars($candidature['telephone']); ?>
+                                </div>
+                                <p style="color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 15px; line-height: 1.5;">
+                                    <?php echo htmlspecialchars(substr($candidature['motivation'], 0, 80)) . '...'; ?>
+                                </p>
+                                <div style="display: flex; gap: 10px;">
+                                    <a href="index.php?action=front_edit_candidature&id=<?php echo $candidature['id']; ?>" class="cyber-btn" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;">
+                                        <i class="fa fa-edit"></i> Modifier
+                                    </a>
+                                    <a href="index.php?action=front_delete_candidature&id=<?php echo $candidature['id']; ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?')" style="padding: 10px 15px; border-radius: 25px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); color: #ffffff;">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
+                        </div>
                     </div>
-                <?php endif; ?>
+                <?php endforeach; ?>
             </div>
-        </div>
+        <?php endif; ?>
     </div>
-</div>
+</section>
 
 <?php
 $content = ob_get_clean();
