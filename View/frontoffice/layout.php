@@ -244,10 +244,11 @@
           </div>
           <p style="color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.8;">Work Wave est une plateforme de mise en relation entre freelances et clients pour des missions de qualite. Trouvez la mission parfaite ou le talent ideal.</p>
           <div style="display: flex; gap: 12px; margin-top: 20px;">
-            <a href="https://facebook.com/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fa fa-facebook-f"></i></a>
-            <a href="https://twitter.com/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fa fa-twitter"></i></a>
-            <a href="https://linkedin.com/company/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fa fa-linkedin-in"></i></a>
-            <a href="https://instagram.com/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fa fa-instagram"></i></a>
+            <a href="https://facebook.com/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fab fa-twitter"></i></a>
+            <a href="https://linkedin.com/company/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://instagram.com/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/workwave" target="_blank" style="width: 40px; height: 40px; background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #00ffcc; text-decoration: none;"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
         <div class="col-lg-4 mb-4 mb-lg-0">
@@ -266,13 +267,13 @@
         </div>
         <div class="col-lg-4">
           <h4 style="color: #ffffff; font-size: 18px; font-weight: 700; margin-bottom: 25px; position: relative; padding-bottom: 12px;">Contactez-nous</h4>
-          <div style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 15px; display: flex; align-items: center;"><i class="fa fa-map-marker-alt" style="color: #00ffcc; margin-right: 10px;"></i> Tunisie</div>
-          <div style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 15px; display: flex; align-items: center;"><i class="fa fa-envelope" style="color: #00ffcc; margin-right: 10px;"></i> <a href="mailto:contact@workwave.fr" style="color: #00ccff; text-decoration: none;">contact@workwave.fr</a></div>
-          <div style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 15px; display: flex; align-items: center;"><i class="fa fa-phone" style="color: #00ffcc; margin-right: 10px;"></i> +216 23053200</div>
+          <div style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 15px; display: flex; align-items: center;"><i class="fas fa-location-dot" style="color: #00ffcc; margin-right: 10px;"></i> Tunisie</div>
+          <div style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 15px; display: flex; align-items: center;"><i class="fas fa-envelope" style="color: #00ffcc; margin-right: 10px;"></i> <a href="mailto:contact@workwave.fr" style="color: #00ccff; text-decoration: none;">contact@workwave.fr</a></div>
+          <div style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 15px; display: flex; align-items: center;"><i class="fas fa-phone" style="color: #00ffcc; margin-right: 10px;"></i> +216 23053200</div>
         </div>
         <div class="col-lg-12">
           <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 25px; margin-top: 40px; text-align: center;">
-            <p style="color: rgba(255,255,255,0.5); font-size: 13px;">Copyright &copy; 2026 <span style="color: #00ffcc; font-weight: 600;">Work Wave</span>. Tous droits reserves. Fait avec <i class="fa fa-heart" style="color: #ff6b6b;"></i> en Tunisie.</p>
+            <p style="color: rgba(255,255,255,0.5); font-size: 13px;">Copyright &copy; 2026 <span style="color: #00ffcc; font-weight: 600;">Work Wave</span>. Tous droits reserves. Fait avec <i class="fas fa-heart" style="color: #ff6b6b;"></i> en Tunisie.</p>
           </div>
         </div>
       </div>
