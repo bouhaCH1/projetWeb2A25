@@ -105,9 +105,35 @@ ob_start();
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="section-heading" style="text-align: center; margin-bottom: 50px;">
+                <div class="section-heading" style="text-align: center; margin-bottom: 30px;">
                     <h2>Missions Disponibles</h2>
                     <h6>Découvrez les opportunités</h6>
+                </div>
+                
+                <!-- Filter & Sort Bar -->
+                <div class="cyber-card mb-5" style="padding: 20px;">
+                    <form method="GET" action="index.php" class="row g-3 align-items-center">
+                        <input type="hidden" name="action" value="missions">
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-0 text-primary"><i class="fa fa-search"></i></span>
+                                <input type="text" name="search" class="form-control bg-dark border-0 text-white" placeholder="Rechercher une mission..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="sort" class="form-select bg-dark border-0 text-white" onchange="this.form.submit()" style="border-radius: 10px;">
+                                <option value="" <?= (($_GET['sort'] ?? '') === '') ? 'selected' : '' ?>>Trier par...</option>
+                                <option value="title_asc" <?= (($_GET['sort'] ?? '') === 'title_asc') ? 'selected' : '' ?>>A-Z (Titre)</option>
+                                <option value="title_desc" <?= (($_GET['sort'] ?? '') === 'title_desc') ? 'selected' : '' ?>>Z-A (Titre)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="cyber-btn w-100" style="padding: 10px;">Filtrer</button>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="index.php?action=missions" class="btn btn-outline-danger w-100" style="border-radius: 25px; padding: 10px;">Reset</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

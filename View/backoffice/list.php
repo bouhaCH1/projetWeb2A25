@@ -108,9 +108,19 @@ ob_start();
             </h1>
             <p class="text-muted mb-0">Pilotez et suivez l'ensemble de vos projets en cours.</p>
         </div>
-        <a href="index.php?action=create" class="btn btn-primary px-4 py-2 fw-bold pulse-on-hover">
-            <i class="fas fa-plus me-2"></i> Nouvelle Mission
-        </a>
+        <div class="d-flex gap-3 align-items-center">
+            <form method="GET" action="index.php" class="d-flex gap-2">
+                <input type="hidden" name="action" value="index">
+                <select name="sort" class="form-select bg-dark border-0 text-white" onchange="this.form.submit()" style="border-radius: 10px;">
+                    <option value="date_desc" <?= (($_GET['sort'] ?? '') === 'date_desc') ? 'selected' : '' ?>>Trier par...</option>
+                    <option value="title_asc" <?= (($_GET['sort'] ?? '') === 'title_asc') ? 'selected' : '' ?>>A-Z (Titre)</option>
+                    <option value="title_desc" <?= (($_GET['sort'] ?? '') === 'title_desc') ? 'selected' : '' ?>>Z-A (Titre)</option>
+                </select>
+            </form>
+            <a href="index.php?action=create" class="btn btn-primary px-4 py-2 fw-bold pulse-on-hover">
+                <i class="fas fa-plus me-2"></i> Nouvelle Mission
+            </a>
+        </div>
     </header>
 
     <?php if (empty($missions)): ?>

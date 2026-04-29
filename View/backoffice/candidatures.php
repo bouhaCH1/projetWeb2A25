@@ -216,7 +216,7 @@ ob_start();
     <div class="filter-forge">
         <form method="GET" action="index.php" class="row g-3 align-items-center">
             <input type="hidden" name="action" value="candidatures">
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <div class="input-group">
                     <span class="input-group-text bg-dark border-0 text-primary">
                         <i class="fas fa-filter"></i>
@@ -230,6 +230,13 @@ ob_start();
                         <?php endforeach; ?>
                     </select>
                 </div>
+            </div>
+            <div class="col-md-3">
+                <select name="sort" class="form-select bg-dark border-0 text-white" onchange="this.form.submit()">
+                    <option value="date_desc" <?= (($_GET['sort'] ?? '') === 'date_desc') ? 'selected' : '' ?>>Trier par...</option>
+                    <option value="name_asc" <?= (($_GET['sort'] ?? '') === 'name_asc') ? 'selected' : '' ?>>A-Z (Prénom)</option>
+                    <option value="name_desc" <?= (($_GET['sort'] ?? '') === 'name_desc') ? 'selected' : '' ?>>Z-A (Prénom)</option>
+                </select>
             </div>
             <div class="col-md-3 d-flex gap-2">
                 <button type="submit" class="btn btn-primary w-100">Filtrer</button>

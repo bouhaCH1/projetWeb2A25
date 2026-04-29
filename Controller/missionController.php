@@ -18,7 +18,8 @@ class MissionController {
     public function frontIndex() {
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
         $statut = isset($_GET['statut']) ? trim($_GET['statut']) : '';
-        $missions = $this->mission->getAll($search, $statut);
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'date_desc';
+        $missions = $this->mission->getAll($search, $statut, $sort);
         require_once __DIR__ . '/../View/frontoffice/missions.php';
     }
 
@@ -209,7 +210,8 @@ class MissionController {
     }
 
     public function index() {
-        $missions = $this->mission->getAll();
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'date_desc';
+        $missions = $this->mission->getAll('', '', $sort);
         require_once __DIR__ . '/../View/backoffice/list.php';
     }
 
@@ -262,9 +264,10 @@ class MissionController {
     public function candidatures() {
         $selectedMissionId = isset($_GET['mission_id']) ? (int)$_GET['mission_id'] : 0;
         $selectedMissionId = $selectedMissionId > 0 ? $selectedMissionId : null;
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'date_desc';
 
         $missions = $this->mission->getAll();
-        $candidatures = $this->candidature->getAllWithMission($selectedMissionId);
+        $candidatures = $this->candidature->getAllWithMission($selectedMissionId, $sort);
         require_once __DIR__ . '/../View/backoffice/candidatures.php';
     }
 

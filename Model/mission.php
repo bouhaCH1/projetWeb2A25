@@ -20,7 +20,7 @@ class Mission {
     }
 
     // READ ALL
-    public function getAll($search = '', $statut = '') {
+    public function getAll($search = '', $statut = '', $sort = 'date_desc') {
         $query = "SELECT * FROM " . $this->table;
         $conditions = [];
 
@@ -35,7 +35,13 @@ class Mission {
             $query .= " WHERE " . implode(' AND ', $conditions);
         }
 
-        $query .= " ORDER BY created_at DESC";
+        // Sorting logic
+        switch ($sort) {
+            case 'title_asc': $query .= " ORDER BY titre ASC"; break;
+            case 'title_desc': $query .= " ORDER BY titre DESC"; break;
+            case 'date_desc':
+            default: $query .= " ORDER BY created_at DESC"; break;
+        }
         $stmt = $this->conn->prepare($query);
 
         if (!empty($search)) {
