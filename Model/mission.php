@@ -11,6 +11,8 @@ class Mission {
     public $date_fin;
     public $statut;
     public $competences;
+    public $categorie;
+    public $niveau;
     public $created_at;
 
     public function __construct($db) {
@@ -60,8 +62,8 @@ class Mission {
     // CREATE
     public function create() {
         $query = "INSERT INTO " . $this->table . " 
-                  (titre, description, budget, date_debut, date_fin, statut, competences) 
-                  VALUES (:titre, :description, :budget, :date_debut, :date_fin, :statut, :competences)";
+                  (titre, description, budget, date_debut, date_fin, statut, competences, categorie, niveau) 
+                  VALUES (:titre, :description, :budget, :date_debut, :date_fin, :statut, :competences, :categorie, :niveau)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':titre', $this->titre);
         $stmt->bindParam(':description', $this->description);
@@ -70,6 +72,8 @@ class Mission {
         $stmt->bindParam(':date_fin', $this->date_fin);
         $stmt->bindParam(':statut', $this->statut);
         $stmt->bindParam(':competences', $this->competences);
+        $stmt->bindParam(':categorie', $this->categorie);
+        $stmt->bindParam(':niveau', $this->niveau);
         return $stmt->execute();
     }
 
@@ -78,7 +82,8 @@ class Mission {
         $query = "UPDATE " . $this->table . " 
                   SET titre=:titre, description=:description, budget=:budget,
                       date_debut=:date_debut, date_fin=:date_fin, 
-                      statut=:statut, competences=:competences
+                      statut=:statut, competences=:competences,
+                      categorie=:categorie, niveau=:niveau
                   WHERE id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $this->id);
@@ -89,6 +94,8 @@ class Mission {
         $stmt->bindParam(':date_fin', $this->date_fin);
         $stmt->bindParam(':statut', $this->statut);
         $stmt->bindParam(':competences', $this->competences);
+        $stmt->bindParam(':categorie', $this->categorie);
+        $stmt->bindParam(':niveau', $this->niveau);
         return $stmt->execute();
     }
 

@@ -64,7 +64,6 @@ class MissionController {
     }
 
     public function frontDelete() {
-        die("frontDelete reached: " . ($_GET['id'] ?? 'no id'));
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if ($id > 0) {
             $this->mission->delete($id);
@@ -296,6 +295,8 @@ class MissionController {
         $this->mission->date_fin = $data['date_fin'];
         $this->mission->statut = $data['statut'];
         $this->mission->competences = trim($data['competences']);
+        $this->mission->categorie = isset($data['categorie']) ? trim($data['categorie']) : null;
+        $this->mission->niveau = isset($data['niveau']) ? trim($data['niveau']) : null;
     }
 
     private function validate($data) {

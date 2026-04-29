@@ -79,9 +79,39 @@ ob_start();
                                     <div class="cyber-card-body">
                                         <h4><?php echo htmlspecialchars($mission['titre']); ?></h4>
                                         <p><?php echo htmlspecialchars(substr($mission['description'], 0, 80)) . '...'; ?></p>
-                                        <span class="cyber-badge cyber-badge-green" style="margin-bottom: 10px; display: inline-block;">
-                                            <?php echo htmlspecialchars($mission['statut']); ?>
-                                        </span>
+                                        <div style="margin-bottom: 10px;">
+                                            <span class="cyber-badge cyber-badge-green" style="margin-right: 5px;">
+                                                <?php echo htmlspecialchars($mission['statut']); ?>
+                                            </span>
+                                            <?php 
+                                            $categorieLabels = [
+                                                'developpement' => 'Développement Web',
+                                                'mobile' => 'Mobile',
+                                                'design' => 'Design',
+                                                'marketing' => 'Marketing',
+                                                'data' => 'Data',
+                                                'autre' => 'Autre'
+                                            ];
+                                            $categorie = $mission['categorie'] ?? '';
+                                            if ($categorie): ?>
+                                            <span class="cyber-badge cyber-badge-blue" style="margin-right: 5px;">
+                                                <?php echo $categorieLabels[$categorie] ?? $categorie; ?>
+                                            </span>
+                                            <?php endif; ?>
+                                            <?php 
+                                            $niveauLabels = [
+                                                'debutant' => 'Débutant',
+                                                'intermediaire' => 'Intermédiaire',
+                                                'avance' => 'Avancé',
+                                                'expert' => 'Expert'
+                                            ];
+                                            $niveau = $mission['niveau'] ?? '';
+                                            if ($niveau): ?>
+                                            <span class="cyber-badge cyber-badge-purple">
+                                                <?php echo $niveauLabels[$niveau] ?? $niveau; ?>
+                                            </span>
+                                            <?php endif; ?>
+                                        </div>
                                         <div class="cyber-meta">
                                             <i class="fa fa-calendar"></i> Du <?php echo date('d/m/Y', strtotime($mission['date_debut'])); ?> au <?php echo date('d/m/Y', strtotime($mission['date_fin'])); ?>
                                         </div>

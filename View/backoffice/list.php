@@ -38,6 +38,8 @@ ob_start();
                         <th scope="col">#</th>
                         <th scope="col">Titre</th>
                         <th scope="col">Budget</th>
+                        <th scope="col">Catégorie</th>
+                        <th scope="col">Niveau</th>
                         <th scope="col">Date début</th>
                         <th scope="col">Date fin</th>
                         <th scope="col">Statut</th>
@@ -58,6 +60,32 @@ ob_start();
                             <span class="budget-amount text-primary fw-bold">
                                 <?= number_format($m['budget'], 0, ',', ' ') ?> EUR
                             </span>
+                        </td>
+                        <td>
+                            <?php 
+                            $categorieLabels = [
+                                'developpement' => 'Développement Web',
+                                'mobile' => 'Mobile',
+                                'design' => 'Design & UX',
+                                'marketing' => 'Marketing',
+                                'data' => 'Data',
+                                'autre' => 'Autre'
+                            ];
+                            $categorie = $m['categorie'] ?? '';
+                            ?>
+                            <span class="badge bg-info"><?= $categorieLabels[$categorie] ?? '-' ?></span>
+                        </td>
+                        <td>
+                            <?php 
+                            $niveauLabels = [
+                                'debutant' => 'Débutant',
+                                'intermediaire' => 'Intermédiaire',
+                                'avance' => 'Avancé',
+                                'expert' => 'Expert'
+                            ];
+                            $niveau = $m['niveau'] ?? '';
+                            ?>
+                            <span class="badge bg-secondary"><?= $niveauLabels[$niveau] ?? '-' ?></span>
                         </td>
                         <td>
                             <time datetime="<?= $m['date_debut'] ?>">

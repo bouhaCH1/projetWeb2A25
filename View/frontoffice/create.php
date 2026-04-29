@@ -74,6 +74,31 @@ ob_start();
                         </div>
                     </div>
 
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label>Catégorie <span class="optional">(optionnel)</span></label>
+                            <select name="categorie" id="categorie">
+                                <option value="">-- Choisir --</option>
+                                <option value="developpement" <?= (isset($_POST['categorie']) && $_POST['categorie'] === 'developpement') ? 'selected' : '' ?>>Développement Web</option>
+                                <option value="mobile" <?= (isset($_POST['categorie']) && $_POST['categorie'] === 'mobile') ? 'selected' : '' ?>>Applications Mobiles</option>
+                                <option value="design" <?= (isset($_POST['categorie']) && $_POST['categorie'] === 'design') ? 'selected' : '' ?>>Design & UX</option>
+                                <option value="marketing" <?= (isset($_POST['categorie']) && $_POST['categorie'] === 'marketing') ? 'selected' : '' ?>>Marketing Digital</option>
+                                <option value="data" <?= (isset($_POST['categorie']) && $_POST['categorie'] === 'data') ? 'selected' : '' ?>>Data & Analytics</option>
+                                <option value="autre" <?= (isset($_POST['categorie']) && $_POST['categorie'] === 'autre') ? 'selected' : '' ?>>Autre</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Niveau <span class="optional">(optionnel)</span></label>
+                            <select name="niveau" id="niveau">
+                                <option value="">-- Choisir --</option>
+                                <option value="debutant" <?= (isset($_POST['niveau']) && $_POST['niveau'] === 'debutant') ? 'selected' : '' ?>>Débutant</option>
+                                <option value="intermediaire" <?= (isset($_POST['niveau']) && $_POST['niveau'] === 'intermediaire') ? 'selected' : '' ?>>Intermédiaire</option>
+                                <option value="avance" <?= (isset($_POST['niveau']) && $_POST['niveau'] === 'avance') ? 'selected' : '' ?>>Avancé</option>
+                                <option value="expert" <?= (isset($_POST['niveau']) && $_POST['niveau'] === 'expert') ? 'selected' : '' ?>>Expert</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="d-flex gap-3">
                         <button type="submit" class="cyber-btn" style="border: none; cursor: pointer;">
                             <i class="fa fa-save"></i> Enregistrer

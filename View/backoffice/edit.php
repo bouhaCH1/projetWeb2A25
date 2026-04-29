@@ -94,6 +94,57 @@ ob_start();
                     <?= isset($errors['description']) ? $errors['description'] : 'Veuillez entrer une description détaillée' ?>
                 </div>
             </div>
+
+            <!-- Additional Fields -->
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label for="categorie" class="form-label">
+                        Catégorie 
+                        <span class="text-muted">(optionnel)</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-0">
+                            <i class="fas fa-tag text-primary"></i>
+                        </span>
+                        <select name="categorie" 
+                                id="categorie"
+                                class="form-select bg-dark border-0"
+                                aria-describedby="categorie-help">
+                            <option value="">-- Choisir une catégorie --</option>
+                            <option value="developpement" <?= (isset($_POST['categorie']) && $_POST['categorie']=='developpement') || (isset($missionData['categorie']) && $missionData['categorie']=='developpement') ? 'selected' : '' ?>>Développement Web</option>
+                            <option value="mobile" <?= (isset($_POST['categorie']) && $_POST['categorie']=='mobile') || (isset($missionData['categorie']) && $missionData['categorie']=='mobile') ? 'selected' : '' ?>>Applications Mobiles</option>
+                            <option value="design" <?= (isset($_POST['categorie']) && $_POST['categorie']=='design') || (isset($missionData['categorie']) && $missionData['categorie']=='design') ? 'selected' : '' ?>>Design & UX</option>
+                            <option value="marketing" <?= (isset($_POST['categorie']) && $_POST['categorie']=='marketing') || (isset($missionData['categorie']) && $missionData['categorie']=='marketing') ? 'selected' : '' ?>>Marketing Digital</option>
+                            <option value="data" <?= (isset($_POST['categorie']) && $_POST['categorie']=='data') || (isset($missionData['categorie']) && $missionData['categorie']=='data') ? 'selected' : '' ?>>Data & Analytics</option>
+                            <option value="autre" <?= (isset($_POST['categorie']) && $_POST['categorie']=='autre') || (isset($missionData['categorie']) && $missionData['categorie']=='autre') ? 'selected' : '' ?>>Autre</option>
+                        </select>
+                    </div>
+                    <small id="categorie-help" class="form-text text-light">Aide à classer la mission</small>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="niveau" class="form-label">
+                        Niveau de compétence requis 
+                        <span class="text-muted">(optionnel)</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-0">
+                            <i class="fas fa-graduation-cap text-primary"></i>
+                        </span>
+                        <select name="niveau" 
+                                id="niveau"
+                                class="form-select bg-dark border-0"
+                                aria-describedby="niveau-help">
+                            <option value="">-- Choisir un niveau --</option>
+                            <option value="debutant" <?= (isset($_POST['niveau']) && $_POST['niveau']=='debutant') || (isset($missionData['niveau']) && $missionData['niveau']=='debutant') ? 'selected' : '' ?>>Débutant</option>
+                            <option value="intermediaire" <?= (isset($_POST['niveau']) && $_POST['niveau']=='intermediaire') || (isset($missionData['niveau']) && $missionData['niveau']=='intermediaire') ? 'selected' : '' ?>>Intermédiaire</option>
+                            <option value="avance" <?= (isset($_POST['niveau']) && $_POST['niveau']=='avance') || (isset($missionData['niveau']) && $missionData['niveau']=='avance') ? 'selected' : '' ?>>Avancé</option>
+                            <option value="expert" <?= (isset($_POST['niveau']) && $_POST['niveau']=='expert') || (isset($missionData['niveau']) && $missionData['niveau']=='expert') ? 'selected' : '' ?>>Expert</option>
+                        </select>
+                    </div>
+                    <small id="niveau-help" class="form-text text-light">Niveau d'expertise attendu</small>
+                </div>
+            </div>
         </fieldset>
 
         <fieldset class="form-section mb-4">

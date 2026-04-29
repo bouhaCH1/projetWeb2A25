@@ -74,6 +74,33 @@ ob_start();
                         </div>
                     </div>
 
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label>Catégorie <span class="optional">(optionnel)</span></label>
+                            <?php $currentCategorie = isset($_POST['categorie']) ? $_POST['categorie'] : ($missionData['categorie'] ?? ''); ?>
+                            <select name="categorie" id="categorie">
+                                <option value="">-- Choisir --</option>
+                                <option value="developpement" <?= ($currentCategorie === 'developpement') ? 'selected' : '' ?>>Développement Web</option>
+                                <option value="mobile" <?= ($currentCategorie === 'mobile') ? 'selected' : '' ?>>Applications Mobiles</option>
+                                <option value="design" <?= ($currentCategorie === 'design') ? 'selected' : '' ?>>Design & UX</option>
+                                <option value="marketing" <?= ($currentCategorie === 'marketing') ? 'selected' : '' ?>>Marketing Digital</option>
+                                <option value="data" <?= ($currentCategorie === 'data') ? 'selected' : '' ?>>Data & Analytics</option>
+                                <option value="autre" <?= ($currentCategorie === 'autre') ? 'selected' : '' ?>>Autre</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Niveau <span class="optional">(optionnel)</span></label>
+                            <?php $currentNiveau = isset($_POST['niveau']) ? $_POST['niveau'] : ($missionData['niveau'] ?? ''); ?>
+                            <select name="niveau" id="niveau">
+                                <option value="">-- Choisir --</option>
+                                <option value="debutant" <?= ($currentNiveau === 'debutant') ? 'selected' : '' ?>>Débutant</option>
+                                <option value="intermediaire" <?= ($currentNiveau === 'intermediaire') ? 'selected' : '' ?>>Intermédiaire</option>
+                                <option value="avance" <?= ($currentNiveau === 'avance') ? 'selected' : '' ?>>Avancé</option>
+                                <option value="expert" <?= ($currentNiveau === 'expert') ? 'selected' : '' ?>>Expert</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="d-flex gap-3">
                         <button type="submit" class="cyber-btn" style="border: none; cursor: pointer;">
                             <i class="fa fa-save"></i> Mettre a jour
