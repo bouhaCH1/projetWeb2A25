@@ -57,6 +57,9 @@ switch ($action) {
     case 'front_delete':
         $controller->frontDelete();
         break;
+    case 'front_delete_candidature':
+        $controller->frontDeleteCandidature();
+        break;
     case 'front_candidatures':
         $controller->frontCandidatures();
         break;

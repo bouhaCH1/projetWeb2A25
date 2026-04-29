@@ -152,34 +152,25 @@ ob_start();
                                     </small>
                                 </div>
                                 <div class="d-flex gap-1 justify-content-center">
-                                    <form method="POST" action="index.php?action=update_candidature_statut&id=<?= $c['id'] ?>&statut=acceptee" 
-                                          style="display: inline;">
-                                        <button type="submit" 
-                                                class="btn btn-sm btn-success me-1 <?= (isset($c['statut']) && $c['statut'] === 'acceptee') ? 'active' : '' ?>" 
-                                                title="Accepter la candidature de <?= htmlspecialchars($c['prenom']) ?>"
-                                                aria-label="Accepter">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                    </form>
-                                    <form method="POST" action="index.php?action=update_candidature_statut&id=<?= $c['id'] ?>&statut=refusee" 
-                                          style="display: inline;">
-                                        <button type="submit" 
-                                                class="btn btn-sm btn-danger me-1 <?= (isset($c['statut']) && $c['statut'] === 'refusee') ? 'active' : '' ?>" 
-                                                title="Refuser la candidature de <?= htmlspecialchars($c['prenom']) ?>"
-                                                aria-label="Refuser">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </form>
-                                    <form method="POST" action="index.php?action=delete_candidature&id=<?= $c['id'] ?>" 
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?');"
-                                          style="display: inline;">
-                                        <button type="submit" 
-                                                class="btn btn-sm btn-outline-light" 
-                                                title="Supprimer la candidature de <?= htmlspecialchars($c['prenom']) ?>"
-                                                aria-label="Supprimer">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    <a href="index.php?action=update_candidature_statut&id=<?= $c['id'] ?>&statut=acceptee"
+                                       class="btn btn-sm btn-success me-1 <?= (isset($c['statut']) && $c['statut'] === 'acceptee') ? 'active' : '' ?>"
+                                       title="Accepter la candidature de <?= htmlspecialchars($c['prenom']) ?>"
+                                       aria-label="Accepter">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                    <a href="index.php?action=update_candidature_statut&id=<?= $c['id'] ?>&statut=refusee"
+                                       class="btn btn-sm btn-danger me-1 <?= (isset($c['statut']) && $c['statut'] === 'refusee') ? 'active' : '' ?>"
+                                       title="Refuser la candidature de <?= htmlspecialchars($c['prenom']) ?>"
+                                       aria-label="Refuser">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                    <a href="index.php?action=delete_candidature&id=<?= $c['id'] ?>"
+                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?');"
+                                       class="btn btn-sm btn-outline-light"
+                                       title="Supprimer la candidature de <?= htmlspecialchars($c['prenom']) ?>"
+                                       aria-label="Supprimer">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
                                 </div>
                             </div>
                         </td>
