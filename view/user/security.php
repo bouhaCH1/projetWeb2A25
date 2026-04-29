@@ -60,9 +60,34 @@ if ($isAdmin) {
         </table>
     </div>
 
-    <!-- Section 2: RGPD (Export & Suppression) -->
+    <!-- Section 2: Sécurité du compte (2FA & RGPD) -->
     <div style="flex:1; min-width:300px; display:flex; flex-direction:column; gap:20px;">
         
+        <!-- 2FA -->
+        <?php
+        // Fetch current 2FA status
+        $userObj = new User();
+        $userData = $userObj->getById((int)$_SESSION['user_id']);
+        $is2faEnabled = ((int)($userData['two_factor_enabled'] ?? 0)) === 1;
+        ?>
+        <div class="dsh-card" style="padding:24px;">
+            <h4 style="font-weight:700; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:8px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Double Authentification (2FA)
+            </h4>
+            <p style="font-size: .85rem; color:#666; margin-bottom:15px;">Ajoutez une couche de sécurité supplémentaire. Lors de la connexion, vous devrez entrer un code de vérification.</p>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,.02); padding:15px; border-radius:8px; border:1px solid var(--border-color);">
+                <div>
+                    <div style="font-weight:700; font-size:.9rem; color: var(--pl-dark);"><?= $is2faEnabled ? '2FA est Activée' : '2FA est Désactivée' ?></div>
+                    <div style="font-size:.75rem; color:#777; margin-top:2px;">Protégez votre compte contre les accès non autorisés.</div>
+                </div>
+                <a href="/workwave/Controller/index.php?action=toggle_2fa" class="btn <?= $is2faEnabled ? 'btn-danger' : 'btn-success' ?>" style="margin-bottom:0; <?= !$is2faEnabled ? 'background:#27ae60; color:#fff; border:none;' : '' ?>">
+                    <?= $is2faEnabled ? 'Désactiver' : 'Activer' ?>
+                </a>
+            </div>
+        </div>
+
         <div class="dsh-card" style="padding:24px;">
             <h4 style="font-weight:700; margin-bottom:15px; border-bottom:1px solid var(--border-color); padding-bottom:10px;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>

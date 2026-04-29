@@ -42,6 +42,13 @@ $pageTitle   = $pageTitle ?? 'Dashboard';
   --pl-white:     #ffffff;
 }
 
+body.dark-mode {
+  --pl-light:     #121212;
+  --pl-text:      #e0e0e0;
+  --pl-white:     #1e1e1e;
+  --pl-border:    #2a2a2a;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -235,15 +242,16 @@ table tbody tr:hover td { background: rgba(239,111,49,.03); }
 
 /* Stat cards */
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 26px; }
-.stat-card { background: #fff; border: 1.5px solid var(--pl-border); border-radius: 12px; padding: 22px 24px; }
-.stat-card-label { font-size: .62rem; text-transform: uppercase; letter-spacing: 1.5px; color: #aaa; margin-bottom: 10px; font-weight: 700; }
-.stat-card-value { font-size: 2.1rem; color: var(--pl-orange); line-height: 1; font-weight: 800; }
-.stat-card-sub { font-size: .72rem; color: #bbb; margin-top: 6px; }
+.stat-card { background: var(--pl-white); border: 1px solid var(--pl-border); border-radius: 10px; padding: 22px 24px; box-shadow: 0 4px 20px rgba(0,0,0,.03); }
+.stat-card-label { font-size: .65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--pl-muted); margin-bottom: 8px; font-weight: 600; }
+.stat-card-value { font-family: 'Montserrat', sans-serif; font-size: 2.2rem; color: var(--pl-orange); line-height: 1; font-weight: 800; }
+.stat-card-sub { font-size: .72rem; color: var(--pl-text); margin-top: 6px; opacity: .8; }
 
 /* Section cards */
 .pld-card { background: #fff; border: 1.5px solid var(--pl-border); border-radius: 12px; padding: 24px 26px; margin-bottom: 22px; }
-.pld-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.pld-card-title { font-size: .95rem; font-weight: 700; color: var(--pl-dark); }
+.pld-content { flex: 1; padding: 35px 45px; overflow-y: auto; background: var(--pl-light); }
+.page-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 15px; }
+.page-header-title { font-size: 1.6rem; font-weight: 800; color: var(--pl-dark); margin-bottom: 5px; }
 
 /* Badges */
 .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: .68rem; font-weight: 700; }
@@ -266,7 +274,6 @@ table tbody tr:hover td { background: rgba(239,111,49,.03); }
 }
 .action-card-title { font-size: .9rem; font-weight: 700; color: var(--pl-dark); }
 .action-card-desc  { font-size: .77rem; color: var(--pl-muted); }
-
 
 /* Page header */
 .page-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 26px; }
@@ -298,6 +305,28 @@ input.input-error, select.input-error { border-color: rgba(220,60,60,.7) !import
 .dsh-card { background: #fff; border: 1.5px solid var(--pl-border); border-radius: 12px; padding: 24px 26px; margin-bottom: 22px; }
 
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        themeIcon.innerHTML = '<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path><circle cx="12" cy="12" r="5"/>';
+    }
+
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        themeIcon.innerHTML = isDark ? 
+            '<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path><circle cx="12" cy="12" r="5"/>' : 
+            '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+    });
+});
+</script>
 </head>
 <body>
 <div class="pld-wrapper">
@@ -423,13 +452,18 @@ input.input-error, select.input-error { border-color: rgba(220,60,60,.7) !import
     <?php endif; ?>
   </nav>
 
-  <div class="pld-sidebar-foot">
-    <a href="/workwave/Controller/index.php?action=logout" class="pld-logout">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-      Déconnexion
-    </a>
-  </div>
-</aside>
+    <div class="pld-sidebar-foot" style="display:flex; justify-content:space-between; align-items:center;">
+      <a href="/workwave/Controller/index.php?action=logout" class="pld-logout">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Déconnexion
+      </a>
+      
+      <!-- Dark Mode Toggle -->
+      <button id="themeToggle" style="background:none; border:none; color:rgba(255,255,255,.5); cursor:pointer;" title="Mode sombre/clair">
+          <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+    </div>
+  </aside>
 
 <!-- ═══════════ MAIN ═══════════ -->
 <div class="pld-main">

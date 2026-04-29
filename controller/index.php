@@ -21,6 +21,12 @@ switch ($action) {
     case 'login_submit':
         $controller->login();
         break;
+    case 'login_2fa':
+        $controller->showLogin2FA();
+        break;
+    case 'login_2fa_submit':
+        $controller->processLogin2FA();
+        break;
     case 'forgot_password':
         $controller->showForgotPassword();
         break;
@@ -39,6 +45,9 @@ switch ($action) {
         break;
     case 'export_data':
         $controller->exportData();
+        break;
+    case 'toggle_2fa':
+        $controller->toggle2FA();
         break;
     case 'delete_account':
         $controller->selfDeleteAccount();

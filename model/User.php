@@ -13,6 +13,7 @@ class User {
     public string $role = 'job_seeker';
     public string $profile_pic = '';
     public string $status = 'active';
+    public int $two_factor_enabled = 0;
     public string $created_at = '';
 
     private PDO $pdo;
@@ -49,7 +50,7 @@ class User {
 
     public function login(): array {
         $stmt = $this->pdo->prepare(
-            'SELECT id, first_name, last_name, email, password, role, profile_pic, status
+            'SELECT id, first_name, last_name, email, password, role, profile_pic, status, two_factor_enabled
              FROM users WHERE email = :email LIMIT 1'
         );
         $stmt->execute([':email' => $this->email]);
@@ -60,16 +61,26 @@ class User {
                 return ['success' => false, 'message' => 'Ce compte a été suspendu par un administrateur.'];
             }
 
+            if ((int)$row['two_factor_enabled'] === 1) {
+                return [
+                    'success' => true, 
+                    'requires_2fa' => true, 
+                    'user_id' => (int)$row['id'],
+                    'role' => $row['role']
+                ];
+            }
+
             $this->id          = (int) $row['id'];
             $this->first_name  = $row['first_name'];
             $this->last_name   = $row['last_name'];
             $this->role        = $row['role'];
             $this->profile_pic = $row['profile_pic'] ?? '';
             $this->status      = $row['status'];
+            $this->two_factor_enabled = 0;
 
             $this->logConnection();
 
-            return ['success' => true, 'message' => 'Connexion réussie.'];
+            return ['success' => true, 'requires_2fa' => false, 'message' => 'Connexion réussie.'];
         }
 
         return ['success' => false, 'message' => 'E-mail ou mot de passe invalide.'];
@@ -77,7 +88,7 @@ class User {
 
     public function getById(int $id) {
         $stmt = $this->pdo->prepare(
-            'SELECT id, first_name, last_name, email, phone, role, profile_pic, status, created_at
+            'SELECT id, first_name, last_name, email, phone, role, profile_pic, status, two_factor_enabled, created_at
              FROM users WHERE id = :id LIMIT 1'
         );
         $stmt->execute([':id' => $id]);
@@ -231,6 +242,20 @@ class User {
         $stmt->execute([':status' => $newStatus, ':id' => $id]);
 
         $msg = ($newStatus === 'active') ? 'Compte réactivé avec succès.' : 'Compte suspendu avec succès.';
+        return ['success' => true, 'message' => $msg];
+    }
+
+    public function toggle2FA(): array {
+        $user = $this->getById($this->id);
+        if (!$user) {
+            return ['success' => false, 'message' => 'Utilisateur introuvable.'];
+        }
+        
+        $newState = ((int)$user['two_factor_enabled'] === 1) ? 0 : 1;
+        $stmt = $this->pdo->prepare("UPDATE users SET two_factor_enabled=:state WHERE id=:id");
+        $stmt->execute([':state' => $newState, ':id' => $this->id]);
+
+        $msg = ($newState === 1) ? 'Authentification à deux facteurs activée.' : 'Authentification à deux facteurs désactivée.';
         return ['success' => true, 'message' => $msg];
     }
 
