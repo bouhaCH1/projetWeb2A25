@@ -284,6 +284,10 @@ class UserController {
         $this->requireLogin();
         $user = new User();
         $data = $user->getById((int) $_SESSION['user_id']);
+        if (!$data) {
+            $this->logout();
+            return;
+        }
         require_once __DIR__ . '/../View/user/profile.php';
     }
 

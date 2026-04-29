@@ -20,9 +20,9 @@
                 <a href="/workwave/Controller/index.php?action=register" class="cta-button">Commencer gratuitement</a>
                 <a href="/workwave/Controller/index.php?action=login" style="padding: 12px 24px; border: 1px solid #00ffcc; color: #00ffcc; border-radius: 8px; font-weight: bold; text-decoration: none; transition: 0.3s;" onmouseover="this.style.background='rgba(0,255,204,0.1)'" onmouseout="this.style.background='transparent'">Se connecter</a>
             <?php else: ?>
-                <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
+                <?php if (($_SESSION['user_role'] ?? '') === 'job_seeker'): ?>
                     <a href="/workwave/Controller/index.php?action=dashboard_seeker" class="cta-button">Aller au tableau de bord</a>
-                <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
+                <?php elseif (($_SESSION['user_role'] ?? '') === 'employer'): ?>
                     <a href="/workwave/Controller/index.php?action=dashboard_employer" class="cta-button">Aller au tableau de bord</a>
                 <?php endif; ?>
             <?php endif; ?>

@@ -5,7 +5,7 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
 
 <div class="page-header">
     <div>
-        <div class="page-header-title">Bon retour, <?= htmlspecialchars($_SESSION['user_first_name']) ?>! 👋</div>
+        <div class="page-header-title">Bon retour, <?= htmlspecialchars($_SESSION['user_first_name'] ?? '') ?>! 👋</div>
         <div class="page-header-sub">Voici l'actualité de votre recherche d'emploi</div>
     </div>
 

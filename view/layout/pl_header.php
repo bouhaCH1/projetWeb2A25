@@ -138,9 +138,9 @@
                 <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
                 <?php if (!empty($_SESSION['user_id'])): ?>
                     <li><a href="/workwave/Controller/index.php?action=profile" class="<?= ($_GET['action'] ?? '') === 'profile' ? 'active' : '' ?>">Mon Profil</a></li>
-                    <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
+                    <?php if (($_SESSION['user_role'] ?? '') === 'job_seeker'): ?>
                         <li><a href="/workwave/Controller/index.php?action=dashboard_seeker" class="<?= ($_GET['action'] ?? '') === 'dashboard_seeker' ? 'active' : '' ?>">Tableau de bord</a></li>
-                    <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
+                    <?php elseif (($_SESSION['user_role'] ?? '') === 'employer'): ?>
                         <li><a href="/workwave/Controller/index.php?action=dashboard_employer" class="<?= ($_GET['action'] ?? '') === 'dashboard_employer' ? 'active' : '' ?>">Tableau de bord</a></li>
                     <?php endif; ?>
                     <li><a href="/workwave/Controller/index.php?action=logout" style="color: #ff6b6b;">Déconnexion</a></li>
@@ -159,9 +159,9 @@
             <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
             <?php if (!empty($_SESSION['user_id'])): ?>
                 <li><a href="/workwave/Controller/index.php?action=profile">Mon Profil</a></li>
-                <?php if ($_SESSION['user_role'] === 'job_seeker'): ?>
+                <?php if (($_SESSION['user_role'] ?? '') === 'job_seeker'): ?>
                     <li><a href="/workwave/Controller/index.php?action=dashboard_seeker">Tableau de bord</a></li>
-                <?php elseif ($_SESSION['user_role'] === 'employer'): ?>
+                <?php elseif (($_SESSION['user_role'] ?? '') === 'employer'): ?>
                     <li><a href="/workwave/Controller/index.php?action=dashboard_employer">Tableau de bord</a></li>
                 <?php endif; ?>
                 <li><a href="/workwave/Controller/index.php?action=logout" style="color: #ff6b6b;">Déconnexion</a></li>
