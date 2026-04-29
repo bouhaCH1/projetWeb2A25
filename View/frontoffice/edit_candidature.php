@@ -60,7 +60,10 @@ ob_start();
                             <div class="col-md-6">
                                 <label>Téléphone <span style="color: #ff6b6b;">*</span></label>
                                 <input type="text" name="telephone" class="<?= isset($errors['telephone']) ? 'is-invalid' : '' ?>"
-                                    value="<?= isset($_POST['telephone']) ? htmlspecialchars($_POST['telephone']) : htmlspecialchars($candidatureData['telephone']) ?>">
+                                    value="<?= isset($_POST['telephone']) ? htmlspecialchars($_POST['telephone']) : htmlspecialchars($candidatureData['telephone']) ?>"
+                                    onkeypress="return /[0-9]/.test(String.fromCharCode(event.which))"
+                                    pattern="[0-9]*"
+                                    inputmode="numeric">
                                 <div class="invalid-feedback"><?= isset($errors['telephone']) ? htmlspecialchars($errors['telephone']) : '' ?></div>
                             </div>
                         </div>

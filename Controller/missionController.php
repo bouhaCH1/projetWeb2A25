@@ -357,6 +357,8 @@ class MissionController {
 
         if (empty(trim($data['telephone'] ?? ''))) {
             $errors['telephone'] = "Le téléphone est obligatoire.";
+        } elseif (!preg_match('/^[0-9]+$/', trim($data['telephone']))) {
+            $errors['telephone'] = "Le numéro de téléphone ne doit contenir que des chiffres.";
         }
 
         if (empty(trim($data['motivation'] ?? ''))) {
