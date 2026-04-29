@@ -6,118 +6,139 @@
     <title>Work Wave - Administration</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="../View/templatemo_610_aurum_gold/templatemo_610_aurum_gold/templatemo-aurum-gold.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="../View/darkpan-1.0.0/darkpan-1.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../View/darkpan-1.0.0/darkpan-1.0.0/css/style.css" rel="stylesheet">
     <style>
-        .admin-sidebar {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            padding: 30px 20px;
-            border-right: 3px solid #d4af37;
+        :root {
+            --primary: #EB1616;
+            --secondary: #191C24;
+            --light: #6C7293;
+            --dark: #000000;
         }
-        .admin-sidebar .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: #d4af37;
-            margin-bottom: 40px;
-            text-align: center;
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: var(--dark);
         }
-        .admin-sidebar .logo span {
-            color: #fff;
+        .sidebar .navbar-brand h3 {
+            font-family: 'Roboto', sans-serif;
         }
-        .admin-sidebar a {
+        .sidebar .nav-link-front {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 15px 20px;
-            color: #b8b8b8;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-            font-family: 'Libre Franklin', sans-serif;
-            font-size: 14px;
+            padding: 7px 20px;
+            color: var(--light);
             font-weight: 500;
+            border-left: 3px solid var(--secondary);
+            border-radius: 0 30px 30px 0;
+            outline: none;
+            text-decoration: none;
+            margin-top: 10px;
+            border-top: 1px solid rgba(108, 114, 147, 0.2);
+            padding-top: 20px;
         }
-        .admin-sidebar a:hover,
-        .admin-sidebar a.active {
-            background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
-            color: #1a1a2e;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        .sidebar .nav-link-front:hover {
+            color: var(--primary);
+            background: var(--dark);
+            border-color: var(--primary);
         }
-        .admin-sidebar a i {
-            font-size: 16px;
-        }
-        .admin-main {
-            background: #f8f9fa;
-            min-height: 100vh;
-        }
-        .admin-header {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            padding: 20px 30px;
-            border-bottom: 3px solid #d4af37;
-        }
-        .admin-header h5 {
-            font-family: 'Cormorant Garamond', serif;
-            color: #d4af37;
-            font-size: 24px;
-            font-weight: 600;
-            margin: 0;
-        }
-        .admin-header h5 i {
-            color: #d4af37;
+        .sidebar .nav-link-front i {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--dark);
+            border-radius: 40px;
             margin-right: 10px;
         }
-        .admin-content {
-            padding: 30px;
+        .sidebar .nav-link-front:hover i {
+            background: var(--secondary);
         }
         .admin-alert {
             padding: 15px 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            font-family: 'Libre Franklin', sans-serif;
+            font-family: 'Open Sans', sans-serif;
         }
         .admin-alert.success {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
+            background: rgba(40, 167, 69, 0.15);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #28a745;
         }
         .admin-alert.warning {
-            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-            color: #1a1a2e;
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
         }
     </style>
 </head>
 <body>
-    <div style="display: flex;">
-        <div class="admin-sidebar" style="width: 280px; position: fixed; height: 100vh; overflow-y: auto;">
-            <div class="logo">WORK <span>WAVE</span></div>
-            <a href="index.php?action=index" class="<?= (isset($activePage) && $activePage === 'list') ? 'active' : '' ?>">
-                <i class="fas fa-list"></i> Liste des missions
-            </a>
-            <a href="index.php?action=create" class="<?= (isset($activePage) && $activePage === 'create') ? 'active' : '' ?>">
-                <i class="fas fa-plus-circle"></i> Ajouter une mission
-            </a>
-            <a href="index.php?action=candidatures" class="<?= (isset($activePage) && $activePage === 'candidatures') ? 'active' : '' ?>">
-                <i class="fas fa-user-check"></i> Candidatures
-            </a>
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(212, 175, 55, 0.3);">
-                <a href="index.php?action=missions" style="background: transparent; border: 2px solid #d4af37; color: #d4af37;">
-                    <i class="fas fa-globe"></i> Retour au FrontOffice
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-secondary navbar-dark">
+                <a href="index.php?action=index" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary"><i class="fa fa-shield-halved me-2"></i>WorkWave</h3>
                 </a>
-            </div>
+                <div class="d-flex align-items-center ms-4 mb-4">
+                    <div class="position-relative">
+                        <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa fa-user-shield text-white"></i>
+                        </div>
+                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="mb-0" style="color: #fff;">Admin</h6>
+                        <span style="color: var(--light);">Administrateur</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100">
+                    <a href="index.php?action=index" class="nav-item nav-link <?= (isset($activePage) && $activePage === 'list') ? 'active' : '' ?>">
+                        <i class="fa fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a href="index.php?action=index" class="nav-item nav-link <?= (isset($activePage) && $activePage === 'list') ? 'active' : '' ?>">
+                        <i class="fa fa-table me-2"></i>Missions
+                    </a>
+                    <a href="index.php?action=create" class="nav-item nav-link <?= (isset($activePage) && $activePage === 'create') ? 'active' : '' ?>">
+                        <i class="fa fa-keyboard me-2"></i>Ajouter Mission
+                    </a>
+                    <a href="index.php?action=candidatures" class="nav-item nav-link <?= (isset($activePage) && $activePage === 'candidatures') ? 'active' : '' ?>">
+                        <i class="fa fa-user-check me-2"></i>Candidatures
+                    </a>
+                    <a href="index.php?action=missions" class="nav-link-front">
+                        <i class="fa fa-globe"></i>Retour au FrontOffice
+                    </a>
+                </div>
+            </nav>
         </div>
+        <!-- Sidebar End -->
 
-        <div class="admin-main" style="margin-left: 280px; flex: 1;">
-            <div class="admin-header">
-                <h5>
-                    <i class="fas fa-<?= isset($pageIcon) ? htmlspecialchars($pageIcon) : 'briefcase' ?>"></i>
-                    <?= isset($pageTitle) ? htmlspecialchars($pageTitle) : 'Administration' ?>
-                </h5>
-            </div>
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+                <a href="index.php?action=index" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-shield-halved"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <div class="navbar-nav align-items-center ms-auto">
+                    <div class="nav-item">
+                        <span class="nav-link" style="color: var(--light);">
+                            <i class="fa fa-<?= isset($pageIcon) ? htmlspecialchars($pageIcon) : 'briefcase' ?> me-2"></i>
+                            <?= isset($pageTitle) ? htmlspecialchars($pageTitle) : 'Administration' ?>
+                        </span>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
 
-            <div class="admin-content">
+            <!-- Admin Content -->
+            <div class="container-fluid pt-4 px-4">
                 <?php if (isset($_GET['success'])): ?>
                     <div class="admin-alert success">
                         <i class="fas fa-check-circle"></i> Mission ajoutee avec succes.
@@ -136,10 +157,31 @@
 
                 <?= $content ?>
             </div>
+
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="#" style="color: var(--primary);">WorkWave</a>, All Right Reserved.
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end" style="color: var(--light);">
+                            Designed By <a href="https://htmlcodex.com" style="color: var(--primary);">HTML Codex</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
         </div>
+        <!-- Content End -->
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
-    <script src="../View/templatemo_610_aurum_gold/templatemo_610_aurum_gold/templatemo-aurum-script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../View/darkpan-1.0.0/darkpan-1.0.0/js/main.js"></script>
     <?= isset($extraJs) ? $extraJs : '' ?>
 </body>
 </html>
