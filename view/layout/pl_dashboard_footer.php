@@ -1,29 +1,20 @@
-    </div><!-- /.container -->
+    </div><!-- /.ww-page -->
+</div><!-- /.ww-main-wrap -->
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content" style="text-align: center; padding: 30px; background: rgba(26, 29, 41, 0.8); border-top: 1px solid rgba(0, 255, 204, 0.1); margin-top: 40px;">
-            <p class="copyright" style="color: #a0a0a0; font-size: 14px;">© 2026 WorkWave. Tous droits réservés. Connecter les talents aux opportunités. 
-            | Designed by <a href="https://templatemo.com" rel="nofollow noopener" target="_blank" style="color: #00ffcc; text-decoration: none;">TemplateMo</a></p>
-        </div>
-    </footer>
+</div><!-- /.ww-shell -->
 
-    <!-- Graph Page Scripts -->
-    <script src="/workwave/View/assets/template_user/templatemo-graph-script.js"></script>
+<footer style="margin-left:220px; text-align:center; padding:14px 24px; border-top:1px solid rgba(0,255,204,0.06); background:#080a12;">
+    <p style="color:#333; font-size:12px;">© 2026 WorkWave. Tous droits réservés.</p>
+</footer>
 
-    <!-- Custom Script for Navbar active states and mobile menu -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hamburger = document.getElementById('hamburger');
-            const navLinksMobile = document.getElementById('navLinksMobile');
-
-            if (hamburger && navLinksMobile) {
-                hamburger.addEventListener('click', () => {
-                    hamburger.classList.toggle('active');
-                    navLinksMobile.classList.toggle('active');
-                });
-            }
-        });
-    </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('wwHamburger');
+    const sidebar = document.getElementById('wwSidebar');
+    if (btn && sidebar) {
+        btn.addEventListener('click', () => sidebar.classList.toggle('open'));
+    }
+});
+</script>
 </body>
 </html>

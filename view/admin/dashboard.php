@@ -56,7 +56,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
         </div>
     </div>
     <div class="col-sm-6 col-xl-3">
-        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4" style="border-left: 4px solid #eb1616;">
+        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4" style="border-left: 4px solid var(--primary);">
             <i class="fa fa-user-plus fa-3x text-primary"></i>
             <div class="ms-3 text-end">
                 <p class="mb-2">Nouveaux ce mois-ci</p>
@@ -67,6 +67,26 @@ include __DIR__ . '/../layout/dashboard_header.php';
                     <?php endif; ?>
                 </h6>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-12 col-xl-6">
+        <div class="bg-secondary text-center rounded p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Croissance des Utilisateurs (Mensuelle)</h6>
+            </div>
+            <canvas id="userGrowthChart"></canvas>
+        </div>
+    </div>
+    <div class="col-sm-12 col-xl-6">
+        <div class="bg-secondary text-center rounded p-4 h-100">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Répartition des Rôles</h6>
+            </div>
+            <canvas id="roleDistributionChart" style="max-height: 300px;"></canvas>
         </div>
     </div>
 </div>
@@ -102,3 +122,109 @@ include __DIR__ . '/../layout/dashboard_header.php';
 </div>
 
 <?php include __DIR__ . '/../layout/dashboard_footer.php'; ?>
+
+<!-- Chart.js Initialization -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    if (typeof Chart !== 'undefined') {
+        
+        // --- Line Chart (User Growth Dynamic) ---
+        var ctxLine = document.getElementById("userGrowthChart").getContext("2d");
+        var myLineChart = new Chart(ctxLine, {
+            type: "line",
+            data: {
+                labels: <?= json_encode($stats['growth_labels'] ?? []) ?>,
+                datasets: [{
+                    label: "Nouveaux Inscrits",
+                    data: <?= json_encode($stats['growth_data'] ?? []) ?>,
+                    backgroundColor: "rgba(230, 57, 70, 0.2)", // Transparent Crimson
+                    borderColor: "#e63946", // Crimson
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#a0a0a0' }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#a0a0a0' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#a0a0a0', stepSize: 1 }
+                    }
+                }
+            }
+        });
+
+        // Custom plugin to draw numbers inside the Doughnut slices
+        const drawNumbersPlugin = {
+            id: 'drawNumbersPlugin',
+            afterDraw(chart) {
+                const ctx = chart.ctx;
+                chart.data.datasets.forEach((dataset, i) => {
+                    chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
+                        const value = dataset.data[index];
+                        if (value > 0) {
+                            const pos = datapoint.tooltipPosition();
+                            ctx.font = 'bold 16px sans-serif';
+                            // Index 1 is the White slice (Employeurs), so text must be black to be visible!
+                            ctx.fillStyle = (index === 1) ? '#000000' : '#ffffff';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText(value, pos.x, pos.y);
+                        }
+                    });
+                });
+            }
+        };
+
+        // --- Pie Chart (Role Distribution) ---
+        var ctxPie = document.getElementById("roleDistributionChart").getContext("2d");
+        var myPieChart = new Chart(ctxPie, {
+            type: "doughnut",
+            data: {
+                labels: [
+                    "Candidats (" + <?= $stats['job_seeker'] ?? 0 ?> + ")", 
+                    "Employeurs (" + <?= $stats['employer'] ?? 0 ?> + ")", 
+                    "Admins (" + <?= $stats['admin'] ?? 0 ?> + ")"
+                ],
+                datasets: [{
+                    backgroundColor: [
+                        "#e63946", // Primary Crimson
+                        "#ffffff", // White
+                        "#333333"  // Dark grey
+                    ],
+                    data: [
+                        <?= $stats['job_seeker'] ?? 0 ?>, 
+                        <?= $stats['employer'] ?? 0 ?>, 
+                        <?= $stats['admin'] ?? 0 ?>
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#a0a0a0',
+                            padding: 20
+                        }
+                    }
+                }
+            },
+            plugins: [drawNumbersPlugin]
+        });
+    }
+});
+</script>

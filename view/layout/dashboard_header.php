@@ -97,6 +97,34 @@ $userPicPath = !empty($userPic) ? '/workwave/' . htmlspecialchars($userPic) : '/
             color: #fff !important;
         }
         
+        .form-control::file-selector-button {
+            background: var(--primary) !important;
+            color: #fff !important;
+            border: none !important;
+            padding: 0.375rem 0.75rem !important;
+            margin-right: 1rem !important;
+            border-radius: 0.25rem !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+        }
+        
+        /* Fix invisible filename text next to the button */
+        input[type="file"].form-control,
+        input[type="file"] {
+            color: #ccc !important;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background: var(--primary) !important;
+            color: #fff !important;
+            border: none !important;
+            padding: 0.375rem 0.75rem !important;
+            margin-right: 1rem !important;
+            border-radius: 0.25rem !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+        }
+        
         .form-control:focus, .form-select:focus {
             border-color: var(--primary) !important;
             box-shadow: 0 0 8px rgba(230, 57, 70, 0.3) !important;

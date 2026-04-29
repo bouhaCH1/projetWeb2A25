@@ -278,9 +278,9 @@ class User {
 
     public function getStats(): array {
         $stmt = $this->pdo->query(
-            "SELECT role, COUNT(*) AS cnt FROM users WHERE role != 'admin' GROUP BY role"
+            "SELECT role, COUNT(*) AS cnt FROM users GROUP BY role"
         );
-        $stats = ['job_seeker' => 0, 'employer' => 0, 'total' => 0, 'new_this_month' => 0];
+        $stats = ['job_seeker' => 0, 'employer' => 0, 'admin' => 0, 'total' => 0, 'new_this_month' => 0];
         foreach ($stmt->fetchAll() as $row) {
             $stats[$row['role']] = (int) $row['cnt'];
             $stats['total']     += (int) $row['cnt'];
@@ -288,13 +288,32 @@ class User {
 
         $stmtMonth = $this->pdo->query(
             "SELECT COUNT(*) AS new_this_month FROM users 
-             WHERE role != 'admin' AND MONTH(created_at) = MONTH(CURRENT_DATE()) 
+             WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) 
              AND YEAR(created_at) = YEAR(CURRENT_DATE())"
         );
         $monthRow = $stmtMonth->fetch();
         if ($monthRow) {
             $stats['new_this_month'] = (int) $monthRow['new_this_month'];
         }
+
+        // Fetch last 6 months for growth chart
+        $growthData = [];
+        $growthLabels = [];
+        $monthsFr = [1=>'Janv',2=>'Févr',3=>'Mars',4=>'Avr',5=>'Mai',6=>'Juin',7=>'Juil',8=>'Août',9=>'Sept',10=>'Oct',11=>'Nov',12=>'Déc'];
+        
+        for ($i = 11; $i >= 0; $i--) {
+            $time = strtotime("-$i months");
+            $month = date('n', $time);
+            $year = date('Y', $time);
+            $growthLabels[] = $monthsFr[$month];
+            
+            $stmtGrowth = $this->pdo->prepare("SELECT COUNT(*) AS cnt FROM users WHERE MONTH(created_at) = ? AND YEAR(created_at) = ?");
+            $stmtGrowth->execute([$month, $year]);
+            $growthData[] = (int) $stmtGrowth->fetch()['cnt'];
+        }
+        
+        $stats['growth_labels'] = $growthLabels;
+        $stats['growth_data'] = $growthData;
 
         return $stats;
     }
