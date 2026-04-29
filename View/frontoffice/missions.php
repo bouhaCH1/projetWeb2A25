@@ -100,90 +100,55 @@ ob_start();
     </div>
 </section>
 
-<!-- Statistics Dashboard -->
-<section style="padding: 40px 0;">
+
+
+<!-- Statistics Section -->
+<section style="padding: 20px 0 60px;">
     <div class="container">
         <div class="row g-4">
-            <!-- Mission Statistics -->
+            <!-- Mission Status Chart -->
             <div class="col-lg-6">
                 <div class="cyber-card" style="padding: 30px;">
-                    <h4 style="color: #00ffcc; font-size: 18px; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center;">
-                        <i class="fa fa-briefcase" style="margin-right: 12px;"></i> Statistiques Missions
-                    </h4>
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.2); border-radius: 12px; padding: 20px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: 700; color: #00ffcc; margin-bottom: 5px;">
-                                    <?= $stats['total_missions'] ?? 0 ?>
-                                </div>
-                                <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Total Missions</div>
-                            </div>
+                    <h5 class="text-white mb-4"><i class="fas fa-project-diagram text-primary me-2"></i> État des Missions</h5>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="missionStatusChart"></canvas>
+                    </div>
+                    <div class="mt-4 d-flex justify-content-center gap-4">
+                        <div class="text-center">
+                            <div class="small text-muted mb-1">Total</div>
+                            <div class="h5 text-white mb-0"><?= $stats['total_missions'] ?></div>
                         </div>
-                        <div class="col-6">
-                            <div style="background: rgba(0, 204, 255, 0.1); border: 1px solid rgba(0, 204, 255, 0.2); border-radius: 12px; padding: 20px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: 700; color: #00ccff; margin-bottom: 5px;">
-                                    <?= $stats['ouverte'] ?? 0 ?>
-                                </div>
-                                <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Ouvertes</div>
-                            </div>
+                        <div class="text-center">
+                            <div class="small text-muted mb-1">Ouvertes</div>
+                            <div class="h5 text-success mb-0"><?= $stats['ouverte'] ?></div>
                         </div>
-                        <div class="col-6">
-                            <div style="background: rgba(147, 51, 234, 0.1); border: 1px solid rgba(147, 51, 234, 0.2); border-radius: 12px; padding: 20px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: 700; color: #9333ea; margin-bottom: 5px;">
-                                    <?= $stats['en_cours'] ?? 0 ?>
-                                </div>
-                                <div style="color: rgba(255,255,255,0.6); font-size: 13px;">En Cours</div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.2); border-radius: 12px; padding: 20px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: 700; color: #ff6b6b; margin-bottom: 5px;">
-                                    <?= $stats['terminee'] ?? 0 ?>
-                                </div>
-                                <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Terminées</div>
-                            </div>
+                        <div class="text-center">
+                            <div class="small text-muted mb-1">En cours</div>
+                            <div class="h5 text-info mb-0"><?= $stats['en_cours'] ?></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Candidature Statistics -->
+
+            <!-- Candidature Status Chart -->
             <div class="col-lg-6">
                 <div class="cyber-card" style="padding: 30px;">
-                    <h4 style="color: #00ffcc; font-size: 18px; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center;">
-                        <i class="fa fa-users" style="margin-right: 12px;"></i> Statistiques Candidatures
-                    </h4>
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.2); border-radius: 12px; padding: 20px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: 700; color: #00ffcc; margin-bottom: 5px;">
-                                    <?= $stats['total_candidatures'] ?? 0 ?>
-                                </div>
-                                <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Total Candidatures</div>
-                            </div>
+                    <h5 class="text-white mb-4"><i class="fas fa-users text-primary me-2"></i> Flux des Candidatures</h5>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="candidatureStatusChart"></canvas>
+                    </div>
+                    <div class="mt-4 d-flex justify-content-center gap-4">
+                        <div class="text-center">
+                            <div class="small text-muted mb-1">Total</div>
+                            <div class="h5 text-white mb-0"><?= $stats['total_candidatures'] ?></div>
                         </div>
-                        <div class="col-6">
-                            <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.2); border-radius: 12px; padding: 20px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: 700; color: #ffc107; margin-bottom: 5px;">
-                                    <?= $stats['en_attente'] ?? 0 ?>
-                                </div>
-                                <div style="color: rgba(255,255,255,0.6); font-size: 13px;">En Attente</div>
-                            </div>
+                        <div class="text-center">
+                            <div class="small text-muted mb-1">Acceptées</div>
+                            <div class="h5 text-success mb-0"><?= $stats['acceptee'] ?></div>
                         </div>
-                        <div class="col-6">
-                            <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 12px; padding: 20px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: 700; color: #4caf50; margin-bottom: 5px;">
-                                    <?= $stats['acceptee'] ?? 0 ?>
-                                </div>
-                                <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Acceptées</div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div style="background: rgba(244, 67, 54, 0.1); border: 1px solid rgba(244, 67, 54, 0.2); border-radius: 12px; padding: 20px; text-align: center;">
-                                <div style="font-size: 32px; font-weight: 700; color: #f44336; margin-bottom: 5px;">
-                                    <?= $stats['refusee'] ?? 0 ?>
-                                </div>
-                                <div style="color: rgba(255,255,255,0.6); font-size: 13px;">Refusées</div>
-                            </div>
+                        <div class="text-center">
+                            <div class="small text-muted mb-1">En attente</div>
+                            <div class="h5 text-warning mb-0"><?= $stats['en_attente'] ?></div>
                         </div>
                     </div>
                 </div>
@@ -192,108 +157,59 @@ ob_start();
     </div>
 </section>
 
-<!-- Circular Progress Statistics -->
-<section style="padding: 20px 0 60px;">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6">
-                <div class="cyber-card" style="padding: 25px; text-align: center;">
-                    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px;">
-                        <svg viewBox="0 0 100 100" style="transform: rotate(-90deg);">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-                            <?php 
-                            $total = $stats['total_missions'] ?? 0;
-                            $percent = $total > 0 ? round(($stats['ouverte'] ?? 0) / $total * 100) : 0;
-                            $circumference = 2 * M_PI * 45;
-                            $offset = $circumference - ($percent / 100) * $circumference;
-                            ?>
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="#00ffcc" stroke-width="8" 
-                                    stroke-dasharray="<?= $circumference ?>" 
-                                    stroke-dashoffset="<?= $offset ?>" 
-                                    stroke-linecap="round"
-                                    style="transition: stroke-dashoffset 0.5s ease;"/>
-                        </svg>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #00ffcc; font-weight: 700; font-size: 18px;">
-                            <?= $percent ?>%
-                        </div>
-                    </div>
-                    <h5 style="color: #fff; margin-bottom: 5px;">Missions Ouvertes</h5>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 13px; margin: 0;"><?= $stats['ouverte'] ?? 0 ?> / <?= $total ?></p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="cyber-card" style="padding: 25px; text-align: center;">
-                    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px;">
-                        <svg viewBox="0 0 100 100" style="transform: rotate(-90deg);">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-                            <?php 
-                            $totalCand = $stats['total_candidatures'] ?? 0;
-                            $percentCand = $totalCand > 0 ? round(($stats['acceptee'] ?? 0) / $totalCand * 100) : 0;
-                            $offsetCand = $circumference - ($percentCand / 100) * $circumference;
-                            ?>
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="#4caf50" stroke-width="8" 
-                                    stroke-dasharray="<?= $circumference ?>" 
-                                    stroke-dashoffset="<?= $offsetCand ?>" 
-                                    stroke-linecap="round"
-                                    style="transition: stroke-dashoffset 0.5s ease;"/>
-                        </svg>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #4caf50; font-weight: 700; font-size: 18px;">
-                            <?= $percentCand ?>%
-                        </div>
-                    </div>
-                    <h5 style="color: #fff; margin-bottom: 5px;">Taux d'Acceptation</h5>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 13px; margin: 0;"><?= $stats['acceptee'] ?? 0 ?> / <?= $totalCand ?></p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="cyber-card" style="padding: 25px; text-align: center;">
-                    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px;">
-                        <svg viewBox="0 0 100 100" style="transform: rotate(-90deg);">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-                            <?php 
-                            $percentEnCours = $total > 0 ? round(($stats['en_cours'] ?? 0) / $total * 100) : 0;
-                            $offsetEnCours = $circumference - ($percentEnCours / 100) * $circumference;
-                            ?>
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="#9333ea" stroke-width="8" 
-                                    stroke-dasharray="<?= $circumference ?>" 
-                                    stroke-dashoffset="<?= $offsetEnCours ?>" 
-                                    stroke-linecap="round"
-                                    style="transition: stroke-dashoffset 0.5s ease;"/>
-                        </svg>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #9333ea; font-weight: 700; font-size: 18px;">
-                            <?= $percentEnCours ?>%
-                        </div>
-                    </div>
-                    <h5 style="color: #fff; margin-bottom: 5px;">Missions en Cours</h5>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 13px; margin: 0;"><?= $stats['en_cours'] ?? 0 ?> / <?= $total ?></p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="cyber-card" style="padding: 25px; text-align: center;">
-                    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px;">
-                        <svg viewBox="0 0 100 100" style="transform: rotate(-90deg);">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-                            <?php 
-                            $percentTerminee = $total > 0 ? round(($stats['terminee'] ?? 0) / $total * 100) : 0;
-                            $offsetTerminee = $circumference - ($percentTerminee / 100) * $circumference;
-                            ?>
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="#ff6b6b" stroke-width="8" 
-                                    stroke-dasharray="<?= $circumference ?>" 
-                                    stroke-dashoffset="<?= $offsetTerminee ?>" 
-                                    stroke-linecap="round"
-                                    style="transition: stroke-dashoffset 0.5s ease;"/>
-                        </svg>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ff6b6b; font-weight: 700; font-size: 18px;">
-                            <?= $percentTerminee ?>%
-                        </div>
-                    </div>
-                    <h5 style="color: #fff; margin-bottom: 5px;">Missions Terminées</h5>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 13px; margin: 0;"><?= $stats['terminee'] ?? 0 ?> / <?= $total ?></p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mission Status Chart
+    new Chart(document.getElementById('missionStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Ouvertes', 'En cours', 'Terminées'],
+            datasets: [{
+                data: [<?= (int)$stats['ouverte'] ?>, <?= (int)$stats['en_cours'] ?>, <?= (int)$stats['terminee'] ?>],
+                backgroundColor: ['#00ffcc', '#9333ea', '#ff6b6b'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            cutout: '75%',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { color: '#fff', font: { family: 'Poppins', size: 12 } }
+                }
+            }
+        }
+    });
+
+    // Candidature Status Chart
+    new Chart(document.getElementById('candidatureStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Acceptées', 'En attente', 'Refusées'],
+            datasets: [{
+                data: [<?= (int)$stats['acceptee'] ?>, <?= (int)$stats['en_attente'] ?>, <?= (int)$stats['refusee'] ?>],
+                backgroundColor: ['#4caf50', '#ffc107', '#e63946'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            cutout: '75%',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { color: '#fff', font: { family: 'Poppins', size: 12 } }
+                }
+            }
+        }
+    });
+});
+</script>
 
 <!-- Missions List -->
 <section style="padding: 60px 0;">

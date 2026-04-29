@@ -129,7 +129,11 @@ class Candidature {
     }
 
     public function countByStatut($statut) {
-        $query = "SELECT COUNT(*) as count FROM " . $this->table . " WHERE statut = :statut";
+        if ($statut === 'en_attente') {
+            $query = "SELECT COUNT(*) as count FROM " . $this->table . " WHERE statut = :statut OR statut IS NULL OR statut = ''";
+        } else {
+            $query = "SELECT COUNT(*) as count FROM " . $this->table . " WHERE statut = :statut";
+        }
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':statut', $statut);
         $stmt->execute();
