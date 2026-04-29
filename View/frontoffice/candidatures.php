@@ -100,7 +100,7 @@ ob_start();
                                     <?php echo htmlspecialchars(substr($candidature['motivation'], 0, 80)) . '...'; ?>
                                 </p>
                                 <div style="display: flex; gap: 10px;">
-                                    <?php if (!isset($candidature['statut']) || $candidature['statut'] === 'en_attente'): ?>
+                                    <?php if ($statusLabel === 'En attente'): ?>
                                         <a href="index.php?action=front_edit_candidature&id=<?php echo $candidature['id']; ?>" class="cyber-btn" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;">
                                             <i class="fa fa-edit"></i> Modifier
                                         </a>

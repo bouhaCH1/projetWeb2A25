@@ -139,7 +139,7 @@ class MissionController {
     public function frontEditCandidature() {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         $candidatureData = $this->candidature->getById($id);
-        if (!$candidatureData || (isset($candidatureData['statut']) && $candidatureData['statut'] !== 'en_attente')) {
+        if (!$candidatureData || ($candidatureData['statut'] !== 'en_attente' && !empty($candidatureData['statut']))) {
             header('Location: index.php?action=front_candidatures');
             exit;
         }
