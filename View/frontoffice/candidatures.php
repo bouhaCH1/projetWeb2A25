@@ -69,9 +69,27 @@ ob_start();
                                 <h4 style="color: #ffffff; font-size: 16px; font-weight: 600; margin-bottom: 10px;">
                                     <?php echo htmlspecialchars($candidature['nom'] . ' ' . $candidature['prenom']); ?>
                                 </h4>
-                                <h6 style="color: #00ccff; margin-bottom: 12px; font-size: 14px;">
-                                    <?php echo htmlspecialchars($candidature['mission_titre']); ?>
-                                </h6>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <h6 style="color: #00ccff; margin: 0; font-size: 14px;">
+                                        <?php echo htmlspecialchars($candidature['mission_titre']); ?>
+                                    </h6>
+                                    <?php 
+                                        $statusLabel = 'En attente';
+                                        $statusColor = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+                                        if (isset($candidature['statut'])) {
+                                            if ($candidature['statut'] === 'acceptee') {
+                                                $statusLabel = 'Acceptée';
+                                                $statusColor = 'linear-gradient(135deg, #00ffcc, #00ccff)';
+                                            } elseif ($candidature['statut'] === 'refusee') {
+                                                $statusLabel = 'Refusée';
+                                                $statusColor = 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
+                                            }
+                                        }
+                                    ?>
+                                    <span style="font-size: 10px; padding: 4px 10px; border-radius: 20px; background: <?php echo $statusColor; ?>; color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <?php echo $statusLabel; ?>
+                                    </span>
+                                </div>
                                 <div style="color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 8px;">
                                     <i class="fa fa-envelope"></i> <?php echo htmlspecialchars($candidature['email']); ?>
                                 </div>
@@ -82,9 +100,15 @@ ob_start();
                                     <?php echo htmlspecialchars(substr($candidature['motivation'], 0, 80)) . '...'; ?>
                                 </p>
                                 <div style="display: flex; gap: 10px;">
-                                    <a href="index.php?action=front_edit_candidature&id=<?php echo $candidature['id']; ?>" class="cyber-btn" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;">
-                                        <i class="fa fa-edit"></i> Modifier
-                                    </a>
+                                    <?php if (!isset($candidature['statut']) || $candidature['statut'] === 'en_attente'): ?>
+                                        <a href="index.php?action=front_edit_candidature&id=<?php echo $candidature['id']; ?>" class="cyber-btn" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;">
+                                            <i class="fa fa-edit"></i> Modifier
+                                        </a>
+                                    <?php else: ?>
+                                        <div style="flex: 1; text-align: center; padding: 10px; border-radius: 25px; background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); font-size: 11px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1);">
+                                            <i class="fa fa-lock me-2"></i> Modification verrouillée
+                                        </div>
+                                    <?php endif; ?>
                                     <a href="index.php?action=front_delete_candidature&id=<?php echo $candidature['id']; ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?')" style="padding: 10px 15px; border-radius: 25px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; background: linear-gradient(135deg, #ff6b6b, #ff8e53); color: #ffffff;">
                                         <i class="fa fa-trash"></i>
                                     </a>
