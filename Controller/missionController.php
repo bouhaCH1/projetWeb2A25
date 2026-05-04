@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../Model/Database.php';
 require_once __DIR__ . '/../Model/mission.php';
 require_once __DIR__ . '/../Model/candidature.php';
+require_once __DIR__ . '/../Model/AIService.php';
 
 class MissionController {
     private $db;
@@ -305,6 +306,35 @@ class MissionController {
             $this->candidature->delete($id);
         }
         header('Location: index.php?action=candidatures&deleted_candidature=1');
+        exit;
+    }
+
+    public function aiClassify() {
+        // Clean any previous output (layout, session, etc.)
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/json; charset=utf-8');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['error' => 'Requête invalide']);
+            exit;
+        }
+
+        $title = isset($_POST['titre']) ? trim($_POST['titre']) : '';
+        $description = isset($_POST['description']) ? trim($_POST['description']) : '';
+
+        if (empty($title) || empty($description)) {
+            echo json_encode(['error' => 'Titre et description requis pour l\'analyse.']);
+            exit;
+        }
+
+        try {
+            $result = AIService::classifyMission($title, $description);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            echo json_encode(['error' => 'Erreur serveur: ' . $e->getMessage()]);
+        }
         exit;
     }
 

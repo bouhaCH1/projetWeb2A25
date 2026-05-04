@@ -183,6 +183,46 @@ ob_start();
         background-position: right 15px center;
         padding-right: 45px;
     }
+
+    .btn-ai-magic {
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+        color: white;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+    }
+
+    .btn-ai-magic:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(168, 85, 247, 0.3);
+        color: white;
+    }
+
+    .btn-ai-magic:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .ai-loading-spinner {
+        display: none;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
 </style>
 
 <div class="creation-container">
@@ -223,7 +263,13 @@ ob_start();
                         </div>
 
                         <div class="form-group-custom">
-                            <label for="description" class="label-premium">Description détaillée <span class="text-danger">*</span></label>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label for="description" class="label-premium mb-0">Description détaillée <span class="text-danger">*</span></label>
+                                <button type="button" id="aiClassifyBtn" class="btn-ai-magic">
+                                    <div class="ai-loading-spinner"></div>
+                                    <i class="fas fa-magic"></i> IA Suggestion
+                                </button>
+                            </div>
                             <textarea name="description" id="description" rows="8"
                                       class="form-control form-control-premium <?= isset($errors['description']) ? 'is-invalid' : '' ?>"
                                       placeholder="Expliquez les objectifs, le contexte et les livrables attendus..." 
@@ -361,7 +407,82 @@ ob_start();
 </div>
 
 <?php
-$extraJs = '<script src="../View/public/assets/js/validation.php"></script>';
 $content = ob_get_clean();
+?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const description = document.getElementById('description');
+    const counter = document.getElementById('description-counter');
+    const aiBtn = document.getElementById('aiClassifyBtn');
+    const spinner = aiBtn.querySelector('.ai-loading-spinner');
+    const aiIcon = aiBtn.querySelector('.fa-magic');
+    const categorieSelect = document.getElementById('categorie');
+    const niveauSelect = document.getElementById('niveau');
+
+    // Char counter
+    const updateCounter = () => {
+        const len = description.value.length;
+        counter.textContent = `${len} / 2000`;
+        counter.style.color = len > 1800 ? '#e63946' : '#4b5563';
+    };
+    description.addEventListener('input', updateCounter);
+    updateCounter();
+
+    // AI Classification logic
+    aiBtn.addEventListener('click', async () => {
+        const titre = document.getElementById('titre').value;
+        const desc = description.value;
+
+        if (!titre || !desc) {
+            alert('Veuillez remplir le titre et la description avant d\'utiliser l\'IA.');
+            return;
+        }
+
+        aiBtn.disabled = true;
+        spinner.style.display = 'block';
+        aiIcon.style.display = 'none';
+
+        try {
+            const formData = new FormData();
+            formData.append('titre', titre);
+            formData.append('description', desc);
+
+            const response = await fetch('index.php?action=ai_classify', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.error) {
+                alert('Erreur IA: ' + (result.details?.error?.message || result.error));
+            } else {
+                if (result.categorie) categorieSelect.value = result.categorie;
+                if (result.niveau) niveauSelect.value = result.niveau;
+                
+                // Visual feedback
+                [categorieSelect, niveauSelect].forEach(el => {
+                    el.style.borderColor = '#a855f7';
+                    el.style.boxShadow = '0 0 12px rgba(168, 85, 247, 0.3)';
+                    setTimeout(() => {
+                        el.style.borderColor = '';
+                        el.style.boxShadow = '';
+                    }, 2000);
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Erreur lors de l\'analyse IA.');
+        } finally {
+            aiBtn.disabled = false;
+            spinner.style.display = 'none';
+            aiIcon.style.display = 'block';
+        }
+    });
+});
+</script>
+
+<?php
 require_once 'layout.php';
 ?>

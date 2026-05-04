@@ -226,6 +226,47 @@ ob_start();
         from { opacity: 0; transform: scale(0.98) translateY(10px); }
         to { opacity: 1; transform: scale(1) translateY(0); }
     }
+
+    .btn-ai-magic {
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+    }
+
+    .btn-ai-magic:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+        color: white;
+    }
+
+    .btn-ai-magic:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .ai-loading-spinner {
+        display: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
 </style>
 
 <div class="creation-container animate-in">
@@ -277,7 +318,13 @@ ob_start();
                         <div class="form-group-custom">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <label for="description" class="label-premium mb-0">Description Détaillée <span class="text-danger">*</span></label>
-                                <span id="description-counter" class="char-counter">0 / 2000</span>
+                                <div class="d-flex align-items-center gap-3">
+                                    <button type="button" id="aiClassifyBtn" class="btn-ai-magic">
+                                        <div class="ai-loading-spinner"></div>
+                                        <i class="fas fa-magic"></i> Analyser avec l'IA
+                                    </button>
+                                    <span id="description-counter" class="char-counter">0 / 2000</span>
+                                </div>
                             </div>
                             <textarea name="description" id="description" rows="10"
                                       class="form-control-premium <?= isset($errors['description']) ? 'is-invalid' : '' ?>"
@@ -419,6 +466,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveBtn = document.getElementById('saveDraftBtn');
     const clearBtn = document.getElementById('clearFormBtn');
     const status = document.getElementById('autoSaveStatus');
+    const aiBtn = document.getElementById('aiClassifyBtn');
+    const spinner = aiBtn.querySelector('.ai-loading-spinner');
+    const aiIcon = aiBtn.querySelector('.fa-magic');
+    const categorieSelect = document.getElementById('categorie');
+    const niveauSelect = document.getElementById('niveau');
 
     // Char counter
     description.addEventListener('input', () => {
@@ -488,6 +540,60 @@ document.addEventListener('DOMContentLoaded', function() {
     // Clear invalid class on change
     form.querySelectorAll('input, textarea, select').forEach(el => {
         el.addEventListener('input', () => el.classList.remove('is-invalid'));
+    });
+
+    // AI Classification logic
+    aiBtn.addEventListener('click', async () => {
+        const titre = document.getElementById('titre').value;
+        const desc = description.value;
+
+        if (!titre || !desc) {
+            alert('Veuillez remplir le titre et la description avant d\'utiliser l\'IA.');
+            return;
+        }
+
+        // UI State: Loading
+        aiBtn.disabled = true;
+        spinner.style.display = 'block';
+        aiIcon.style.display = 'none';
+
+        try {
+            const formData = new FormData();
+            formData.append('titre', titre);
+            formData.append('description', desc);
+
+            const response = await fetch('index.php?action=ai_classify', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.error) {
+                alert('Erreur IA: ' + (result.details?.error?.message || result.error));
+            } else {
+                if (result.categorie) categorieSelect.value = result.categorie;
+                if (result.niveau) niveauSelect.value = result.niveau;
+                showStatus('Classification IA appliquée ! ✨');
+                
+                // Add a subtle pulse effect to the updated fields
+                [categorieSelect, niveauSelect].forEach(el => {
+                    el.style.borderColor = '#a855f7';
+                    el.style.boxShadow = '0 0 15px rgba(168, 85, 247, 0.4)';
+                    setTimeout(() => {
+                        el.style.borderColor = '';
+                        el.style.boxShadow = '';
+                    }, 2000);
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Erreur lors de l\'analyse IA.');
+        } finally {
+            aiBtn.disabled = false;
+            spinner.style.display = 'none';
+            aiIcon.style.display = 'block';
+        }
     });
 });
 </script>
