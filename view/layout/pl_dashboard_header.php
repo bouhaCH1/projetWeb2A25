@@ -345,7 +345,12 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
             <?php endif; ?>
         </div>
         <div style="min-width:0;">
-            <div class="ww-sb-user-name"><?= $userName ?></div>
+            <div class="ww-sb-user-name">
+                <?= $userName ?>
+                <?php if ((int)($_SESSION['user_verified'] ?? 0) === 1): ?>
+                    <i class="fa fa-check-circle" style="color:#00ffcc; margin-left:3px;" title="Compte Certifié"></i>
+                <?php endif; ?>
+            </div>
             <span class="ww-sb-badge"><?= $role === 'employer' ? 'Employeur' : 'Candidat' ?></span>
         </div>
     </div>
@@ -357,6 +362,14 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
         </a>
         <a href="/workwave/Controller/index.php?action=profile" class="<?= $action === 'profile' ? 'active' : '' ?>">
             <i class="fa fa-user"></i> Mon Profil
+        </a>
+
+        <div class="ww-sb-section" style="margin-top:10px;">Outils IA</div>
+        <a href="/workwave/Controller/index.php?action=ai_analyze" class="<?= $action === 'ai_analyze' ? 'active' : '' ?>" style="<?= $action !== 'ai_analyze' ? 'color:#00b3ff;' : '' ?>">
+            <i class="fa fa-brain"></i> Analyse IA
+        </a>
+        <a href="/workwave/Controller/index.php?action=verify_identity" class="<?= $action === 'verify_identity' ? 'active' : '' ?>" style="<?= (int)($_SESSION['user_verified'] ?? 0) === 1 ? 'color:#00ffcc;' : 'color:#ffd700;' ?>">
+            <i class="fa fa-id-card"></i> <?= (int)($_SESSION['user_verified'] ?? 0) === 1 ? '&#10003; Vérifié' : 'Vérifier CIN' ?>
         </a>
 
         <div class="ww-sb-section" style="margin-top:10px;">Compte</div>
@@ -392,6 +405,9 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
                     <?php endif; ?>
                 </div>
                 <?= $userName ?>
+                <?php if ((int)($_SESSION['user_verified'] ?? 0) === 1): ?>
+                    <i class="fa fa-check-circle" style="color:#00ffcc;" title="Compte Certifié"></i>
+                <?php endif; ?>
             </div>
         </div>
     </div>

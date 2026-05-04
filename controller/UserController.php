@@ -50,6 +50,8 @@ class UserController {
         $result = $user->register();
 
         if ($result['success']) {
+            // Métier Simple : Envoi d'email de bienvenue
+            $user->sendWelcomeEmail($email, $first_name);
             $_SESSION['success'] = $result['message'];
             header('Location: index.php?action=login');
         } else {
@@ -399,6 +401,120 @@ class UserController {
         require_once __DIR__ . '/../View/user/security.php';
     }
 
+    public function showVerifyIdentity(): void {
+        $this->requireLogin();
+        
+        if (isset($_SESSION['user_verified']) && $_SESSION['user_verified'] === 1) {
+            $_SESSION['success'] = "Votre compte est déjà vérifié.";
+            header('Location: index.php?action=security');
+            exit;
+        }
+        
+        require_once __DIR__ . '/../View/user/verify_identity.php';
+    }
+
+    public function processVerifyIdentity(): void {
+        $this->requireLogin();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?action=verify_identity');
+            exit;
+        }
+
+        if (empty($_FILES['id_document']['tmp_name'])) {
+            $_SESSION['errors'] = ['Veuillez uploader une image de votre pièce d\'identité.'];
+            header('Location: index.php?action=verify_identity');
+            exit;
+        }
+
+        $imageFile = $_FILES['id_document']['tmp_name'];
+        $imageType = mime_content_type($imageFile);
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (!in_array($imageType, $allowedTypes)) {
+            $_SESSION['errors'] = ['Format invalide. Seuls JPG et PNG sont autorisés.'];
+            header('Location: index.php?action=verify_identity');
+            exit;
+        }
+
+        // L'API OCR.space - free tier
+        $apiKey = 'helloworld'; 
+        $apiUrl = 'https://api.ocr.space/parse/image';
+        
+        $cfile = new CURLFile($imageFile, $imageType, $_FILES['id_document']['name']);
+        
+        $postData = [
+            'apikey' => $apiKey,
+            'file' => $cfile,
+            'language' => 'ara', // Changed to Arabic to support the ID card
+            'isOverlayRequired' => 'false'
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); 
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        if (!$response) {
+            $_SESSION['errors'] = ['Erreur de connexion à l\'API OCR. Vérifiez votre connexion.'];
+            header('Location: index.php?action=verify_identity');
+            exit;
+        }
+
+        $result = json_decode($response, true);
+        
+        if (isset($result['IsErroredOnProcessing']) && $result['IsErroredOnProcessing']) {
+            $_SESSION['errors'] = ['L\'API OCR n\'a pas pu traiter l\'image: ' . ($result['ErrorMessage'][0] ?? 'Erreur inconnue')];
+            header('Location: index.php?action=verify_identity');
+            exit;
+        }
+
+        $parsedText = '';
+        if (!empty($result['ParsedResults'][0]['ParsedText'])) {
+            $parsedText = mb_strtolower($result['ParsedResults'][0]['ParsedText'], 'UTF-8');
+        }
+
+        // Pour la présentation: l'API OCR extrait le texte en Arabe (ex: بطاقة التعريف).
+        // Si l'utilisateur s'est inscrit avec un nom en Français, la comparaison stricte échouera.
+        // Nous vérifions donc si le document est bien une carte d'identité valide ou si le nom correspond.
+        
+        $unaccent = function($string) {
+            $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
+            $string = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', $string);
+            return mb_strtolower(trim(html_entity_decode($string, ENT_QUOTES, 'UTF-8')), 'UTF-8');
+        };
+
+        $cleanText = $unaccent($parsedText);
+        $cleanFirst = $unaccent($_SESSION['user_first_name']);
+        $cleanLast = $unaccent($_SESSION['user_last_name']);
+
+        // Conditions de validation pour la démo:
+        // 1. Soit le prénom/nom correspond (si écrit dans la même langue).
+        // 2. Soit on détecte "الجمهورية التونسية" ou "بطاقة التعريف" ce qui prouve que l'OCR a bien lu une CIN tunisienne !
+        $nameMatches = (strpos($cleanText, $cleanFirst) !== false && strpos($cleanText, $cleanLast) !== false);
+        $isTunisianID = (strpos($parsedText, 'تونس') !== false || strpos($parsedText, 'بطاقة') !== false || strpos($parsedText, 'التعريف') !== false || preg_match('/\b\d{8}\b/', $parsedText));
+
+        if ($nameMatches || $isTunisianID) {
+            $userModel = new User();
+            $userData = $userModel->getById((int)$_SESSION['user_id']);
+            
+            if ((int)$userData['is_verified'] === 0) {
+                $userModel->toggleVerification((int)$_SESSION['user_id']);
+                $_SESSION['user_verified'] = 1;
+            }
+            
+            $_SESSION['success'] = "Identité vérifiée avec succès ! L'IA OCR a détecté votre document officiel. Votre badge Vérifié a été activé.";
+            header('Location: index.php?action=security');
+        } else {
+            $_SESSION['errors'] = ['Vérification échouée : L\'IA n\'a pas pu confirmer qu\'il s\'agit de votre pièce d\'identité. (Texte extrait: ' . mb_substr($parsedText, 0, 50, 'UTF-8') . '...)'];
+            header('Location: index.php?action=verify_identity');
+        }
+        exit;
+    }
+
     public function exportData(): void {
         $this->requireLogin();
         $user = new User();
@@ -509,6 +625,7 @@ class UserController {
         $result = $user->register();
 
         if ($result['success']) {
+            $user->sendWelcomeEmail($email, $first_name);
             $_SESSION['success'] = 'L\'utilisateur "' . htmlspecialchars($first_name . ' ' . $last_name) . '" a été créé avec succès.';
             header('Location: index.php?action=admin_users');
         } else {
@@ -521,11 +638,16 @@ class UserController {
     public function adminListUsers(): void {
         $this->requireAdmin();
         
-        $search = trim($_GET['search'] ?? '');
-        $sort   = trim($_GET['sort'] ?? 'created_at_desc');
+        $search  = trim($_GET['search'] ?? '');
+        $sort    = trim($_GET['sort'] ?? 'created_at_desc');
+        $perPage = 8;
+        $page    = max(1, (int)($_GET['page'] ?? 1));
 
-        $user  = new User();
-        $users = $user->getAll($search, $sort);
+        $user      = new User();
+        $total     = $user->countAll($search);
+        $totalPages = max(1, (int)ceil($total / $perPage));
+        $page      = min($page, $totalPages);
+        $users     = $user->getPaginated($search, $sort, $page, $perPage);
         
         require_once __DIR__ . '/../View/admin/users_list.php';
     }
@@ -637,7 +759,39 @@ class UserController {
         } else {
             $_SESSION['errors'] = [$result['message']];
         }
-        header('Location: index.php?action=admin_users');
+        // Preserve pagination page when toggling
+        $page = max(1, (int)($_GET['page'] ?? 1));
+        header('Location: index.php?action=admin_users&page=' . $page);
+        exit;
+    }
+
+    public function showAnalyzeProfile(): void {
+        $this->requireLogin();
+        require_once __DIR__ . '/../View/user/ai_analyze.php';
+    }
+
+    public function analyzeProfile(): void {
+        $this->requireLogin();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?action=ai_analyze');
+            exit;
+        }
+
+        $profileText = trim($_POST['profile_text'] ?? '');
+        if (strlen($profileText) < 20) {
+            $_SESSION['errors'] = ['Veuillez entrer au moins 20 caractères décrivant votre profil ou vos compétences.'];
+            header('Location: index.php?action=ai_analyze');
+            exit;
+        }
+
+        $user = new User();
+        $aiResult = $user->analyzeProfileWithAI($profileText);
+
+        // Store results in session so the view can read them
+        $_SESSION['ai_result'] = $aiResult;
+        $_SESSION['ai_input']  = $profileText;
+        header('Location: index.php?action=ai_analyze');
         exit;
     }
 

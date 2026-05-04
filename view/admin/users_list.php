@@ -135,7 +135,37 @@ include __DIR__ . '/../layout/dashboard_header.php';
             </tbody>
         </table>
     </div>
-    <small class="text-muted d-block mt-3">* Les comptes administrateurs sont exclus de cette liste.</small>
+
+    <!-- Pagination -->
+    <?php if (($totalPages ?? 1) > 1): ?>
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <small class="text-muted">Affichage de la page <?= $page ?> sur <?= $totalPages ?> &mdash; <?= $total ?> utilisateur(s) au total</small>
+        <nav>
+            <ul class="pagination mb-0" style="gap:4px; display:flex;">
+                <?php
+                $baseUrl = '/workwave/Controller/index.php?action=admin_users';
+                if (!empty($_GET['search'])) $baseUrl .= '&search=' . urlencode($_GET['search']);
+                if (!empty($_GET['sort']))   $baseUrl .= '&sort='   . urlencode($_GET['sort']);
+                ?>
+                <!-- Prev -->
+                <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                    <a class="page-link" href="<?= $baseUrl ?>&page=<?= $page - 1 ?>" style="background:#1a1a2e;border-color:rgba(230,57,70,0.2);color:#e63946;">&laquo;</a>
+                </li>
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?= $i === $page ? 'active' : '' ?>">
+                    <a class="page-link" href="<?= $baseUrl ?>&page=<?= $i ?>" style="<?= $i === $page ? 'background:#e63946;border-color:#e63946;color:#fff;' : 'background:#1a1a2e;border-color:rgba(230,57,70,0.2);color:#e63946;' ?>"><?= $i ?></a>
+                </li>
+                <?php endfor; ?>
+                <!-- Next -->
+                <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
+                    <a class="page-link" href="<?= $baseUrl ?>&page=<?= $page + 1 ?>" style="background:#1a1a2e;border-color:rgba(230,57,70,0.2);color:#e63946;">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <?php else: ?>
+    <small class="text-muted d-block mt-3"><?= ($total ?? 0) ?> utilisateur(s) au total. Les comptes administrateurs sont exclus.</small>
+    <?php endif; ?>
 </div>
 
 <!-- html2pdf library -->

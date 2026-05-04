@@ -97,31 +97,138 @@ include __DIR__ . '/../layout/dashboard_header.php';
         <h6 class="mb-0">Actions rapides</h6>
     </div>
     <div class="row g-4">
-        <div class="col-sm-12 col-md-4">
-            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition: .3s; cursor: pointer;" onclick="window.location.href='/workwave/Controller/index.php?action=admin_users'" onmouseover="this.classList.add('bg-secondary');this.classList.remove('bg-dark');" onmouseout="this.classList.add('bg-dark');this.classList.remove('bg-secondary');">
+        <div class="col-sm-12 col-md-3">
+            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition:.3s;cursor:pointer;" onclick="window.location.href='/workwave/Controller/index.php?action=admin_users'" onmouseover="this.style.background='#1a1a2e'" onmouseout="this.style.background=''">
                 <i class="fa fa-users-cog fa-3x text-primary mb-3"></i>
                 <h6 class="mb-2">Gérer les utilisateurs</h6>
-                <p class="mb-0 text-muted">Afficher, modifier ou supprimer des comptes</p>
+                <p class="mb-0 text-muted small">Afficher, modifier ou supprimer des comptes</p>
             </div>
         </div>
-        <div class="col-sm-12 col-md-4">
-            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition: .3s; cursor: pointer;" onclick="window.location.href='/workwave/Controller/index.php?action=admin_add_user'" onmouseover="this.classList.add('bg-secondary');this.classList.remove('bg-dark');" onmouseout="this.classList.add('bg-dark');this.classList.remove('bg-secondary');">
+        <div class="col-sm-12 col-md-3">
+            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition:.3s;cursor:pointer;" onclick="window.location.href='/workwave/Controller/index.php?action=admin_add_user'" onmouseover="this.style.background='#1a1a2e'" onmouseout="this.style.background=''">
                 <i class="fa fa-user-plus fa-3x text-primary mb-3"></i>
                 <h6 class="mb-2">Ajouter un utilisateur</h6>
-                <p class="mb-0 text-muted">Créer manuellement un compte</p>
+                <p class="mb-0 text-muted small">Créer manuellement un nouveau compte</p>
             </div>
         </div>
-        <div class="col-sm-12 col-md-4">
-            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition: .3s; cursor: pointer;" onclick="window.location.href='/workwave/Controller/index.php'" onmouseover="this.classList.add('bg-secondary');this.classList.remove('bg-dark');" onmouseout="this.classList.add('bg-dark');this.classList.remove('bg-secondary');">
+        <div class="col-sm-12 col-md-3">
+            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition:.3s;cursor:pointer;border:1px solid rgba(0,179,255,0.2);" onclick="window.location.href='/workwave/Controller/index.php?action=ai_analyze'" onmouseover="this.style.background='#0a0f1e'" onmouseout="this.style.background=''">
+                <span style="font-size:2.5rem;margin-bottom:12px;">🤖</span>
+                <h6 class="mb-2" style="color:#00b3ff;">Analyse IA</h6>
+                <p class="mb-0 text-muted small">Classer un profil avec HuggingFace IA</p>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition:.3s;cursor:pointer;" onclick="window.location.href='/workwave/Controller/index.php'" onmouseover="this.style.background='#1a1a2e'" onmouseout="this.style.background=''">
                 <i class="fa fa-globe fa-3x text-primary mb-3"></i>
                 <h6 class="mb-2">Site public</h6>
-                <p class="mb-0 text-muted">Aller sur la page d'accueil publique</p>
+                <p class="mb-0 text-muted small">Aller sur la page d'accueil publique</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Weather + AI info row -->
+<div class="row g-4 mb-4">
+    <div class="col-sm-12 col-xl-4">
+        <div class="bg-secondary rounded p-4" style="border-left:3px solid #00b3ff;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0" style="color:#00b3ff;">🌍 Météo — Métier Avancé</h6>
+                <small class="text-muted">wttr.in API</small>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div style="display:flex;gap:8px;flex:1;">
+                    <input type="text" id="adminCityInput" value="Tunis" placeholder="Ville..."
+                        class="form-control form-control-sm" style="max-width:140px;" />
+                    <button onclick="adminFetchWeather()" class="btn btn-sm btn-primary">Go</button>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <div id="adminWeatherIcon" style="font-size:2.5rem;">⏳</div>
+                <div id="adminWeatherTemp" style="font-size:2rem;font-weight:800;color:#00b3ff;">--°C</div>
+                <div id="adminWeatherCity" class="text-muted small">Chargement...</div>
+                <div id="adminWeatherDesc" class="text-muted small" style="text-transform:capitalize;">...</div>
+                <div class="d-flex justify-content-center gap-3 mt-2">
+                    <span class="small text-muted">💧 <span id="adminHumidity">--%</span></span>
+                    <span class="small text-muted">💨 <span id="adminWind">-- km/h</span></span>
+                    <span class="small text-muted">🌡 <span id="adminFeels">--°</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-xl-8">
+        <div class="bg-secondary rounded p-4" style="border-left:3px solid rgba(0,255,204,0.5);">
+            <h6 class="mb-3" style="color:#00ffcc;">🧠 Fonctionnalités Métier Avancé</h6>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="p-3 rounded" style="background:rgba(0,255,204,0.04);border:1px solid rgba(0,255,204,0.12);">
+                        <div style="font-size:1.5rem;">🆔</div>
+                        <div class="fw-bold mt-2 small">OCR Vérification CIN</div>
+                        <div class="text-muted" style="font-size:.75rem;">API OCR.space · Lecture automatique de CIN</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded" style="background:rgba(0,179,255,0.04);border:1px solid rgba(0,179,255,0.12);">
+                        <div style="font-size:1.5rem;">🤖</div>
+                        <div class="fw-bold mt-2 small" style="color:#00b3ff;">HuggingFace IA</div>
+                        <div class="text-muted" style="font-size:.75rem;">Classification zero-shot de profils métier</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded" style="background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.12);">
+                        <div style="font-size:1.5rem;">🌤</div>
+                        <div class="fw-bold mt-2 small" style="color:#ffd700;">API Météo</div>
+                        <div class="text-muted" style="font-size:.75rem;">Données météo en temps réel (wttr.in)</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <?php include __DIR__ . '/../layout/dashboard_footer.php'; ?>
+
+<!-- Admin Weather Widget -->
+<script>
+const adminWeatherIcons = {
+    'clear sky':'☀️','few clouds':'⛅','scattered clouds':'🌤','broken clouds':'☁️',
+    'overcast clouds':'☁️','shower rain':'🌧','rain':'🌧','light rain':'🌦',
+    'thunderstorm':'⛈','snow':'❄️','mist':'🌫','haze':'🌫','fog':'🌫',
+    'drizzle':'🌦','moderate rain':'🌧','heavy rain':'🌧'
+};
+function adminGetWeatherIcon(desc) {
+    for (const [k, v] of Object.entries(adminWeatherIcons)) {
+        if (desc.toLowerCase().includes(k)) return v;
+    }
+    return '🌡';
+}
+function adminFetchWeather() {
+    const city = document.getElementById('adminCityInput')?.value.trim() || 'Tunis';
+    fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`)
+        .then(r => r.json())
+        .then(data => {
+            const curr = data.current_condition[0];
+            const area = data.nearest_area[0];
+            const cityName = area.areaName[0].value + ', ' + area.country[0].value;
+            const desc = curr.weatherDesc[0].value;
+            document.getElementById('adminWeatherIcon').textContent = adminGetWeatherIcon(desc);
+            document.getElementById('adminWeatherTemp').textContent = curr.temp_C + '°C';
+            document.getElementById('adminWeatherCity').textContent = cityName;
+            document.getElementById('adminWeatherDesc').textContent = desc;
+            document.getElementById('adminHumidity').textContent   = curr.humidity + '%';
+            document.getElementById('adminWind').textContent       = curr.windspeedKmph + ' km/h';
+            document.getElementById('adminFeels').textContent      = curr.FeelsLikeC + '°';
+        })
+        .catch(() => {
+            document.getElementById('adminWeatherIcon').textContent = '❌';
+            document.getElementById('adminWeatherCity').textContent = 'Erreur connexion';
+        });
+}
+document.addEventListener('DOMContentLoaded', function() { adminFetchWeather(); });
+document.getElementById('adminCityInput')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') adminFetchWeather();
+});
+</script>
 
 <!-- Chart.js Initialization -->
 <script>

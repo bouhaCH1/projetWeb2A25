@@ -140,6 +140,35 @@ if ($isAdmin) {
             </form>
         </div>
 
+        <!-- Section 3: Vérification d'identité OCR (Métier Avancé) -->
+        <?php $isVerified = (isset($_SESSION['user_verified']) && $_SESSION['user_verified'] === 1); ?>
+        <div class="dsh-card" style="padding:24px; border:1px solid <?= $isVerified ? 'rgba(0,255,204,0.3)' : 'rgba(255,193,7,0.3)' ?>; background:<?= $isVerified ? 'rgba(0,255,204,0.02)' : 'rgba(255,193,7,0.02)' ?>;">
+            <h4 style="font-weight:700; margin-bottom:12px; color:<?= $isVerified ? '#00ffcc' : '#ffc107' ?>; border-bottom:1px solid <?= $isVerified ? 'rgba(0,255,204,0.15)' : 'rgba(255,193,7,0.15)' ?>; padding-bottom:10px; font-size:0.95rem;">
+                <i class="fa fa-id-card" style="margin-right:8px;"></i>
+                Vérification d'Identité (OCR IA)
+            </h4>
+            <p style="font-size:0.83rem; color:#666; margin-bottom:16px; line-height:1.6;">
+                <?= $isVerified ? 'Votre identité a été vérifiée avec succès. Vous possédez le badge "Vérifié" public.' : 'Prouvez votre identité en scannant votre pièce d\'identité via notre Intelligence Artificielle OCR pour obtenir un badge de confiance.' ?>
+            </p>
+            
+            <?php if (!$isVerified): ?>
+                <a href="/workwave/Controller/index.php?action=verify_identity" style="
+                    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+                    width:100%; padding:10px 18px; border-radius:7px;
+                    background:rgba(255,193,7,0.1); color:#ffc107;
+                    border:1px solid rgba(255,193,7,0.3);
+                    font-size:0.85rem; font-weight:700; text-decoration:none;
+                    transition:background 0.18s;
+                " onmouseover="this.style.background='rgba(255,193,7,0.15)'" onmouseout="this.style.background='rgba(255,193,7,0.1)'">
+                    <i class="fa fa-camera"></i> Lancer la vérification
+                </a>
+            <?php else: ?>
+                <div style="display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:10px 18px; border-radius:7px; background:rgba(0,255,204,0.1); color:#00ffcc; border:1px solid rgba(0,255,204,0.3); font-size:0.85rem; font-weight:700;">
+                    <i class="fa fa-check-circle"></i> Compte Certifié
+                </div>
+            <?php endif; ?>
+        </div>
+
     </div>
 </div>
 

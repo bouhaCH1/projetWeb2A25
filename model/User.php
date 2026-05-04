@@ -111,31 +111,156 @@ class User {
             $params[':search3'] = $searchTerm;
         }
 
-        switch ($sort) {
-            case 'name_asc':
-                $sql .= " ORDER BY first_name ASC, last_name ASC";
-                break;
-            case 'name_desc':
-                $sql .= " ORDER BY first_name DESC, last_name DESC";
-                break;
-            case 'role_asc':
-                $sql .= " ORDER BY role ASC, created_at DESC";
-                break;
-            case 'role_desc':
-                $sql .= " ORDER BY role DESC, created_at DESC";
-                break;
-            case 'created_at_asc':
-                $sql .= " ORDER BY created_at ASC";
-                break;
-            case 'created_at_desc':
-            default:
-                $sql .= " ORDER BY created_at DESC";
-                break;
-        }
+        $sql .= $this->buildSortClause($sort);
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll();
+    }
+
+    public function countAll(string $search = ''): int {
+        $sql = "SELECT COUNT(*) FROM users WHERE role != 'admin'";
+        $params = [];
+        if ($search !== '') {
+            $sql .= " AND (first_name LIKE :search1 OR last_name LIKE :search2 OR email LIKE :search3)";
+            $searchTerm = '%' . $search . '%';
+            $params[':search1'] = $searchTerm;
+            $params[':search2'] = $searchTerm;
+            $params[':search3'] = $searchTerm;
+        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getPaginated(string $search = '', string $sort = 'created_at_desc', int $page = 1, int $perPage = 8): array {
+        $sql = "SELECT id, first_name, last_name, email, phone, role, status, is_verified, created_at
+                FROM users WHERE role != 'admin'";
+        $params = [];
+        if ($search !== '') {
+            $sql .= " AND (first_name LIKE :search1 OR last_name LIKE :search2 OR email LIKE :search3)";
+            $searchTerm = '%' . $search . '%';
+            $params[':search1'] = $searchTerm;
+            $params[':search2'] = $searchTerm;
+            $params[':search3'] = $searchTerm;
+        }
+        $sql .= $this->buildSortClause($sort);
+        $offset = ($page - 1) * $perPage;
+        $sql .= " LIMIT :limit OFFSET :offset";
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    private function buildSortClause(string $sort): string {
+        switch ($sort) {
+            case 'name_asc':        return " ORDER BY first_name ASC, last_name ASC";
+            case 'name_desc':       return " ORDER BY first_name DESC, last_name DESC";
+            case 'role_asc':        return " ORDER BY role ASC, created_at DESC";
+            case 'role_desc':       return " ORDER BY role DESC, created_at DESC";
+            case 'created_at_asc':  return " ORDER BY created_at ASC";
+            case 'created_at_desc':
+            default:                return " ORDER BY created_at DESC";
+        }
+    }
+
+    public function sendWelcomeEmail(string $toEmail, string $firstName): void {
+        $subject  = '=?UTF-8?B?' . base64_encode('Bienvenue sur WorkWave !') . '?=';
+        $body     = "Bonjour $firstName,\n\nBienvenue sur WorkWave ! Votre compte a été créé avec succès.\n\nBonne recherche !\n\nL'équipe WorkWave";
+        $headers  = "From: noreply@workwave.com\r\n";
+        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        @mail($toEmail, $subject, $body, $headers);
+    }
+
+    public function analyzeProfileWithAI(string $profileText): array {
+        // HuggingFace Inference API – zero-shot classification
+        // We classify the profile into job-related categories to give career suggestions
+        $apiUrl = 'https://api-inference.huggingface.co/models/facebook/bart-large-mnli';
+        $apiKey = 'hf_demo'; // Free tier / public model — no real key needed for demo
+
+        $candidateLabels = [
+            'Informatique & Développement',
+            'Marketing & Communication',
+            'Finance & Comptabilité',
+            'Design & Créativité',
+            'Ressources Humaines',
+            'Commerce & Ventes',
+            'Ingénierie & Technique',
+            'Santé & Médecine'
+        ];
+
+        $payload = json_encode([
+            'inputs' => $profileText,
+            'parameters' => ['candidate_labels' => $candidateLabels]
+        ]);
+
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $apiKey
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if (!$response || $httpCode !== 200) {
+            // Fallback: return simulated results for the demo if API fails
+            return $this->simulateAIAnalysis($profileText, $candidateLabels);
+        }
+
+        $data = json_decode($response, true);
+        if (isset($data['error']) || empty($data['labels'])) {
+            return $this->simulateAIAnalysis($profileText, $candidateLabels);
+        }
+
+        $results = [];
+        foreach ($data['labels'] as $i => $label) {
+            $results[] = [
+                'label' => $label,
+                'score' => round(($data['scores'][$i] ?? 0) * 100, 1)
+            ];
+        }
+        return ['success' => true, 'results' => $results, 'source' => 'HuggingFace API'];
+    }
+
+    private function simulateAIAnalysis(string $text, array $labels): array {
+        // Keyword-based simulation when API is unavailable
+        $text = mb_strtolower($text, 'UTF-8');
+        $scores = [];
+        $keywords = [
+            'Informatique & Développement' => ['php','python','javascript','dev','code','web','sql','java','react','node','html','css','git','api','logiciel'],
+            'Marketing & Communication'    => ['marketing','communication','social','media','content','brand','seo','publicité','campagne','stratégie'],
+            'Finance & Comptabilité'       => ['finance','comptabilité','budget','audit','bilan','fiscal','économie','banque','comptable','investissement'],
+            'Design & Créativité'          => ['design','créatif','photoshop','figma','illustrator','ui','ux','graphisme','logo','art','animation'],
+            'Ressources Humaines'          => ['rh','recrutement','formation','talent','ressources humaines','paie','contrat','emploi','carrière'],
+            'Commerce & Ventes'            => ['vente','commercial','client','prospect','négociation','b2b','crm','chiffre','revenue','business'],
+            'Ingénierie & Technique'       => ['ingénieur','mécanique','électronique','automatisme','industriel','génie','structure','btp','construction'],
+            'Santé & Médecine'             => ['santé','médecin','infirmier','pharmacie','hôpital','clinique','médical','soin','patient','bio']
+        ];
+        foreach ($labels as $label) {
+            $score = 5; // base score
+            foreach (($keywords[$label] ?? []) as $kw) {
+                if (str_contains($text, $kw)) $score += 15;
+            }
+            $scores[$label] = min(95, $score);
+        }
+        arsort($scores);
+        $total = array_sum($scores) ?: 1;
+        $results = [];
+        foreach ($scores as $label => $raw) {
+            $results[] = ['label' => $label, 'score' => round(($raw / $total) * 100, 1)];
+        }
+        return ['success' => true, 'results' => $results, 'source' => 'Analyse locale (simulation)'];
     }
 
     public function updateProfile(): array {

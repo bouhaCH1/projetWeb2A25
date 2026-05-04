@@ -182,13 +182,16 @@ $userPicPath = !empty($userPic) ? '/workwave/' . htmlspecialchars($userPic) : '/
                         <a href="/workwave/Controller/index.php?action=admin_dashboard" class="nav-item nav-link <?= $action === 'admin_dashboard' ? 'active' : '' ?>"><i class="fa fa-tachometer-alt me-2"></i>Tableau de bord</a>
                         <a href="/workwave/Controller/index.php?action=profile" class="nav-item nav-link <?= $action === 'profile' ? 'active' : '' ?>"><i class="fa fa-user me-2"></i>Mon Profil</a>
                         <a href="/workwave/Controller/index.php?action=admin_users" class="nav-item nav-link <?= $action === 'admin_users' ? 'active' : '' ?>"><i class="fa fa-users me-2"></i>Utilisateurs</a>
+                        <a href="/workwave/Controller/index.php?action=ai_analyze" class="nav-item nav-link <?= $action === 'ai_analyze' ? 'active' : '' ?>" style="color:<?= $action === 'ai_analyze' ? '' : '#00b3ff' ?>;"><i class="fa fa-brain me-2"></i>Analyse IA</a>
                         <a href="/workwave/Controller/index.php?action=security" class="nav-item nav-link <?= $action === 'security' ? 'active' : '' ?>"><i class="fa fa-shield-alt me-2"></i>Sécurité</a>
                     <?php elseif ($role === 'employer'): ?>
                         <a href="/workwave/Controller/index.php?action=dashboard_employer" class="nav-item nav-link <?= $action === 'dashboard_employer' ? 'active' : '' ?>"><i class="fa fa-tachometer-alt me-2"></i>Tableau de bord</a>
                         <a href="/workwave/Controller/index.php?action=profile" class="nav-item nav-link <?= $action === 'profile' ? 'active' : '' ?>"><i class="fa fa-building me-2"></i>Mon Profil</a>
+                        <a href="/workwave/Controller/index.php?action=ai_analyze" class="nav-item nav-link <?= $action === 'ai_analyze' ? 'active' : '' ?>" style="color:<?= $action === 'ai_analyze' ? '' : '#00b3ff' ?>;"><i class="fa fa-brain me-2"></i>Analyse IA</a>
                     <?php else: ?>
                         <a href="/workwave/Controller/index.php?action=dashboard_seeker" class="nav-item nav-link <?= $action === 'dashboard_seeker' ? 'active' : '' ?>"><i class="fa fa-tachometer-alt me-2"></i>Tableau de bord</a>
                         <a href="/workwave/Controller/index.php?action=profile" class="nav-item nav-link <?= $action === 'profile' ? 'active' : '' ?>"><i class="fa fa-user me-2"></i>Mon Profil</a>
+                        <a href="/workwave/Controller/index.php?action=ai_analyze" class="nav-item nav-link <?= $action === 'ai_analyze' ? 'active' : '' ?>" style="color:<?= $action === 'ai_analyze' ? '' : '#00b3ff' ?>;"><i class="fa fa-brain me-2"></i>Analyse IA</a>
                     <?php endif; ?>
                     <a href="/workwave/Controller/index.php" class="nav-item nav-link"><i class="fa fa-home me-2"></i>Site public</a>
                 </div>

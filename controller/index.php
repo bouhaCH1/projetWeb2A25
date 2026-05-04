@@ -46,12 +46,38 @@ switch ($action) {
     case 'export_data':
         $controller->exportData();
         break;
+    case 'verify_identity':
+        $controller->showVerifyIdentity();
+        break;
+    case 'verify_identity_submit':
+        $controller->processVerifyIdentity();
+        break;
     case 'toggle_2fa':
         $controller->toggle2FA();
         break;
     case 'delete_account':
         $controller->selfDeleteAccount();
         break;
+    case 'ai_analyze':
+        $controller->showAnalyzeProfile();
+        break;
+    case 'ai_analyze_submit':
+        $controller->analyzeProfile();
+        break;
+    case 'weather_api':
+        // Proxy for OpenWeatherMap to avoid exposing API key in frontend JS
+        $city = trim($_GET['city'] ?? 'Tunis');
+        $apiKey = 'demokey'; // Replace with real key
+        $url = "https://api.openweathermap.org/data/2.5/weather?q=" . urlencode($city) . "&appid=$apiKey&units=metric&lang=fr";
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $resp = curl_exec($ch);
+        curl_close($ch);
+        header('Content-Type: application/json');
+        echo $resp ?: json_encode(['cod' => 500, 'message' => 'API error']);
+        exit;
     case 'logout':
         $controller->logout();
         break;
