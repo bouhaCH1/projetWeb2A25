@@ -471,6 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const aiIcon = aiBtn.querySelector('.fa-magic');
     const categorieSelect = document.getElementById('categorie');
     const niveauSelect = document.getElementById('niveau');
+    const competencesInput = document.getElementById('competences');
 
     // Char counter
     description.addEventListener('input', () => {
@@ -574,10 +575,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 if (result.categorie) categorieSelect.value = result.categorie;
                 if (result.niveau) niveauSelect.value = result.niveau;
+                if (result.competences) competencesInput.value = result.competences;
                 showStatus('Classification IA appliquée ! ✨');
                 
                 // Add a subtle pulse effect to the updated fields
-                [categorieSelect, niveauSelect].forEach(el => {
+                [categorieSelect, niveauSelect, competencesInput].forEach(el => {
+                    if(!el) return;
                     el.style.borderColor = '#a855f7';
                     el.style.boxShadow = '0 0 15px rgba(168, 85, 247, 0.4)';
                     setTimeout(() => {

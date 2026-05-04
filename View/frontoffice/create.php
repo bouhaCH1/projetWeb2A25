@@ -34,7 +34,13 @@ ob_start();
                         </div>
 
                         <div class="mb-4">
-                            <label>Description <span style="color: #ff6b6b;">*</span></label>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label>Description <span style="color: #ff6b6b;">*</span></label>
+                                <button type="button" id="aiClassifyBtn" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; padding: 6px 16px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);">
+                                    <span class="ai-spinner" style="display:none; width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-radius:50%; border-top-color:white; animation: spin 0.8s linear infinite;"></span>
+                                    <i class="fas fa-magic"></i> Analyser avec l'IA
+                                </button>
+                            </div>
                             <textarea name="description" id="description" rows="5"
                                       class="<?= isset($errors['description']) ? 'is-invalid' : '' ?>"
                                       placeholder="Décrivez en détail la mission..."><?= isset($_POST['description']) ? htmlspecialchars($_POST['description']) : '' ?></textarea>
@@ -126,6 +132,72 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
-$extraJs = '<script src="../View/public/assets/js/validation.php"></script>';
+?>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+#aiClassifyBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(168, 85, 247, 0.4); }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const aiBtn = document.getElementById('aiClassifyBtn');
+    const spinner = aiBtn.querySelector('.ai-spinner');
+    const aiIcon = aiBtn.querySelector('.fa-magic');
+    const categorieSelect = document.getElementById('categorie');
+    const niveauSelect = document.getElementById('niveau');
+    const competencesInput = document.getElementById('competences');
+
+    aiBtn.addEventListener('click', async () => {
+        const titre = document.getElementById('titre').value;
+        const desc = document.getElementById('description').value;
+
+        if (!titre || !desc) {
+            alert('Veuillez remplir le titre et la description avant d\'utiliser l\'IA.');
+            return;
+        }
+
+        aiBtn.disabled = true;
+        spinner.style.display = 'block';
+        aiIcon.style.display = 'none';
+
+        try {
+            const formData = new FormData();
+            formData.append('titre', titre);
+            formData.append('description', desc);
+
+            const response = await fetch('index.php?action=ai_classify', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.error) {
+                alert('Erreur IA: ' + (result.details?.error?.message || result.error));
+            } else {
+                if (result.categorie) categorieSelect.value = result.categorie;
+                if (result.niveau) niveauSelect.value = result.niveau;
+                if (result.competences) competencesInput.value = result.competences;
+                [categorieSelect, niveauSelect, competencesInput].forEach(el => {
+                    if(!el) return;
+                    el.style.borderColor = '#a855f7';
+                    el.style.boxShadow = '0 0 12px rgba(168, 85, 247, 0.4)';
+                    setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 2000);
+                });
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Erreur lors de l\'analyse IA.');
+        } finally {
+            aiBtn.disabled = false;
+            spinner.style.display = 'none';
+            aiIcon.style.display = 'block';
+        }
+    });
+});
+</script>
+
+<?php
 require_once 'layout.php';
 ?>

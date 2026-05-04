@@ -1,8 +1,7 @@
 <?php
+require_once __DIR__ . '/../config.php';
 
 class AIService {
-    // IMPORTANT: Replace with your actual Gemini API Key
-    private static $apiKey = 'AIzaSyAji3HFIooQCPfzIXwDJXAnqETT0NKdqgk';
     private static $model = 'gemini-2.5-flash-lite';
 
     /**
@@ -10,9 +9,10 @@ class AIService {
      * Returns a JSON with suggested category and level.
      */
     public static function classifyMission($title, $description) {
-        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . self::$model . ":generateContent?key=" . self::$apiKey;
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . self::$model . ":generateContent?key=" . GEMINI_API_KEY;
 
-        $prompt = "You are a professional HR assistant. Based on the following mission title and description, suggest the most appropriate category and seniority level.
+
+        $prompt = "You are a professional HR assistant. Based on the following mission title and description, suggest the most appropriate category, seniority level, and extract a list of 3 to 5 key skills required.
         
         Mission Title: \"$title\"
         Mission Description: \"$description\"
@@ -30,8 +30,8 @@ class AIService {
         - avance (Senior)
         - expert (Expert)
 
-        Return ONLY a JSON object with two keys: 'categorie' and 'niveau'. Use the keys exactly as listed above.
-        Example: {\"categorie\": \"developpement\", \"niveau\": \"intermediaire\"}";
+        Return ONLY a JSON object with three keys: 'categorie', 'niveau', and 'competences' (comma separated string). Use the keys exactly as listed above.
+        Example: {\"categorie\": \"developpement\", \"niveau\": \"intermediaire\", \"competences\": \"PHP, React, MySQL\"}";
 
         $data = [
             'contents' => [
