@@ -71,19 +71,73 @@ ob_start();
         text-transform: uppercase;
     }
 
+    /* Action Buttons */
     .btn-action {
-        width: 35px;
-        height: 35px;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        border-radius: 10px;
+        gap: 5px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
         transition: all 0.2s ease;
+        white-space: nowrap;
     }
 
     .btn-action:hover {
-        transform: translateY(-3px);
-        filter: brightness(1.2);
+        transform: translateY(-2px);
+        filter: brightness(1.15);
+    }
+
+    .btn-action-edit {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-action-candidates {
+        background: rgba(6, 182, 212, 0.15);
+        color: #22d3ee;
+        border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .btn-action-delete {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.72rem;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-ouverte {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-en-cours {
+        background: rgba(234, 179, 8, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+
+    .status-terminee {
+        background: rgba(6, 182, 212, 0.15);
+        color: #22d3ee;
+        border: 1px solid rgba(6, 182, 212, 0.3);
     }
 
     .empty-state-forge {
@@ -186,16 +240,17 @@ ob_start();
                         </td>
                         <td>
                             <?php 
-                            $badgeClass = 'bg-secondary';
+                            $badgeClass = 'status-ouverte';
                             $statusText = 'Inconnu';
+                            $statusIcon = 'fas fa-circle';
                             switch($m['statut']) {
-                                case 'ouverte': $badgeClass = 'bg-success bg-opacity-10 text-success border border-success border-opacity-25'; $statusText = 'Ouverte'; break;
-                                case 'en_cours': $badgeClass = 'bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25'; $statusText = 'En cours'; break;
-                                case 'terminee': $badgeClass = 'bg-info bg-opacity-10 text-info border border-info border-opacity-25'; $statusText = 'Terminée'; break;
+                                case 'ouverte': $badgeClass = 'status-ouverte'; $statusText = 'Ouverte'; $statusIcon = 'fas fa-door-open'; break;
+                                case 'en_cours': $badgeClass = 'status-en-cours'; $statusText = 'En cours'; $statusIcon = 'fas fa-spinner'; break;
+                                case 'terminee': $badgeClass = 'status-terminee'; $statusText = 'Terminée'; $statusIcon = 'fas fa-check-double'; break;
                             }
                             ?>
-                            <span class="premium-badge <?= $badgeClass ?>">
-                                <?= $statusText ?>
+                            <span class="status-badge <?= $badgeClass ?>">
+                                <i class="<?= $statusIcon ?>"></i> <?= $statusText ?>
                             </span>
                         </td>
                         <td>
@@ -205,16 +260,16 @@ ob_start();
                             </div>
                         </td>
                         <td>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <a href="index.php?action=edit&id=<?= $m['id'] ?>" class="btn-action bg-primary bg-opacity-10 text-primary" title="Modifier">
-                                    <i class="fas fa-pen"></i>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                <a href="index.php?action=edit&id=<?= $m['id'] ?>" class="btn-action btn-action-edit" title="Modifier">
+                                    <i class="fas fa-pen"></i> Modifier
                                 </a>
-                                <a href="index.php?action=candidatures&mission_id=<?= $m['id'] ?>" class="btn-action bg-info bg-opacity-10 text-info" title="Candidatures">
-                                    <i class="fas fa-users"></i>
+                                <a href="index.php?action=candidatures&mission_id=<?= $m['id'] ?>" class="btn-action btn-action-candidates" title="Candidatures">
+                                    <i class="fas fa-users"></i> Candidats
                                 </a>
-                                <form method="POST" action="index.php?action=delete&id=<?= $m['id'] ?>" onsubmit="return confirm('Supprimer définitivement cette mission ?');">
-                                    <button type="submit" class="btn-action bg-danger bg-opacity-10 text-danger border-0">
-                                        <i class="fas fa-trash"></i>
+                                <form method="POST" action="index.php?action=delete&id=<?= $m['id'] ?>" onsubmit="return confirm('Supprimer définitivement cette mission ?');" style="display:inline;">
+                                    <button type="submit" class="btn-action btn-action-delete">
+                                        <i class="fas fa-trash"></i> Supprimer
                                     </button>
                                 </form>
                             </div>
