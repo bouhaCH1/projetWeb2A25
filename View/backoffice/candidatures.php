@@ -101,6 +101,81 @@ ob_start();
     }
 
     /* Action Buttons */
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.15);
+    }
+
+    .btn-action-view {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-action-accept {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .btn-action-reject {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-action-delete {
+        background: rgba(107, 114, 128, 0.15);
+        color: #9ca3af;
+        border: 1px solid rgba(107, 114, 128, 0.3);
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.72rem;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-pending {
+        background: rgba(234, 179, 8, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+
+    .status-accepted {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-rejected {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Action Buttons */
     .btn-action-round {
         width: 36px;
         height: 36px;
@@ -123,7 +198,6 @@ ob_start();
         background: #12161f;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 24px;
-        overflow: hidden;
         box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
     }
 
@@ -312,44 +386,44 @@ ob_start();
                             </td>
                             <td>
                                 <?php 
-                                    $badgeClass = 'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25';
+                                    $badgeClass = 'status-pending';
                                     $statutText = 'En attente';
                                     $statusIcon = 'fas fa-clock';
                                     if (isset($c['statut'])) {
                                         if ($c['statut'] === 'acceptee') { 
-                                            $badgeClass = 'bg-success bg-opacity-10 text-success border border-success border-opacity-25'; 
+                                            $badgeClass = 'status-accepted'; 
                                             $statutText = 'Acceptée'; 
                                             $statusIcon = 'fas fa-check-circle';
                                         }
                                         if ($c['statut'] === 'refusee') { 
-                                            $badgeClass = 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25'; 
+                                            $badgeClass = 'status-rejected'; 
                                             $statutText = 'Refusée'; 
                                             $statusIcon = 'fas fa-times-circle';
                                         }
                                     }
                                 ?>
-                                <span class="premium-badge <?= $badgeClass ?>">
+                                <span class="status-badge <?= $badgeClass ?>">
                                     <i class="<?= $statusIcon ?>"></i> <?= $statutText ?>
                                 </span>
                             </td>
                             <td>
-                                <div class="d-flex gap-2 justify-content-center">
-                                    <button class="btn-action-round bg-primary bg-opacity-20 text-primary border-0" 
+                                <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                    <button class="btn-action btn-action-view" 
                                             title="Voir Détails"
                                             onclick="showCandidateDetails(<?= htmlspecialchars(json_encode($c)) ?>)">
-                                        <i class="fas fa-eye"></i>
+                                        <i class="fas fa-eye"></i> Voir
                                     </button>
                                     <a href="index.php?action=update_candidature_statut&id=<?= $c['id'] ?>&statut=acceptee" 
-                                       class="btn-action-round bg-success bg-opacity-20 text-success" title="Accepter">
-                                        <i class="fas fa-check"></i>
+                                       class="btn-action btn-action-accept" title="Accepter">
+                                        <i class="fas fa-check"></i> Accepter
                                     </a>
                                     <a href="index.php?action=update_candidature_statut&id=<?= $c['id'] ?>&statut=refusee" 
-                                       class="btn-action-round bg-danger bg-opacity-20 text-danger" title="Refuser">
-                                        <i class="fas fa-times"></i>
+                                       class="btn-action btn-action-reject" title="Refuser">
+                                        <i class="fas fa-times"></i> Refuser
                                     </a>
                                     <a href="index.php?action=delete_candidature&id=<?= $c['id'] ?>" 
                                        onclick="return confirm('Supprimer cette candidature ?');"
-                                       class="btn-action-round bg-dark text-muted" title="Supprimer">
+                                       class="btn-action btn-action-delete" title="Supprimer">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
                                 </div>
@@ -371,7 +445,7 @@ ob_start();
 
 <!-- Details Modal Forge -->
 <div class="modal fade modal-forge" id="candidateModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="d-flex align-items-center">
@@ -429,13 +503,11 @@ ob_start();
                             </div>
                         </div>
                     </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                </div> <!-- end row g-4 -->
+            </div> <!-- end modal-body -->
+        </div> <!-- end modal-content -->
+    </div> <!-- end modal-dialog -->
+</div> <!-- end modal -->
 
 <!-- Scripts -->
 <script>
