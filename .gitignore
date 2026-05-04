@@ -13,6 +13,6 @@ Desktop.ini
 *.log
 .env
 .env.local
-config.php
+Model/config.php
 test_ai.php
 list_models.php

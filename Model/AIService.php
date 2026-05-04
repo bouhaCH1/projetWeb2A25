@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/config.php';
 
 class AIService {
-    private static $model = 'gemini-2.5-flash-lite';
+    private static $model = 'gemini-flash-latest';
 
     /**
      * Classifies a mission based on its title and description.
