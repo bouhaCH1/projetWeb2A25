@@ -32,7 +32,7 @@ function getStatus($date) {
 
     <section class="dashboard-section" style="padding-top: 100px;">
         <div class="dashboard-container">
-            <h2 class="section-title">Dashboard Admin - 12 Métiers Intégrés</h2>
+            <h2 class="section-title">Dashboard Admin</h2>
 
             <!-- [METIER Event Manager / Accountant / HR] -->
             <div class="kpi-container">
