@@ -48,19 +48,5 @@ class Event {
         $stmt->bindParam(1, $id);
         return $stmt->execute();
     }
-
-    public function countTotal() {
-        $query = "SELECT COUNT(*) as total FROM " . $this->table_name;
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-    }
-
-    public function countUpcoming() {
-        $query = "SELECT COUNT(*) as total FROM " . $this->table_name . " WHERE date > NOW()";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-    }
 }
 ?>

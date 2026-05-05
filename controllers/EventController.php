@@ -31,15 +31,5 @@ class EventController {
         $event = new Event($this->db);
         return $event->delete($id);
     }
-
-    public function countTotal() {
-        $event = new Event($this->db);
-        return $event->countTotal();
-    }
-
-    public function countUpcoming() {
-        $event = new Event($this->db);
-        return $event->countUpcoming();
-    }
 }
 ?>

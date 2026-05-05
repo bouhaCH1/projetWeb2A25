@@ -52,12 +52,8 @@ if ($action == 'delete_resource' && isset($_GET['id'])) {
 $viewsPath = __DIR__ . '/../views/';
 
 if ($action == 'admin') {
-    $events          = $eventController->getEvents();
-    $resources       = $resourceController->getResources();
-    $totalEvents     = $eventController->countTotal();
-    $upcomingEvents  = $eventController->countUpcoming();
-    $totalResources  = $resourceController->countTotal();
-    $lowStockCount   = $resourceController->countLowStock();
+    $events    = $eventController->getEvents();
+    $resources = $resourceController->getResources();
     require_once $viewsPath . 'admin/index.php';
 
 } elseif ($action == 'form_event') {

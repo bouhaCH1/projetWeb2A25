@@ -46,20 +46,5 @@ class Resource {
         $stmt->bindParam(1, $id);
         return $stmt->execute();
     }
-
-    public function countTotal() {
-        $query = "SELECT COUNT(*) as total FROM " . $this->table_name;
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-    }
-
-    public function countLowStock($threshold = 2) {
-        $query = "SELECT COUNT(*) as total FROM " . $this->table_name . " WHERE quantity <= :threshold";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":threshold", $threshold);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
-    }
 }
 ?>

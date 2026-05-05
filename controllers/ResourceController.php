@@ -31,15 +31,5 @@ class ResourceController {
         $resource = new Resource($this->db);
         return $resource->delete($id);
     }
-
-    public function countTotal() {
-        $resource = new Resource($this->db);
-        return $resource->countTotal();
-    }
-
-    public function countLowStock() {
-        $resource = new Resource($this->db);
-        return $resource->countLowStock();
-    }
 }
 ?>
