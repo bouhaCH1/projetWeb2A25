@@ -7,6 +7,18 @@
 
     <?php $fieldErrors = $_SESSION['field_errors'] ?? []; unset($_SESSION['field_errors']); ?>
 
+    <?php if (!empty($_SESSION['errors'])): ?>
+      <div class="ww-alert ww-alert-danger">
+        <?= htmlspecialchars($_SESSION['errors'][0]); unset($_SESSION['errors']); ?>
+      </div>
+    <?php endif; ?>
+
+    <?php if (!empty($_SESSION['success'])): ?>
+      <div class="ww-alert ww-alert-success">
+        <?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+      </div>
+    <?php endif; ?>
+
     <form id="registerForm" action="/workwave/Controller/index.php?action=register_submit" method="POST" novalidate>
 
       <label>Prénom *</label>

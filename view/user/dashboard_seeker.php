@@ -33,10 +33,10 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
         </div>
         <div class="stat-card-sub"><?= (int)($_SESSION['user_verified'] ?? 0) === 1 ? 'Badge de confiance actif' : 'Vérifiez votre CIN' ?></div>
     </div>
-    <div class="stat-card" id="weatherCard">
-        <div class="stat-card-label">🌤 Météo locale</div>
-        <div class="stat-card-value" id="weatherTemp" style="font-size:1.5rem;color:#00b3ff;">--°C</div>
-        <div class="stat-card-sub" id="weatherDesc">Chargement...</div>
+    <div class="stat-card">
+        <div class="stat-card-label">📝 Candidatures</div>
+        <div class="stat-card-value" style="font-size:1.5rem;color:#00b3ff;"><?= $stats['applications_count'] ?? 0 ?></div>
+        <div class="stat-card-sub">Total envoyées</div>
     </div>
     <div class="stat-card">
         <div class="stat-card-label">Membre depuis</div>
@@ -84,39 +84,26 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
 
 </div>
 
-<!-- Bottom row: Météo + Jobs recommandés -->
+<!-- Bottom row: Job Search Analytics + Jobs recommandés -->
 <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;">
 
-    <!-- Météo widget -->
-    <div class="dsh-card" style="flex:0 0 300px;min-width:260px;padding:24px;" id="weatherWidget">
+    <!-- Job Search Analytics widget -->
+    <div class="dsh-card" style="flex:0 0 300px;min-width:260px;padding:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <div style="font-weight:700;color:#fff;font-size:0.95rem;">🌍 Météo — Métier Avancé</div>
-            <div style="font-size:0.7rem;color:#555;background:rgba(0,179,255,0.08);padding:2px 8px;border-radius:10px;border:1px solid rgba(0,179,255,0.2);color:#00b3ff;">API OpenWeatherMap</div>
+            <div style="font-weight:700;color:#fff;font-size:0.95rem;">📊 Analytics — Métier Avancé</div>
+            <div style="font-size:0.7rem;color:#555;background:rgba(0,255,204,0.08);padding:2px 8px;border-radius:10px;border:1px solid rgba(0,255,204,0.2);color:#00ffcc;">Temps réel</div>
         </div>
 
-        <!-- City selector -->
-        <div style="display:flex;gap:8px;margin-bottom:16px;">
-            <input type="text" id="cityInput" value="Tunis" placeholder="Ville..."
-                style="flex:1;padding:7px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(0,179,255,0.2);border-radius:6px;color:#ddd;font-size:0.83rem;outline:none;" />
-            <button onclick="fetchWeather()" style="padding:7px 14px;background:linear-gradient(135deg,#00b3ff,#00ffcc);border:none;border-radius:6px;color:#000;font-weight:700;font-size:0.8rem;cursor:pointer;">Go</button>
-        </div>
-
-        <!-- Weather display -->
-        <div id="weatherDisplay" style="text-align:center;padding:16px 0;">
-            <div id="weatherIcon" style="font-size:3.5rem;margin-bottom:8px;line-height:1;">⏳</div>
-            <div id="weatherBigTemp" style="font-size:2.8rem;font-weight:800;color:#00b3ff;line-height:1;">--</div>
-            <div id="weatherUnit" style="font-size:1rem;color:#555;margin-bottom:6px;">°C</div>
-            <div id="weatherCity" style="font-weight:700;color:#fff;font-size:1rem;margin-bottom:4px;">Chargement...</div>
-            <div id="weatherDescFull" style="font-size:0.83rem;color:#777;text-transform:capitalize;margin-bottom:12px;">...</div>
-
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;">
-                <div style="padding:8px;border-radius:7px;background:rgba(0,179,255,0.06);border:1px solid rgba(0,179,255,0.1);">
-                    <div style="font-size:0.65rem;color:#555;margin-bottom:3px;">RESSENTI</div>
-                    <div id="weatherFeels" style="font-size:0.88rem;font-weight:700;color:#00b3ff;">--°</div>
-                </div>
-                <div style="padding:8px;border-radius:7px;background:rgba(0,255,204,0.06);border:1px solid rgba(0,255,204,0.1);">
-                    <div style="font-size:0.65rem;color:#555;margin-bottom:3px;">HUMIDITÉ</div>
-                    <div id="weatherHumidity" style="font-size:0.88rem;font-weight:700;color:#00ffcc;">--%</div>
+        <!-- Analytics display -->
+        <div class="text-center">
+            <div style="font-size:2.5rem;margin-bottom:8px;">📈</div>
+            <div style="font-size:2.5rem;font-weight:800;color:#00ffcc;"><?= $stats['profile_views'] ?? 0 ?></div>
+            <div style="font-size:0.85rem;color:#aaa;margin-bottom:4px;">Vues du profil</div>
+            <div style="font-size:0.8rem;color:#888;margin-bottom:12px;">Cette semaine</div>
+            <div style="display:flex;justify-content:center;gap:16px;font-size:0.75rem;color:#666;">
+                <div>📝 <?= $stats['applications_count'] ?? 0 ?></div>
+                <div>💼 <?= $stats['saved_jobs'] ?? 0 ?></div>
+                <div>👁 <?= $stats['searches'] ?? 0 ?></div>
                 </div>
                 <div style="padding:8px;border-radius:7px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.1);">
                     <div style="font-size:0.65rem;color:#555;margin-bottom:3px;">VENT</div>
@@ -165,61 +152,16 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
 <?php include __DIR__ . '/../layout/pl_dashboard_footer.php'; ?>
 
 <script>
-const weatherIcons = {
-    'clear sky': '☀️', 'few clouds': '⛅', 'scattered clouds': '🌤',
-    'broken clouds': '☁️', 'overcast clouds': '☁️',
-    'shower rain': '🌧', 'rain': '🌧', 'light rain': '🌦',
-    'thunderstorm': '⛈', 'snow': '❄️', 'mist': '🌫', 'haze': '🌫',
-    'fog': '🌫', 'drizzle': '🌦', 'moderate rain': '🌧', 'heavy rain': '🌧'
-};
-
-function getWeatherIcon(desc) {
-    for (const [k, v] of Object.entries(weatherIcons)) {
-        if (desc.toLowerCase().includes(k)) return v;
-    }
-    return '🌡';
+// Analytics update function
+function updateAnalytics() {
+    // Real-time analytics would be updated here
+    const timestamp = new Date().toLocaleTimeString('fr-FR');
+    const updatedElements = document.querySelectorAll('[id*="Updated"]');
+    updatedElements.forEach(el => {
+        el.textContent = timestamp;
+    });
 }
 
-function fetchWeather() {
-    const city = document.getElementById('cityInput').value.trim() || 'Tunis';
-    // Use wttr.in JSON API — no key required, works perfectly for demo
-    const url = `https://wttr.in/${encodeURIComponent(city)}?format=j1`;
-
-    fetch(url)
-        .then(r => r.json())
-        .then(data => {
-            const curr = data.current_condition[0];
-            const area = data.nearest_area[0];
-            const cityName = area.areaName[0].value + ', ' + area.country[0].value;
-            const temp    = curr.temp_C;
-            const feels   = curr.FeelsLikeC;
-            const humid   = curr.humidity;
-            const wind    = curr.windspeedKmph;
-            const desc    = curr.weatherDesc[0].value;
-
-            document.getElementById('weatherBigTemp').textContent = temp;
-            document.getElementById('weatherCity').textContent    = cityName;
-            document.getElementById('weatherDescFull').textContent = desc;
-            document.getElementById('weatherFeels').textContent   = feels + '°';
-            document.getElementById('weatherHumidity').textContent = humid + '%';
-            document.getElementById('weatherWind').textContent    = wind + ' km/h';
-            document.getElementById('weatherIcon').textContent    = getWeatherIcon(desc);
-            document.getElementById('weatherTemp').textContent    = temp + '°C';
-            document.getElementById('weatherDesc').textContent    = desc;
-            document.getElementById('weatherUpdated').textContent = new Date().toLocaleTimeString('fr-FR');
-        })
-        .catch(() => {
-            document.getElementById('weatherCity').textContent    = 'Erreur API';
-            document.getElementById('weatherDescFull').textContent = 'Vérifiez votre connexion';
-            document.getElementById('weatherIcon').textContent    = '❌';
-        });
-}
-
-// Auto-fetch on load
-fetchWeather();
-
-// Allow Enter key in city input
-document.getElementById('cityInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') fetchWeather();
-});
+// Update analytics every 30 seconds
+setInterval(updateAnalytics, 30000);
 </script>

@@ -27,11 +27,20 @@ switch ($action) {
     case 'login_2fa_submit':
         $controller->processLogin2FA();
         break;
+    case 'send_2fa_code':
+        $controller->send2FACode();
+        break;
     case 'forgot_password':
         $controller->showForgotPassword();
         break;
     case 'forgot_password_submit':
         $controller->processForgotPassword();
+        break;
+    case 'reset_password':
+        $controller->showResetPassword();
+        break;
+    case 'reset_password_submit':
+        $controller->processResetPassword();
         break;
 
     case 'profile':
@@ -64,11 +73,11 @@ switch ($action) {
     case 'ai_analyze_submit':
         $controller->analyzeProfile();
         break;
-    case 'weather_api':
-        // Proxy for OpenWeatherMap to avoid exposing API key in frontend JS
-        $city = trim($_GET['city'] ?? 'Tunis');
-        $apiKey = 'demokey'; // Replace with real key
-        $url = "https://api.openweathermap.org/data/2.5/weather?q=" . urlencode($city) . "&appid=$apiKey&units=metric&lang=fr";
+    case 'maps_api':
+        // Google Maps API proxy for location-based job search
+        $location = trim($_GET['location'] ?? 'Tunis');
+        $apiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with real key
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . urlencode($location) . "&key=$apiKey";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
@@ -76,16 +85,45 @@ switch ($action) {
         $resp = curl_exec($ch);
         curl_close($ch);
         header('Content-Type: application/json');
-        echo $resp ?: json_encode(['cod' => 500, 'message' => 'API error']);
+        echo $resp ?: json_encode(['status' => 'error', 'message' => 'Maps API error']);
         exit;
+    case 'salary_api':
+        // Salary data API for compensation insights
+        $jobTitle = trim($_GET['job_title'] ?? 'developer');
+        $location = trim($_GET['location'] ?? 'Tunis');
+        $url = "https://api.apilayer.com/salary/salary?job_title=" . urlencode($jobTitle) . "&location=" . urlencode($location);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['apikey: YOUR_SALARY_API_KEY']);
+        $resp = curl_exec($ch);
+        curl_close($ch);
+        header('Content-Type: application/json');
+        echo $resp ?: json_encode(['status' => 'error', 'message' => 'Salary API error']);
+        exit;
+    case 'linkedin_import':
+        // LinkedIn profile import simulation
+        $controller->showLinkedInImport();
+        break;
+    case 'linkedin_import_submit':
+        $controller->processLinkedInImport();
+        break;
     case 'logout':
         $controller->logout();
         break;
     case 'dashboard_seeker':
+        $controller = new UserController();
+        $stats = $controller->getDashboardStats();
         require_once __DIR__ . '/../View/user/dashboard_seeker.php';
         break;
     case 'dashboard_employer':
+        $controller = new UserController();
+        $stats = $controller->getDashboardStats();
         require_once __DIR__ . '/../View/user/dashboard_employer.php';
+        break;
+    case 'job_search':
+        require_once __DIR__ . '/../View/user/enhanced_job_search.php';
         break;
     case 'admin_login':
         $controller->showAdminLogin();

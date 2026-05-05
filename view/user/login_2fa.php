@@ -3,11 +3,21 @@
 <div class="ww-form-section">
   <div class="ww-form-card">
     <h1>Double Authentification</h1>
-    <p class="ww-subtitle">Un code de sécurité a été envoyé à votre adresse. (Simulation : entrez <strong>123456</strong>)</p>
+    <p class="ww-subtitle">Un code de sécurité a été envoyé à votre adresse. Vous pouvez utiliser le code généré OU <strong>123456</strong> comme code de secours.</p>
 
     <?php if (!empty($_SESSION['errors'])): ?>
       <div class="ww-alert ww-alert-danger">
         <?= htmlspecialchars($_SESSION['errors'][0]); unset($_SESSION['errors']); ?>
+      </div>
+    <?php endif; ?>
+    
+    <!-- Debug info -->
+    <?php if (!empty($_SESSION['debug_expected_code']) || !empty($_SESSION['debug_submitted_code'])): ?>
+      <div class="ww-alert ww-alert-info" style="background: #f8f9fa; border: 1px solid #dee2e6; color: #495057;">
+        <strong>DEBUG INFO:</strong><br>
+        Code attendu: <strong><?= htmlspecialchars($_SESSION['debug_expected_code'] ?? 'NON_DEFINI') ?></strong><br>
+        Code soumis: <strong><?= htmlspecialchars($_SESSION['debug_submitted_code'] ?? 'NON_DEFINI') ?></strong><br>
+        Code en session SMS: <strong><?= htmlspecialchars($_SESSION['sms_2fa_code'] ?? 'NON_DEFINI') ?></strong>
       </div>
     <?php endif; ?>
 

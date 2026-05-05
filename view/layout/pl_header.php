@@ -65,6 +65,11 @@
           font-size: .88rem;
           transition: border-color .2s, box-shadow .2s;
         }
+        /* Fix: option text visible on all browsers */
+        .ww-form-card select option {
+          background: #1a1d2e;
+          color: #fff;
+        }
         .ww-form-card input:focus,
         .ww-form-card select:focus {
           outline: none;

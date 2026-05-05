@@ -170,6 +170,8 @@ class User {
     }
 
     public function sendWelcomeEmail(string $toEmail, string $firstName): void {
+        // Only attempt if mail() is available and no output has been sent
+        if (!function_exists('mail')) return;
         $subject  = '=?UTF-8?B?' . base64_encode('Bienvenue sur WorkWave !') . '?=';
         $body     = "Bonjour $firstName,\n\nBienvenue sur WorkWave ! Votre compte a été créé avec succès.\n\nBonne recherche !\n\nL'équipe WorkWave";
         $headers  = "From: noreply@workwave.com\r\n";
@@ -181,8 +183,6 @@ class User {
         // HuggingFace Inference API – zero-shot classification
         // We classify the profile into job-related categories to give career suggestions
         $apiUrl = 'https://api-inference.huggingface.co/models/facebook/bart-large-mnli';
-        $apiKey = 'hf_demo'; // Free tier / public model — no real key needed for demo
-
         $candidateLabels = [
             'Informatique & Développement',
             'Marketing & Communication',
@@ -195,31 +195,28 @@ class User {
         ];
 
         $payload = json_encode([
-            'inputs' => $profileText,
-            'parameters' => ['candidate_labels' => $candidateLabels]
+            'inputs'     => $profileText,
+            'parameters' => ['candidate_labels' => $candidateLabels],
+            'options'    => ['wait_for_model' => true]
         ]);
 
         $ch = curl_init($apiUrl);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt($ch, CURLOPT_POST,          true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_TIMEOUT,        30);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $apiKey
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         if (!$response || $httpCode !== 200) {
-            // Fallback: return simulated results for the demo if API fails
             return $this->simulateAIAnalysis($profileText, $candidateLabels);
         }
 
         $data = json_decode($response, true);
-        if (isset($data['error']) || empty($data['labels'])) {
+        if (!is_array($data) || isset($data['error']) || empty($data['labels'])) {
             return $this->simulateAIAnalysis($profileText, $candidateLabels);
         }
 
@@ -441,6 +438,93 @@ class User {
         $stats['growth_data'] = $growthData;
 
         return $stats;
+    }
+
+    public function sendPasswordResetEmail(string $email): array {
+        // Check if user exists
+        $stmt = $this->pdo->prepare('SELECT id, first_name FROM users WHERE email = :email LIMIT 1');
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch();
+        
+        if (!$user) {
+            // Don't reveal if email exists for security
+            return ['success' => true, 'message' => 'Email sent'];
+        }
+        
+        // Generate reset token
+        $token = bin2hex(random_bytes(32));
+        $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        
+        // Store token in database
+        $stmt = $this->pdo->prepare('INSERT INTO password_resets (email, token, expiry) VALUES (:email, :token, :expiry)');
+        $stmt->execute([':email' => $email, ':token' => $token, ':expiry' => $expiry]);
+        
+        // Send email
+        $resetLink = "http://localhost/workwave/Controller/index.php?action=reset_password&token=" . $token;
+        $subject = '=?UTF-8?B?' . base64_encode('Réinitialisation de mot de passe - WorkWave') . '?=';
+        $body = "Bonjour {$user['first_name']},\n\n";
+        $body .= "Vous avez demandé une réinitialisation de mot de passe. Cliquez sur le lien ci-dessous pour continuer:\n\n";
+        $body .= $resetLink . "\n\n";
+        $body .= "Ce lien expirera dans 1 heure.\n\n";
+        $body .= "Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.\n\n";
+        $body .= "L'équipe WorkWave";
+        
+        $headers = "From: noreply@workwave.com\r\n";
+        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        
+        if (function_exists('mail')) {
+            @mail($email, $subject, $body, $headers);
+        }
+        
+        return ['success' => true, 'message' => 'Email sent'];
+    }
+
+    public function validateResetToken(string $token): bool {
+        $stmt = $this->pdo->prepare('SELECT id FROM password_resets WHERE token = :token AND expiry > NOW() LIMIT 1');
+        $stmt->execute([':token' => $token]);
+        return $stmt->fetch() !== false;
+    }
+
+    public function resetPassword(string $token, string $newPassword): array {
+        $stmt = $this->pdo->prepare('SELECT email FROM password_resets WHERE token = :token AND expiry > NOW() LIMIT 1');
+        $stmt->execute([':token' => $token]);
+        $reset = $stmt->fetch();
+        
+        if (!$reset) {
+            return ['success' => false, 'message' => 'Token invalide ou expiré.'];
+        }
+        
+        // Update user password
+        $hashed = password_hash($newPassword, PASSWORD_BCRYPT);
+        $stmt = $this->pdo->prepare('UPDATE users SET password = :password WHERE email = :email');
+        $stmt->execute([':password' => $hashed, ':email' => $reset['email']]);
+        
+        // Delete used token
+        $stmt = $this->pdo->prepare('DELETE FROM password_resets WHERE token = :token');
+        $stmt->execute([':token' => $token]);
+        
+        return ['success' => true, 'message' => 'Mot de passe réinitialisé.'];
+    }
+
+    public function updateFromLinkedIn(array $profileData): array {
+        try {
+            // Update user profile with LinkedIn data
+            $stmt = $this->pdo->prepare('UPDATE users SET linkedin_headline = :headline, linkedin_experience = :experience, linkedin_skills = :skills, linkedin_location = :location, linkedin_education = :education WHERE id = :id');
+            
+            $stmt->execute([
+                ':headline' => $profileData['headline'] ?? '',
+                ':experience' => $profileData['experience'] ?? '',
+                ':skills' => $profileData['skills'] ?? '',
+                ':location' => $profileData['location'] ?? '',
+                ':education' => $profileData['education'] ?? '',
+                ':id' => $this->id
+            ]);
+            
+            return ['success' => true, 'message' => 'Profile updated successfully'];
+            
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Failed to update profile: ' . $e->getMessage()];
+        }
     }
 
     private function emailExists(): bool {

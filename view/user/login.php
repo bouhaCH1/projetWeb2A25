@@ -32,8 +32,12 @@
         <div class="ww-field-err"><?= htmlspecialchars($fieldErrors['password']) ?></div>
       <?php endif; ?>
 
-      <div style="text-align: right; margin-top: -10px; margin-bottom: 20px;">
-          <a href="/workwave/Controller/index.php?action=forgot_password" style="font-size: .8rem; color: var(--pl-orange); text-decoration: none;">Mot de passe oublié ?</a>
+      <div class="ww-form-options">
+        <div class="ww-forgot-password">
+          <a href="/workwave/Controller/index.php?action=forgot_password" class="ww-link">
+            Mot de passe oublié ?
+          </a>
+        </div>
       </div>
 
       <button type="submit" class="ww-btn-primary">Se connecter</button>
@@ -41,5 +45,31 @@
     </form>
   </div>
 </div>
+
+<style>
+.ww-form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.ww-forgot-password {
+    text-align: right;
+    flex: 1;
+}
+
+.ww-link {
+    font-size: 0.9rem;
+    color: var(--pl-orange);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.ww-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+</style>
 
 <?php include __DIR__ . '/../layout/pl_footer.php'; ?>

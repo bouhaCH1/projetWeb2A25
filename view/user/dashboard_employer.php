@@ -26,10 +26,10 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
         <div class="stat-card-value" style="color:#ffd700;">0</div>
         <div class="stat-card-sub">Ce mois-ci</div>
     </div>
-    <div class="stat-card" id="weatherCard">
-        <div class="stat-card-label">🌤 Météo locale</div>
-        <div class="stat-card-value" id="weatherTemp" style="font-size:1.5rem;color:#00b3ff;">--°C</div>
-        <div class="stat-card-sub" id="weatherDesc">Chargement...</div>
+    <div class="stat-card">
+        <div class="stat-card-label">📈 Taux de réponse</div>
+        <div class="stat-card-value" style="font-size:1.5rem;color:#00ffcc;"><?= $stats['response_rate'] ?? 0 ?>%</div>
+        <div class="stat-card-sub">Ce mois-ci</div>
     </div>
     <div class="stat-card">
         <div class="stat-card-label">Statut compte</div>
@@ -78,38 +78,33 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
 <!-- Bottom row: Météo + Tips + Mini chart -->
 <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;">
 
-    <!-- Météo widget -->
+    <!-- Hiring Analytics widget -->
     <div class="dsh-card" style="flex:0 0 300px;min-width:260px;padding:24px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-            <div style="font-weight:700;color:#fff;font-size:0.95rem;">🌍 Météo — Métier Avancé</div>
-            <div style="font-size:0.7rem;background:rgba(0,179,255,0.08);padding:2px 8px;border-radius:10px;border:1px solid rgba(0,179,255,0.2);color:#00b3ff;">wttr.in API</div>
-        </div>
-        <div style="display:flex;gap:8px;margin-bottom:16px;">
-            <input type="text" id="cityInput" value="Tunis" placeholder="Ville..."
-                style="flex:1;padding:7px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(0,179,255,0.2);border-radius:6px;color:#ddd;font-size:0.83rem;outline:none;" />
-            <button onclick="fetchWeather()" style="padding:7px 14px;background:linear-gradient(135deg,#00b3ff,#00ffcc);border:none;border-radius:6px;color:#000;font-weight:700;font-size:0.8rem;cursor:pointer;">Go</button>
+            <div style="font-weight:700;color:#fff;font-size:0.95rem;">📊 Analytics — Métier Avancé</div>
+            <div style="font-size:0.7rem;background:rgba(0,255,204,0.08);padding:2px 8px;border-radius:10px;border:1px solid rgba(0,255,204,0.2);color:#00ffcc;">Temps réel</div>
         </div>
         <div style="text-align:center;padding:12px 0;">
-            <div id="weatherIcon" style="font-size:3.5rem;line-height:1;margin-bottom:8px;">⏳</div>
-            <div id="weatherBigTemp" style="font-size:2.8rem;font-weight:800;color:#00b3ff;line-height:1;">--°C</div>
-            <div id="weatherCity" style="font-weight:700;color:#fff;margin:6px 0 2px;">Chargement...</div>
-            <div id="weatherDescFull" style="font-size:0.82rem;color:#777;text-transform:capitalize;margin-bottom:12px;">...</div>
+            <div style="font-size:3.5rem;line-height:1;margin-bottom:8px;">📈</div>
+            <div style="font-size:2.8rem;font-weight:800;color:#00ffcc;line-height:1;"><?= $stats['total_applications'] ?? 0 ?></div>
+            <div style="font-weight:700;color:#fff;margin:6px 0 2px;">Candidatures totales</div>
+            <div style="font-size:0.82rem;color:#777;text-transform:capitalize;margin-bottom:12px;">Toutes vos offres</div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
                 <div style="padding:8px;border-radius:7px;background:rgba(0,179,255,0.06);border:1px solid rgba(0,179,255,0.1);">
-                    <div style="font-size:0.62rem;color:#555;margin-bottom:3px;">RESSENTI</div>
-                    <div id="weatherFeels" style="font-size:0.85rem;font-weight:700;color:#00b3ff;">--°</div>
+                    <div style="font-size:0.62rem;color:#555;margin-bottom:3px;">CE MOIS</div>
+                    <div style="font-size:0.85rem;font-weight:700;color:#00b3ff;"><?= $stats['monthly_applications'] ?? 0 ?></div>
                 </div>
                 <div style="padding:8px;border-radius:7px;background:rgba(0,255,204,0.06);border:1px solid rgba(0,255,204,0.1);">
-                    <div style="font-size:0.62rem;color:#555;margin-bottom:3px;">HUMIDITÉ</div>
-                    <div id="weatherHumidity" style="font-size:0.85rem;font-weight:700;color:#00ffcc;">--%</div>
+                    <div style="font-size:0.62rem;color:#555;margin-bottom:3px;">EN ATTENTE</div>
+                    <div style="font-size:0.85rem;font-weight:700;color:#00ffcc;"><?= $stats['pending_applications'] ?? 0 ?></div>
                 </div>
                 <div style="padding:8px;border-radius:7px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.1);">
-                    <div style="font-size:0.62rem;color:#555;margin-bottom:3px;">VENT</div>
-                    <div id="weatherWind" style="font-size:0.85rem;font-weight:700;color:#a78bfa;">-- km/h</div>
+                    <div style="font-size:0.62rem;color:#555;margin-bottom:3px;">TAUX</div>
+                    <div style="font-size:0.85rem;font-weight:700;color:#a78bfa;"><?= $stats['conversion_rate'] ?? 0 ?>%</div>
                 </div>
             </div>
         </div>
-        <div style="text-align:center;font-size:0.68rem;color:#444;margin-top:8px;">Mis à jour : <span id="weatherUpdated">--</span></div>
+        <div style="text-align:center;font-size:0.68rem;color:#444;margin-top:8px;">Mis à jour : <?= date('H:i:s') ?></div>
     </div>
 
     <!-- Tips + activity -->
@@ -147,49 +142,18 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-// Weather widget
-const weatherIcons = {
-    'clear sky':'☀️','few clouds':'⛅','scattered clouds':'🌤','broken clouds':'☁️',
-    'overcast clouds':'☁️','shower rain':'🌧','rain':'🌧','light rain':'🌦',
-    'thunderstorm':'⛈','snow':'❄️','mist':'🌫','haze':'🌫','fog':'🌫',
-    'drizzle':'🌦','moderate rain':'🌧','heavy rain':'🌧'
-};
-
-function getWeatherIcon(desc) {
-    for (const [k, v] of Object.entries(weatherIcons)) {
-        if (desc.toLowerCase().includes(k)) return v;
-    }
-    return '🌡';
+// Analytics update function
+function updateAnalytics() {
+    // Real-time analytics would be updated here
+    const timestamp = new Date().toLocaleTimeString('fr-FR');
+    const updatedElements = document.querySelectorAll('[id*="Updated"]');
+    updatedElements.forEach(el => {
+        el.textContent = timestamp;
+    });
 }
 
-function fetchWeather() {
-    const city = document.getElementById('cityInput').value.trim() || 'Tunis';
-    fetch(`https://wttr.in/${encodeURIComponent(city)}?format=j1`)
-        .then(r => r.json())
-        .then(data => {
-            const curr = data.current_condition[0];
-            const area = data.nearest_area[0];
-            const cityName = area.areaName[0].value + ', ' + area.country[0].value;
-            const desc = curr.weatherDesc[0].value;
-            document.getElementById('weatherBigTemp').textContent   = curr.temp_C + '°C';
-            document.getElementById('weatherCity').textContent      = cityName;
-            document.getElementById('weatherDescFull').textContent  = desc;
-            document.getElementById('weatherFeels').textContent     = curr.FeelsLikeC + '°';
-            document.getElementById('weatherHumidity').textContent  = curr.humidity + '%';
-            document.getElementById('weatherWind').textContent      = curr.windspeedKmph + ' km/h';
-            document.getElementById('weatherIcon').textContent      = getWeatherIcon(desc);
-            document.getElementById('weatherTemp').textContent      = curr.temp_C + '°C';
-            document.getElementById('weatherDesc').textContent      = desc;
-            document.getElementById('weatherUpdated').textContent   = new Date().toLocaleTimeString('fr-FR');
-        })
-        .catch(() => {
-            document.getElementById('weatherCity').textContent    = 'Erreur API';
-            document.getElementById('weatherDescFull').textContent = 'Vérifiez votre connexion';
-            document.getElementById('weatherIcon').textContent    = '❌';
-        });
-}
-fetchWeather();
-document.getElementById('cityInput').addEventListener('keypress', e => { if (e.key === 'Enter') fetchWeather(); });
+// Update analytics every 30 seconds
+setInterval(updateAnalytics, 30000);
 
 // Trend chart
 document.addEventListener('DOMContentLoaded', function() {

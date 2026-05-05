@@ -82,7 +82,7 @@ if ($isAdmin) {
                     <div style="font-weight:700; font-size:0.88rem; color:<?= $is2faEnabled ? '#00ffcc' : '#aaa' ?>;">
                         <?= $is2faEnabled ? '✅ 2FA est Activée' : '⚠️ 2FA est Désactivée' ?>
                     </div>
-                    <div style="font-size:0.75rem; color:#555; margin-top:3px;">Protégez votre compte contre les accès non autorisés.</div>
+                    <div style="font-size:0.75rem; color:#555; margin-top:3px;">Authentification par SMS pour plus de sécurité.</div>
                 </div>
                 <a href="/workwave/Controller/index.php?action=toggle_2fa" style="
                     display:inline-flex; align-items:center; gap:6px;
@@ -97,6 +97,45 @@ if ($isAdmin) {
                     <?= $is2faEnabled ? 'Désactiver' : 'Activer' ?>
                 </a>
             </div>
+            
+            <?php if ($is2faEnabled): ?>
+            <div style="margin-top:16px; padding:12px; border-radius:6px; background:rgba(0,179,255,0.05); border:1px solid rgba(0,179,255,0.15);">
+                <div style="font-size:0.8rem; color:#00b3ff; font-weight:600; margin-bottom:8px;">📱 Envoyer un code de test</div>
+                <p style="font-size:0.75rem; color:#666; margin-bottom:12px;">Testez la réception des codes SMS sur votre numéro.</p>
+                <form action="/workwave/Controller/index.php?action=send_2fa_code" method="POST" style="display:flex; gap:8px;">
+                    <input type="tel" name="phone" placeholder="Votre numéro" value="<?= htmlspecialchars($userData['phone'] ?? '') ?>" 
+                           style="flex:1; padding:6px 10px; border:1px solid rgba(0,179,255,0.2); border-radius:4px; background:rgba(255,255,255,0.04); color:#ddd; font-size:0.8rem;" required>
+                    <button type="submit" style="padding:6px 12px; background:rgba(0,179,255,0.1); color:#00b3ff; border:1px solid rgba(0,179,255,0.3); border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">
+                        Envoyer
+                    </button>
+                </form>
+                <?php if (!empty($_SESSION['last_sms_code'])): ?>
+                <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(0,255,204,0.05); border:1px solid rgba(0,255,204,0.15);">
+                    <div style="font-size:0.7rem; color:#00ffcc;">
+                        <strong>Dernier code envoyé:</strong> <?= htmlspecialchars($_SESSION['last_sms_code']['code']) ?>
+                        <br><small>à <?= htmlspecialchars($_SESSION['last_sms_code']['sent_at']) ?></small>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <!-- Debug info -->
+                <?php if (!empty($_SESSION['sms_2fa_code'])): ?>
+                <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.15);">
+                    <div style="font-size:0.7rem; color:#ff6b6b;">
+                        <strong>DEBUG - Code en session:</strong> <?= htmlspecialchars($_SESSION['sms_2fa_code']) ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <?php if (!empty($_SESSION['success'])): ?>
+                <div style="margin-top:10px; padding:8px; border-radius:4px; background:rgba(0,255,204,0.05); border:1px solid rgba(0,255,204,0.15);">
+                    <div style="font-size:0.7rem; color:#00ffcc;">
+                        <strong>Success:</strong> <?= htmlspecialchars($_SESSION['success']) ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
         </div>
 
         <div class="dsh-card" style="padding:24px;">
