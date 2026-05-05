@@ -3,6 +3,7 @@ require_once __DIR__ . '/../Model/Database.php';
 require_once __DIR__ . '/../Model/mission.php';
 require_once __DIR__ . '/../Model/candidature.php';
 require_once __DIR__ . '/../Model/AIService.php';
+require_once __DIR__ . '/../Model/EmailService.php';
 require_once __DIR__ . '/../Model/MatchingScoreService.php';
 
 class MissionController {
@@ -381,6 +382,49 @@ class MissionController {
             $this->candidature->updateStatut($id, $statut);
         }
         header('Location: index.php?action=candidatures&updated_statut=1');
+        exit;
+    }
+
+    public function generateEmail() {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/json; charset=utf-8');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['error' => 'Requête invalide']);
+            exit;
+        }
+
+        $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+        $type = isset($_POST['type']) ? trim($_POST['type']) : '';
+
+        if ($id <= 0 || !in_array($type, ['acceptation', 'refus'], true)) {
+            echo json_encode(['error' => 'Paramètres invalides']);
+            exit;
+        }
+
+        $candidature = $this->candidature->getById($id);
+        if (!$candidature) {
+            echo json_encode(['error' => 'Candidature non trouvée']);
+            exit;
+        }
+
+        $candidateName = htmlspecialchars($candidature['prenom'] . ' ' . $candidature['nom']);
+        $missionTitle = htmlspecialchars($candidature['mission_titre']);
+        $motivation = $candidature['motivation'] ?? '';
+
+        try {
+            $email = EmailService::generateEmail($type, $candidateName, $missionTitle, $motivation);
+
+            // Mettre à jour le statut automatiquement
+            $newStatut = ($type === 'acceptation') ? 'acceptee' : 'refusee';
+            $this->candidature->updateStatut($id, $newStatut);
+
+            echo json_encode($email);
+        } catch (Exception $e) {
+            echo json_encode(['error' => 'Erreur: ' . $e->getMessage()]);
+        }
         exit;
     }
 

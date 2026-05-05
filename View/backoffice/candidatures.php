@@ -622,11 +622,14 @@ ob_start();
                         <small class="text-muted" id="modalIdLabel">Candidature #0</small>
                     </div>
                 </div>
-                <div class="ms-auto d-flex align-items-center gap-3">
-                    <button type="button" class="btn py-2 px-4 rounded-3 fw-800 text-white border-0 shadow-sm" data-bs-dismiss="modal" style="background: linear-gradient(135deg, #ff6b35, #e63946); font-size: 0.8rem;">
-                        <i class="fas fa-arrow-left me-2"></i> RETOUR
+                <div class="ms-auto d-flex align-items-center gap-2">
+                    <button type="button" id="btnEmailAccept" onclick="generateEmail('acceptation')" class="btn py-2 px-3 rounded-3 fw-700 text-white border-0 shadow-sm" style="background: linear-gradient(135deg, #00ffcc, #00ccff); font-size: 0.75rem;">
+                        <i class="fas fa-envelope me-1"></i> Accepter & Email
                     </button>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" id="btnEmailRefuse" onclick="generateEmail('refus')" class="btn py-2 px-3 rounded-3 fw-700 text-white border-0 shadow-sm" style="background: linear-gradient(135deg, #ff6b35, #e63946); font-size: 0.75rem;">
+                        <i class="fas fa-envelope me-1"></i> Refuser & Email
+                    </button>
+                    <button type="button" class="btn-close btn-close-white ms-2" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
             <div class="modal-body">
@@ -664,7 +667,7 @@ ob_start();
                         </div>
                     </div>
 
-                    <!-- Column Right: Motivation & CV -->
+                    <!-- Column Right: Motivation & CV & Email -->
                     <div class="col-md-7">
                         <div class="info-card-forge h-100 d-flex flex-column">
                             <span class="label-forge">Lettre de Motivation</span>
@@ -674,6 +677,18 @@ ob_start();
                                 <a id="modalCvLink" href="#" target="_blank" class="btn btn-primary w-100 py-3 rounded-3 fw-bold">
                                     <i class="fas fa-file-pdf me-2"></i> Consulter le CV complet
                                 </a>
+                            </div>
+
+                            <!-- Email Generated -->
+                            <div id="emailGeneratedContainer" class="mt-4 d-none" style="border: 1px solid rgba(0,255,204,0.2); border-radius: 12px; padding: 15px; background: rgba(0,255,204,0.03);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <span class="label-forge" style="color: #00ffcc;"><i class="fas fa-envelope me-2"></i>Email Généré</span>
+                                    <button type="button" class="btn btn-sm" onclick="copyEmail()" style="background: rgba(0,255,204,0.15); color: #00ffcc; border: none; font-size: 11px; padding: 4px 12px; border-radius: 20px;">
+                                        <i class="fas fa-copy me-1"></i> Copier
+                                    </button>
+                                </div>
+                                <div style="font-size: 13px; color: #00ffcc; font-weight: 600; margin-bottom: 8px;" id="emailGeneratedSubject">--</div>
+                                <div id="emailGeneratedBody" style="font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; white-space: pre-wrap; max-height: 200px; overflow-y: auto;">--</div>
                             </div>
                         </div>
                     </div>
@@ -685,7 +700,11 @@ ob_start();
 
 <!-- Scripts -->
 <script>
+    let currentCandidateId = null;
+
     function showCandidateDetails(data) {
+        currentCandidateId = data.id;
+
         // Populate Data
         document.getElementById('modalIdLabel').innerText = 'Candidature #' + data.id;
         document.getElementById('modalFullName').innerText = data.prenom + ' ' + data.nom;
@@ -696,6 +715,9 @@ ob_start();
         document.getElementById('modalPhone').innerText = data.telephone;
         document.getElementById('modalPhone').href = 'tel:' + data.telephone;
         document.getElementById('modalMotivation').innerText = data.motivation;
+
+        // Reset email container
+        document.getElementById('emailGeneratedContainer').classList.add('d-none');
 
         // Score handling
         const score = data.matching_score ?? 0;
@@ -734,6 +756,75 @@ ob_start();
         // Show Modal
         const modal = new bootstrap.Modal(document.getElementById('candidateModal'));
         modal.show();
+    }
+
+    function generateEmail(type) {
+        if (!currentCandidateId) return;
+
+        const btnAccept = document.getElementById('btnEmailAccept');
+        const btnRefuse = document.getElementById('btnEmailRefuse');
+        const originalTextAccept = btnAccept.innerHTML;
+        const originalTextRefuse = btnRefuse.innerHTML;
+        const loadingHtml = '<i class="fas fa-spinner fa-spin me-1"></i> Génération...';
+
+        btnAccept.disabled = true;
+        btnRefuse.disabled = true;
+        if (type === 'acceptation') btnAccept.innerHTML = loadingHtml;
+        else btnRefuse.innerHTML = loadingHtml;
+
+        const formData = new FormData();
+        formData.append('id', currentCandidateId);
+        formData.append('type', type);
+
+        fetch('index.php?action=generate_email', {
+            method: 'POST',
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) {
+                alert('Erreur : ' + data.error);
+                return;
+            }
+
+            document.getElementById('emailGeneratedSubject').innerText = data.sujet;
+            document.getElementById('emailGeneratedBody').innerText = data.corps;
+            document.getElementById('emailGeneratedContainer').classList.remove('d-none');
+
+            // Update buttons to reflect new status
+            const statusColor = type === 'acceptation' ? '#00ffcc' : '#ff6b6b';
+            const statusLabel = type === 'acceptation' ? 'Accepté' : 'Refusé';
+            btnAccept.style.display = 'none';
+            btnRefuse.style.display = 'none';
+
+            const statusBadge = document.createElement('span');
+            statusBadge.className = 'badge rounded-pill px-3 py-2';
+            statusBadge.style.background = statusColor;
+            statusBadge.style.color = '#0a0e27';
+            statusBadge.style.fontWeight = '700';
+            statusBadge.innerHTML = '<i class="fas fa-check me-1"></i> ' + statusLabel;
+
+            const headerDiv = btnAccept.parentElement;
+            headerDiv.insertBefore(statusBadge, headerDiv.firstChild);
+        })
+        .catch(err => {
+            alert('Erreur réseau : ' + err);
+        })
+        .finally(() => {
+            btnAccept.disabled = false;
+            btnRefuse.disabled = false;
+            btnAccept.innerHTML = originalTextAccept;
+            btnRefuse.innerHTML = originalTextRefuse;
+        });
+    }
+
+    function copyEmail() {
+        const subject = document.getElementById('emailGeneratedSubject').innerText;
+        const body = document.getElementById('emailGeneratedBody').innerText;
+        const text = 'SUJET: ' + subject + '\n\n' + body;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Email copié dans le presse-papiers !');
+        });
     }
 </script>
 

@@ -32,6 +32,7 @@ switch ($action) {
     case 'candidatures': $controller->candidatures(); break;
     case 'update_candidature_statut': $controller->updateCandidatureStatut(); break;
     case 'delete_candidature': $controller->deleteCandidature(); break;
+    case 'generate_email': $controller->generateEmail(); break;
     case 'ai_classify': $controller->aiClassify(); break;
 
     // --- FRONTOFFICE ACTIONS ---
