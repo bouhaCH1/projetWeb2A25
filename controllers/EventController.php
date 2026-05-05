@@ -31,5 +31,13 @@ class EventController {
         $event = new Event($this->db);
         return $event->delete($id);
     }
+
+    public function getStats() {
+        $event = new Event($this->db);
+        return [
+            'total' => $event->countTotal(),
+            'upcoming' => $event->countUpcoming()
+        ];
+    }
 }
 ?>

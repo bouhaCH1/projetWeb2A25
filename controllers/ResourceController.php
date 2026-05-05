@@ -31,5 +31,13 @@ class ResourceController {
         $resource = new Resource($this->db);
         return $resource->delete($id);
     }
+
+    public function getStats() {
+        $resource = new Resource($this->db);
+        return [
+            'total' => $resource->sumQuantity(),
+            'low_stock' => $resource->countLowStock()
+        ];
+    }
 }
 ?>

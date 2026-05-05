@@ -48,5 +48,13 @@ class Event {
         $stmt->bindParam(1, $id);
         return $stmt->execute();
     }
+
+    // [METIER 1] Event Manager - Stats
+    public function countTotal() {
+        return $this->conn->query("SELECT COUNT(*) FROM " . $this->table_name)->fetchColumn();
+    }
+    public function countUpcoming() {
+        return $this->conn->query("SELECT COUNT(*) FROM " . $this->table_name . " WHERE date >= CURDATE()")->fetchColumn();
+    }
 }
 ?>
