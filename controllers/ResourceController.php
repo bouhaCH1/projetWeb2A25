@@ -36,7 +36,8 @@ class ResourceController {
         $resource = new Resource($this->db);
         return [
             'total' => $resource->sumQuantity(),
-            'low_stock' => $resource->countLowStock()
+            'low_stock' => $resource->countLowStock(),
+            'types' => $resource->getTypeStats()
         ];
     }
 }

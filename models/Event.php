@@ -49,12 +49,19 @@ class Event {
         return $stmt->execute();
     }
 
-    // [METIER 1] Event Manager - Stats
     public function countTotal() {
         return $this->conn->query("SELECT COUNT(*) FROM " . $this->table_name)->fetchColumn();
     }
     public function countUpcoming() {
         return $this->conn->query("SELECT COUNT(*) FROM " . $this->table_name . " WHERE date >= CURDATE()")->fetchColumn();
+    }
+
+    // [CHART DATA] Events by Month
+    public function getMonthlyStats() {
+        $query = "SELECT MONTHNAME(date) as month, COUNT(*) as count FROM " . $this->table_name . " GROUP BY MONTH(date) ORDER BY MONTH(date)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>

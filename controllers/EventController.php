@@ -36,7 +36,8 @@ class EventController {
         $event = new Event($this->db);
         return [
             'total' => $event->countTotal(),
-            'upcoming' => $event->countUpcoming()
+            'upcoming' => $event->countUpcoming(),
+            'monthly' => $event->getMonthlyStats()
         ];
     }
 }

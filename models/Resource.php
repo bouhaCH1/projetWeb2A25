@@ -47,12 +47,19 @@ class Resource {
         return $stmt->execute();
     }
 
-    // [METIER 5/6] HR & Accountant Stats
     public function countLowStock() {
         return $this->conn->query("SELECT COUNT(*) FROM " . $this->table_name . " WHERE quantity <= 2")->fetchColumn();
     }
     public function sumQuantity() {
         return $this->conn->query("SELECT SUM(quantity) FROM " . $this->table_name)->fetchColumn();
+    }
+
+    // [CHART DATA] Resources by Type
+    public function getTypeStats() {
+        $query = "SELECT type, COUNT(*) as count FROM " . $this->table_name . " GROUP BY type";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>
