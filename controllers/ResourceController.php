@@ -37,7 +37,8 @@ class ResourceController {
         return [
             'total' => $resource->sumQuantity(),
             'low_stock' => $resource->countLowStock(),
-            'types' => $resource->getTypeStats()
+            'types' => $resource->getTypeStats(),
+            'ranges' => $resource->getQuantityRange()
         ];
     }
 }

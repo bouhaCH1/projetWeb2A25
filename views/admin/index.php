@@ -11,23 +11,24 @@ function getStatus($date) {
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>DarkPan - Professional Admin</title>
+    <title>EventResource Pro - Premium Admin</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
-    
-    <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Customized Bootstrap Stylesheet -->
+    <!-- DarkPan Styles -->
     <link href="../darkpan/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
     <link href="../darkpan/css/style.css" rel="stylesheet">
+
+    <style>
+        .chart-container { position: relative; height: 300px; width: 100%; }
+        .activity-item { border-left: 2px solid #eb1616; padding-left: 15px; margin-bottom: 20px; position: relative; }
+        .activity-item::before { content: ""; position: absolute; width: 10px; height: 10px; background: #eb1616; border-radius: 50%; left: -6px; top: 5px; }
+        .badge-outline { border: 1px solid currentColor; background: transparent !important; }
+    </style>
 </head>
 
 <body>
@@ -36,152 +37,201 @@ function getStatus($date) {
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-secondary navbar-dark">
                 <a href="index.php?action=admin" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DarkPan</h3>
+                    <h3 class="text-primary"><i class="fa fa-chart-pie me-2"></i>ER PRO</h3>
                 </a>
-                <div class="d-flex align-items-center ms-4 mb-4">
-                    <div class="position-relative">
-                        <img class="rounded-circle" src="../darkpan/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="mb-0">Admin Ayoub</h6>
-                        <span>Responsable</span>
-                    </div>
-                </div>
                 <div class="navbar-nav w-100">
                     <a href="index.php?action=admin" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="index.php" class="nav-item nav-link"><i class="fa fa-home me-2"></i>Page Client</a>
-                    <a href="index.php?action=form_event" class="nav-item nav-link"><i class="fa fa-calendar-plus me-2"></i>Ajout Event</a>
-                    <a href="index.php?action=form_resource" class="nav-item nav-link"><i class="fa fa-plus-square me-2"></i>Ajout Resource</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-calendar me-2"></i>Événements</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="index.php?action=admin" class="dropdown-item">Liste</a>
+                            <a href="index.php?action=form_event" class="dropdown-item">Ajouter</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-tools me-2"></i>Ressources</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="index.php?action=admin" class="dropdown-item">Liste</a>
+                            <a href="index.php?action=form_resource" class="dropdown-item">Ajouter</a>
+                        </div>
+                    </div>
+                    <a href="index.php" class="nav-item nav-link"><i class="fa fa-external-link-alt me-2"></i>Vue Client</a>
                 </div>
             </nav>
         </div>
         <!-- Sidebar End -->
 
-
         <!-- Content Start -->
         <div class="content">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
-                <a href="#" class="sidebar-toggler flex-shrink-0">
-                    <i class="fa fa-bars"></i>
-                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0"><i class="fa fa-bars"></i></a>
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="../darkpan/img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Admin Panel</span>
+                            <span class="d-none d-lg-inline-flex">Administrateur</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                            <a href="index.php" class="dropdown-item">Log Out</a>
+                            <a href="index.php" class="dropdown-item">Déconnexion</a>
                         </div>
                     </div>
                 </div>
             </nav>
             <!-- Navbar End -->
 
-
-            <!-- Stats Cards Start -->
+            <!-- Stats Grid -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                     <div class="col-sm-6 col-xl-3">
-                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-calendar-alt fa-3x text-primary"></i>
-                            <div class="ms-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4 shadow-sm">
+                            <i class="fa fa-calendar-check fa-3x text-primary"></i>
+                            <div class="ms-3 text-end">
                                 <p class="mb-2">Total Events</p>
-                                <h6 class="mb-0"><?= $eventStats['total'] ?></h6>
+                                <h4 class="mb-0"><?= $eventStats['total'] ?></h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-xl-3">
-                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-hourglass-start fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Upcoming</p>
-                                <h6 class="mb-0"><?= $eventStats['upcoming'] ?></h6>
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4 shadow-sm">
+                            <i class="fa fa-clock fa-3x text-info"></i>
+                            <div class="ms-3 text-end">
+                                <p class="mb-2">À Venir</p>
+                                <h4 class="mb-0"><?= $eventStats['upcoming'] ?></h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-xl-3">
-                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-cubes fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Resources</p>
-                                <h6 class="mb-0"><?= $resStats['total'] ?></h6>
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4 shadow-sm">
+                            <i class="fa fa-boxes fa-3x text-warning"></i>
+                            <div class="ms-3 text-end">
+                                <p class="mb-2">Total Qty</p>
+                                <h4 class="mb-0"><?= $resStats['total'] ?></h4>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6 col-xl-3">
-                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-exclamation-circle fa-3x text-danger"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Low Stock</p>
-                                <h6 class="mb-0 text-danger"><?= $resStats['low_stock'] ?></h6>
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4 shadow-sm">
+                            <i class="fa fa-exclamation-triangle fa-3x text-danger"></i>
+                            <div class="ms-3 text-end">
+                                <p class="mb-2">Critique</p>
+                                <h4 class="mb-0 text-danger"><?= $resStats['low_stock'] ?></h4>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Stats Cards End -->
 
-
-            <!-- Charts Start -->
+            <!-- Advanced Charts Row 1 -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
-                    <div class="col-sm-12 col-xl-6">
+                    <div class="col-sm-12 col-xl-8">
                         <div class="bg-secondary text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Analyse Mensuelle des Événements</h6>
+                                <h6 class="mb-0">Tendance Mensuelle (Line Chart)</h6>
                             </div>
-                            <canvas id="events-monthly-chart"></canvas>
+                            <div class="chart-container">
+                                <canvas id="line-chart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xl-6">
+                    <div class="col-sm-12 col-xl-4">
                         <div class="bg-secondary text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Répartition des Ressources par Type</h6>
+                                <h6 class="mb-0">Répartition (Doughnut)</h6>
                             </div>
-                            <canvas id="resources-type-chart"></canvas>
+                            <div class="chart-container">
+                                <canvas id="doughnut-chart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Charts End -->
 
-
-            <!-- Tables Start -->
+            <!-- Advanced Charts Row 2 -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
-                    <!-- Events Table -->
-                    <div class="col-12">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Gestion des Événements</h6>
-                                <a href="index.php?action=form_event" class="btn btn-primary btn-sm"><i class="fa fa-plus me-2"></i>Nouvel Événement</a>
+                    <div class="col-sm-12 col-md-6 col-xl-4">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <h6 class="mb-4">Top Lieux (Bar)</h6>
+                            <div class="chart-container">
+                                <canvas id="bar-chart"></canvas>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-xl-4">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <h6 class="mb-4">Disponibilité (Polar)</h6>
+                            <div class="chart-container">
+                                <canvas id="polar-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-xl-4">
+                        <div class="bg-secondary p-4 h-100 rounded">
+                            <h6 class="mb-4">Activités Récentes</h6>
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between"><strong>Nouvel Event</strong> <small class="text-muted">À l'instant</small></div>
+                                <p class="text-muted small mb-0">Un nouvel événement a été ajouté à Tunis.</p>
+                            </div>
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between"><strong>Stock Bas</strong> <small class="text-muted">Il y a 5m</small></div>
+                                <p class="text-muted small mb-0">La ressource "Projecteur" est passée en critique.</p>
+                            </div>
+                            <div class="activity-item">
+                                <div class="d-flex justify-content-between"><strong>Mise à jour</strong> <small class="text-muted">Il y a 1h</small></div>
+                                <p class="text-muted small mb-0">Modification des détails de la salle de conférence.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Tables -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">Gestion Complète</h6>
+                    </div>
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-events">Events</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-resources">Resources</button></li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="tab-events">
                             <div class="table-responsive">
                                 <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Titre</th>
-                                            <th scope="col">Date</th>
-                                            <th scope="col">Lieu</th>
-                                            <th scope="col">Statut</th>
-                                            <th scope="col">Actions</th>
-                                        </tr>
-                                    </thead>
+                                    <thead><tr><th>ID</th><th>Titre</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
                                     <tbody>
-                                        <?php foreach ($events as $event): $st = getStatus($event['date']); ?>
+                                        <?php foreach($events as $e): $st=getStatus($e['date']); ?>
                                         <tr>
-                                            <td><?= $event['id'] ?></td>
-                                            <td><?= htmlspecialchars($event['title']) ?></td>
-                                            <td><?= $event['date'] ?></td>
-                                            <td><?= htmlspecialchars($event['location']) ?></td>
-                                            <td><span class="badge bg-<?= $st['c'] ?>"><?= $st['l'] ?></span></td>
+                                            <td><?= $e['id'] ?></td>
+                                            <td><?= htmlspecialchars($e['title']) ?></td>
+                                            <td><?= $e['date'] ?></td>
+                                            <td><span class="badge badge-outline text-<?= $st['c'] ?>"><?= $st['l'] ?></span></td>
                                             <td>
-                                                <a class="btn btn-square btn-outline-info btn-sm me-1" href="index.php?action=form_event&id=<?= $event['id'] ?>"><i class="fa fa-edit"></i></a>
-                                                <a class="btn btn-square btn-outline-danger btn-sm" href="index.php?action=delete_event&id=<?= $event['id'] ?>" onclick="return confirm('Supprimer cet événement ?')"><i class="fa fa-trash"></i></a>
+                                                <a href="index.php?action=form_event&id=<?= $e['id'] ?>" class="btn btn-sm btn-outline-info me-1"><i class="fa fa-edit"></i></a>
+                                                <a href="index.php?action=delete_event&id=<?= $e['id'] ?>" onclick="return confirm('Sûr?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab-resources">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead><tr><th>ID</th><th>Nom</th><th>Type</th><th>Qty</th><th>Actions</th></tr></thead>
+                                    <tbody>
+                                        <?php foreach($resources as $r): ?>
+                                        <tr>
+                                            <td><?= $r['id'] ?></td>
+                                            <td><?= htmlspecialchars($r['name']) ?></td>
+                                            <td><?= htmlspecialchars($r['type']) ?></td>
+                                            <td><?= $r['quantity'] ?></td>
+                                            <td>
+                                                <a href="index.php?action=form_resource&id=<?= $r['id'] ?>" class="btn btn-sm btn-outline-info me-1"><i class="fa fa-edit"></i></a>
+                                                <a href="index.php?action=delete_resource&id=<?= $r['id'] ?>" onclick="return confirm('Sûr?')" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
@@ -190,133 +240,85 @@ function getStatus($date) {
                             </div>
                         </div>
                     </div>
-
-                    <!-- Resources Table -->
-                    <div class="col-12">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Gestion des Ressources</h6>
-                                <a href="index.php?action=form_resource" class="btn btn-primary btn-sm"><i class="fa fa-plus me-2"></i>Nouvelle Ressource</a>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Nom</th>
-                                            <th scope="col">Type</th>
-                                            <th scope="col">Quantité</th>
-                                            <th scope="col">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($resources as $res): ?>
-                                        <tr>
-                                            <td><?= $res['id'] ?></td>
-                                            <td><?= htmlspecialchars($res['name']) ?></td>
-                                            <td><?= htmlspecialchars($res['type']) ?></td>
-                                            <td class="<?= (int)$res['quantity'] <= 2 ? 'text-danger fw-bold' : '' ?>"><?= $res['quantity'] ?></td>
-                                            <td>
-                                                <a class="btn btn-square btn-outline-info btn-sm me-1" href="index.php?action=form_resource&id=<?= $res['id'] ?>"><i class="fa fa-edit"></i></a>
-                                                <a class="btn btn-square btn-outline-danger btn-sm" href="index.php?action=delete_resource&id=<?= $res['id'] ?>" onclick="return confirm('Supprimer cette ressource ?')"><i class="fa fa-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-            <!-- Tables End -->
 
-
-            <!-- Footer Start -->
+            <!-- Footer -->
             <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary rounded-top p-4">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">EventResource Pro</a>, All Right Reserved. 
-                        </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                        </div>
-                    </div>
+                <div class="bg-secondary rounded-top p-4 text-center">
+                    <p class="mb-0">&copy; 2026 <strong>EventResource Pro</strong>. Système Expert.</p>
                 </div>
             </div>
-            <!-- Footer End -->
         </div>
-        <!-- Content End -->
-
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
-    <!-- JavaScript Libraries -->
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Template Javascript -->
     <script src="../darkpan/js/main.js"></script>
 
     <script>
-        // Set Chart.js Defaults for Dark Mode
-        Chart.defaults.color = "#6C7293";
-        Chart.defaults.borderColor = "rgba(255, 255, 255, .1)";
+        // Global Chart Config
+        Chart.defaults.color = "#888";
+        Chart.defaults.borderColor = "rgba(255,255,255,0.05)";
 
-        // Monthly Events Chart
-        const ctxEvents = document.getElementById('events-monthly-chart').getContext('2d');
-        new Chart(ctxEvents, {
-            type: 'bar',
+        // 1. Line Chart (Events Trend)
+        new Chart(document.getElementById('line-chart'), {
+            type: 'line',
             data: {
                 labels: [<?php foreach($eventStats['monthly'] as $m) echo '"'.$m['month'].'",'; ?>],
                 datasets: [{
-                    label: "Nombre d'événements",
+                    label: "Événements",
                     data: [<?php foreach($eventStats['monthly'] as $m) echo $m['count'].','; ?>],
-                    backgroundColor: "rgba(235, 22, 22, .7)",
-                    fill: true
+                    borderColor: "#eb1616",
+                    backgroundColor: "rgba(235, 22, 22, .2)",
+                    fill: true,
+                    tension: 0.4
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: false }
-                }
-            }
+            options: { maintainAspectRatio: false }
         });
 
-        // Resources Type Chart
-        const ctxResources = document.getElementById('resources-type-chart').getContext('2d');
-        new Chart(ctxResources, {
+        // 2. Doughnut Chart (Resource Types)
+        new Chart(document.getElementById('doughnut-chart'), {
             type: 'doughnut',
             data: {
                 labels: [<?php foreach($resStats['types'] as $t) echo '"'.$t['type'].'",'; ?>],
                 datasets: [{
-                    backgroundColor: [
-                        "rgba(235, 22, 22, .9)",
-                        "rgba(235, 22, 22, .7)",
-                        "rgba(235, 22, 22, .5)",
-                        "rgba(235, 22, 22, .3)",
-                        "rgba(235, 22, 22, .1)"
-                    ],
                     data: [<?php foreach($resStats['types'] as $t) echo $t['count'].','; ?>],
+                    backgroundColor: ["#eb1616", "#00ffcc", "#ffcc00", "#36a2eb", "#9966ff"],
                     borderWidth: 0
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { padding: 20 }
-                    }
-                }
-            }
+            options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // 3. Bar Chart (Top Locations)
+        new Chart(document.getElementById('bar-chart'), {
+            type: 'bar',
+            data: {
+                labels: [<?php foreach($eventStats['location'] as $l) echo '"'.$l['location'].'",'; ?>],
+                datasets: [{
+                    label: "Events",
+                    data: [<?php foreach($eventStats['location'] as $l) echo $l['count'].','; ?>],
+                    backgroundColor: "#00ffcc"
+                }]
+            },
+            options: { maintainAspectRatio: false }
+        });
+
+        // 4. Polar Area Chart (Quantity Ranges)
+        new Chart(document.getElementById('polar-chart'), {
+            type: 'polarArea',
+            data: {
+                labels: [<?php foreach($resStats['ranges'] as $r) echo '"'.$r['range_label'].'",'; ?>],
+                datasets: [{
+                    data: [<?php foreach($resStats['ranges'] as $r) echo $r['count'].','; ?>],
+                    backgroundColor: ["#eb1616", "#ffcc00", "#00ffcc"]
+                }]
+            },
+            options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
         });
     </script>
 </body>

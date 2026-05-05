@@ -51,12 +51,26 @@ class Resource {
         return $this->conn->query("SELECT COUNT(*) FROM " . $this->table_name . " WHERE quantity <= 2")->fetchColumn();
     }
     public function sumQuantity() {
-        return $this->conn->query("SELECT SUM(quantity) FROM " . $this->table_name)->fetchColumn();
+        $sum = $this->conn->query("SELECT SUM(quantity) FROM " . $this->table_name)->fetchColumn();
+        return $sum ? $sum : 0;
     }
 
-    // [CHART DATA] Resources by Type
     public function getTypeStats() {
         $query = "SELECT type, COUNT(*) as count FROM " . $this->table_name . " GROUP BY type";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // [ADVANCED STATS] Quantity distribution
+    public function getQuantityRange() {
+        $query = "SELECT 
+            CASE 
+                WHEN quantity <= 2 THEN 'Critique'
+                WHEN quantity <= 10 THEN 'Moyen'
+                ELSE 'Abondant'
+            END as range_label, COUNT(*) as count 
+            FROM " . $this->table_name . " GROUP BY range_label";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

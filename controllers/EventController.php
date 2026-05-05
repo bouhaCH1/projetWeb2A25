@@ -37,7 +37,8 @@ class EventController {
         return [
             'total' => $event->countTotal(),
             'upcoming' => $event->countUpcoming(),
-            'monthly' => $event->getMonthlyStats()
+            'monthly' => $event->getMonthlyStats(),
+            'location' => $event->getLocationStats()
         ];
     }
 }
