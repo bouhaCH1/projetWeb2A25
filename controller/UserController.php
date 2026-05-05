@@ -203,12 +203,23 @@ class UserController {
 
         $code = trim($_POST['code'] ?? '');
         
-        // Debug: Store for troubleshooting
-        $_SESSION['debug_expected_code'] = $_SESSION['sms_2fa_code'] ?? 'NOT_SET';
-        $_SESSION['debug_submitted_code'] = $code;
+        // Get user info to check database for valid 2FA code
+        $user = new User();
+        $user = $user->getById((int)$_SESSION['pending_2fa_user_id']);
         
-        // Verify the SMS code - accept both generated code and fallback 123456
-        $isValidCode = ($code === ($_SESSION['sms_2fa_code'] ?? '')) || ($code === '123456');
+        if ($user) {
+            $userObj = new User();
+            $userObj->id = $user['id'];
+            $validCode = $userObj->getValid2FACode();
+        }
+        
+        // Debug: Store for troubleshooting
+        $_SESSION['debug_expected_code'] = $validCode ?? 'NOT_SET';
+        $_SESSION['debug_submitted_code'] = $code;
+        $_SESSION['debug_session_code'] = $_SESSION['sms_2fa_code'] ?? 'NOT_SET';
+        
+        // Verify the SMS code - check database, session, or fallback 123456
+        $isValidCode = ($code === $validCode) || ($code === ($_SESSION['sms_2fa_code'] ?? '')) || ($code === '123456');
         
         if ($isValidCode) {
             $user = new User();
@@ -267,8 +278,13 @@ class UserController {
             // Generate 6-digit code
             $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             
-            // Store code in session
+            // Store code in session AND database for persistence
             $_SESSION['sms_2fa_code'] = $code;
+            
+            // Store in user record for persistence across login
+            $user = new User();
+            $user->id = (int)$_SESSION['user_id'];
+            $user->update2FACode($code);
             
             // Send SMS
             $result = $this->sendSMSCode($phone, $code);

@@ -508,22 +508,77 @@ class User {
 
     public function updateFromLinkedIn(array $profileData): array {
         try {
-            // Update user profile with LinkedIn data
-            $stmt = $this->pdo->prepare('UPDATE users SET linkedin_headline = :headline, linkedin_experience = :experience, linkedin_skills = :skills, linkedin_location = :location, linkedin_education = :education WHERE id = :id');
+            $pdo = $this->pdo;
+            
+            $stmt = $pdo->prepare('
+                UPDATE users SET 
+                    linkedin_url = :linkedin_url,
+                    linkedin_headline = :headline,
+                    linkedin_experience = :experience,
+                    linkedin_skills = :skills,
+                    linkedin_education = :education,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = :id
+            ');
             
             $stmt->execute([
+                ':linkedin_url' => $profileData['linkedin_url'] ?? '',
                 ':headline' => $profileData['headline'] ?? '',
                 ':experience' => $profileData['experience'] ?? '',
                 ':skills' => $profileData['skills'] ?? '',
-                ':location' => $profileData['location'] ?? '',
                 ':education' => $profileData['education'] ?? '',
                 ':id' => $this->id
             ]);
             
-            return ['success' => true, 'message' => 'Profile updated successfully'];
+            return ['success' => true, 'message' => 'Profil LinkedIn mis à jour avec succès'];
             
         } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Failed to update profile: ' . $e->getMessage()];
+            return ['success' => false, 'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage()];
+        }
+    }
+
+    public function update2FACode(string $code): array {
+        try {
+            $pdo = $this->pdo;
+            
+            $stmt = $pdo->prepare('
+                UPDATE users SET 
+                    sms_2fa_code = :code,
+                    sms_2fa_code_expires = DATE_ADD(NOW(), INTERVAL 5 MINUTE)
+                WHERE id = :id
+            ');
+            
+            $stmt->execute([
+                ':code' => $code,
+                ':id' => $this->id
+            ]);
+            
+            return ['success' => true, 'message' => 'Code 2FA mis à jour'];
+            
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Erreur 2FA: ' . $e->getMessage()];
+        }
+    }
+
+    public function getValid2FACode(): ?string {
+        try {
+            $pdo = $this->pdo;
+            
+            $stmt = $pdo->prepare('
+                SELECT sms_2fa_code 
+                FROM users 
+                WHERE id = :id 
+                AND sms_2fa_code_expires > NOW()
+                AND sms_2fa_code IS NOT NULL
+            ');
+            
+            $stmt->execute([':id' => $this->id]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            return $result['sms_2fa_code'] ?? null;
+            
+        } catch (Exception $e) {
+            return null;
         }
     }
 

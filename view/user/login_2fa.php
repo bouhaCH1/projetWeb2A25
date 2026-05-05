@@ -11,16 +11,7 @@
       </div>
     <?php endif; ?>
     
-    <!-- Debug info -->
-    <?php if (!empty($_SESSION['debug_expected_code']) || !empty($_SESSION['debug_submitted_code'])): ?>
-      <div class="ww-alert ww-alert-info" style="background: #f8f9fa; border: 1px solid #dee2e6; color: #495057;">
-        <strong>DEBUG INFO:</strong><br>
-        Code attendu: <strong><?= htmlspecialchars($_SESSION['debug_expected_code'] ?? 'NON_DEFINI') ?></strong><br>
-        Code soumis: <strong><?= htmlspecialchars($_SESSION['debug_submitted_code'] ?? 'NON_DEFINI') ?></strong><br>
-        Code en session SMS: <strong><?= htmlspecialchars($_SESSION['sms_2fa_code'] ?? 'NON_DEFINI') ?></strong>
-      </div>
-    <?php endif; ?>
-
+    
     <form action="/workwave/Controller/index.php?action=login_2fa_submit" method="POST">
       <label>Code à 6 chiffres</label>
       <input type="text" name="code" placeholder="123456" required style="font-size: 1.5rem; letter-spacing: 10px; text-align: center; font-weight: bold;">
