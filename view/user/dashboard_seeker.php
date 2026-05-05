@@ -66,6 +66,22 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
         <div class="action-card-desc">Découvrez votre domaine métier avec l'IA HuggingFace</div>
     </a>
 
+    <a href="/workwave/Controller/index.php?action=ai_job_matching" class="action-card" style="border-color:rgba(74,222,128,0.2);">
+        <div class="action-card-icon" style="background:rgba(74,222,128,0.1);color:#4ade80;">
+            🎯
+        </div>
+        <div class="action-card-title">AI Job Matching</div>
+        <div class="action-card-desc">Analyse de CV et compatibilité avec les offres</div>
+    </a>
+
+    <a href="/workwave/Controller/index.php?action=ai_interview_coach" class="action-card" style="border-color:rgba(168,85,247,0.2);">
+        <div class="action-card-icon" style="background:rgba(168,85,247,0.1);color:#a855f7;">
+            🎤
+        </div>
+        <div class="action-card-title">AI Interview Coach</div>
+        <div class="action-card-desc">Entraînement et feedback avec IA</div>
+    </a>
+
     <a href="/workwave/Controller/index.php?action=security" class="action-card" style="border-color:rgba(167,139,250,0.2);">
         <div class="action-card-icon" style="background:rgba(167,139,250,0.1);color:#a78bfa;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>

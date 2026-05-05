@@ -122,6 +122,45 @@ switch ($action) {
         $stats = $controller->getDashboardStats();
         require_once __DIR__ . '/../View/user/dashboard_employer.php';
         break;
+    case 'interview_scheduling':
+        require_once __DIR__ . '/../View/user/interview_scheduling.php';
+        break;
+    case 'ai_job_matching':
+        require_once __DIR__ . '/../View/user/ai_job_matching.php';
+        break;
+    case 'ai_parse_resume':
+        $aiController = new AIController();
+        $resumeText = $_POST['resume_text'] ?? '';
+        $result = $aiController->parseResume($resumeText);
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    case 'ai_job_match':
+        $aiController = new AIController();
+        $userId = (int) $_SESSION['user_id'];
+        $jobId = (int) ($_POST['job_id'] ?? 0);
+        $result = $aiController->calculateJobMatch($userId, $jobId);
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    case 'ai_career_recommendations':
+        $aiController = new AIController();
+        $userId = (int) $_SESSION['user_id'];
+        $result = $aiController->getCareerRecommendations($userId);
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    case 'ai_salary_analysis':
+        $aiController = new AIController();
+        $userId = (int) $_SESSION['user_id'];
+        $jobId = (int) ($_POST['job_id'] ?? 0);
+        $result = $aiController->getSalaryAnalysis($userId, $jobId);
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    case 'ai_interview_coach':
+        require_once __DIR__ . '/../View/user/ai_interview_coach.php';
+        break;
     case 'job_search':
         require_once __DIR__ . '/../View/user/enhanced_job_search.php';
         break;
