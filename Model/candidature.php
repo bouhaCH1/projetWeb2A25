@@ -154,5 +154,17 @@ class Candidature {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['count'] ?? 0;
     }
+
+    public function getByEmail($email) {
+        $query = "SELECT c.*, m.titre AS mission_titre, m.competences AS mission_competences, m.categorie AS mission_categorie, m.description AS mission_description
+                  FROM " . $this->table . " c
+                  INNER JOIN mission m ON m.id = c.mission_id
+                  WHERE c.email = :email
+                  ORDER BY c.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
