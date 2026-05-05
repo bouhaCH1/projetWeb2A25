@@ -621,6 +621,7 @@ ob_start();
                         <h5 class="modal-title text-white fw-800 mb-0">Détails du Candidat</h5>
                         <small class="text-muted" id="modalIdLabel">Candidature #0</small>
                     </div>
+                    <div id="modalStatusArea" class="ms-3"></div>
                 </div>
                 <div class="ms-auto d-flex align-items-center gap-2">
                     <button type="button" id="btnEmailAccept" onclick="generateEmail('acceptation')" class="btn py-2 px-3 rounded-3 fw-700 text-white border-0 shadow-sm" style="background: linear-gradient(135deg, #00ffcc, #00ccff); font-size: 0.75rem;">
@@ -753,6 +754,23 @@ ob_start();
             cvContainer.classList.add('d-none');
         }
 
+        // Status handling in buttons
+        const btnAccept = document.getElementById('btnEmailAccept');
+        const btnRefuse = document.getElementById('btnEmailRefuse');
+        const statusArea = document.getElementById('modalStatusArea');
+        
+        btnAccept.classList.remove('d-none');
+        btnRefuse.classList.remove('d-none');
+        if (statusArea) statusArea.innerHTML = '';
+
+        if (data.statut === 'acceptee') {
+            btnRefuse.classList.add('d-none');
+            if (statusArea) statusArea.innerHTML = '<span class="badge rounded-pill px-3 py-2" style="background: #00ffcc; color: #0a0e27; font-weight: 700;"><i class="fas fa-check me-1"></i> Acceptée</span>';
+        } else if (data.statut === 'refusee') {
+            btnAccept.classList.add('d-none');
+            if (statusArea) statusArea.innerHTML = '<span class="badge rounded-pill px-3 py-2" style="background: #ff6b6b; color: #0a0e27; font-weight: 700;"><i class="fas fa-times me-1"></i> Refusée</span>';
+        }
+
         // Show Modal
         const modal = new bootstrap.Modal(document.getElementById('candidateModal'));
         modal.show();
@@ -797,15 +815,18 @@ ob_start();
             btnAccept.style.display = 'none';
             btnRefuse.style.display = 'none';
 
+            const statusArea = document.getElementById('modalStatusArea');
+            statusArea.innerHTML = '';
+            
             const statusBadge = document.createElement('span');
             statusBadge.className = 'badge rounded-pill px-3 py-2';
             statusBadge.style.background = statusColor;
             statusBadge.style.color = '#0a0e27';
             statusBadge.style.fontWeight = '700';
-            statusBadge.innerHTML = '<i class="fas fa-check me-1"></i> ' + statusLabel;
+            const iconClass = type === 'acceptation' ? 'fa-check' : 'fa-times';
+            statusBadge.innerHTML = '<i class="fas ' + iconClass + ' me-1"></i> ' + statusLabel;
 
-            const headerDiv = btnAccept.parentElement;
-            headerDiv.insertBefore(statusBadge, headerDiv.firstChild);
+            statusArea.appendChild(statusBadge);
         })
         .catch(err => {
             alert('Erreur réseau : ' + err);

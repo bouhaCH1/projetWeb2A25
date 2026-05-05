@@ -15,10 +15,12 @@ class EmailService {
             $instruction = "Rédige un email professionnel en français pour informer un candidat qu'il a été accepté pour une mission freelance.";
             $tone = "enthousiaste et professionnel";
             $closing = "Félicitations encore et bienvenue dans l'équipe !";
+            $style = "chaleureux et accueillant";
         } else {
-            $instruction = "Rédige un email professionnel et bienveillant en français pour informer un candidat qu'il n'a pas été retenu pour une mission freelance.";
-            $tone = "respectueux et encourageant";
-            $closing = "Je vous souhaite beaucoup de succès dans vos projets futurs.";
+            $instruction = "Rédige un email professionnel en français pour informer formellement un candidat que sa candidature est REFUSÉE et qu'il n'a PAS été retenu pour la mission freelance.";
+            $tone = "respectueux mais ferme sur le refus";
+            $closing = "Nous vous souhaitons beaucoup de succès dans vos projets futurs.";
+            $style = "professionnel et direct, annonçant clairement le refus";
         }
 
         $prompt = "$instruction
@@ -33,7 +35,7 @@ class EmailService {
         - Ensuite, rédige le corps de l'email de manière structurée avec des paragraphes clairs.
         - Finis par : CLOSING: [votre phrase de fermeture]
         - L'email ne doit pas dépasser 150 mots.
-        - Le style doit être chaleureux mais professionnel.";
+        - Le style doit être $style.";
 
         $data = [
             'contents' => [
