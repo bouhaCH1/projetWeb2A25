@@ -140,5 +140,19 @@ class Candidature {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['count'] ?? 0;
     }
+
+    public function countByEmailAndCategory($email, $categorie) {
+        if (empty($email) || empty($categorie)) return 0;
+        $query = "SELECT COUNT(*) as count
+                  FROM " . $this->table . " c
+                  INNER JOIN mission m ON m.id = c.mission_id
+                  WHERE c.email = :email AND m.categorie = :categorie";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':categorie', $categorie);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['count'] ?? 0;
+    }
 }
 ?>

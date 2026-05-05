@@ -269,6 +269,112 @@ ob_start();
         transform: scale(1.02);
         box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
     }
+
+    /* Matching Score Styles */
+    .score-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.85rem;
+        color: #fff;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .score-circle::after {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .score-excellent { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .score-good { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .score-average { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .score-low { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+    .match-badge {
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.65rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        display: inline-block;
+        margin-top: 4px;
+    }
+
+    .match-badge-excellent { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .match-badge-good { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+    .match-badge-average { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .match-badge-low { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+    /* Top 3 Candidates */
+    .top-candidates-section {
+        margin-bottom: 35px;
+    }
+
+    .top-candidate-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .top-candidate-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255,107,53,0.3);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .top-candidate-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #ff6b35, #e63946);
+    }
+
+    .top-rank {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6b35, #e63946);
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .top-score-bar {
+        height: 6px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.05);
+        overflow: hidden;
+        margin-top: 12px;
+    }
+
+    .top-score-fill {
+        height: 100%;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #22c55e, #4ade80);
+        transition: width 0.8s ease;
+    }
 </style>
 
 <div class="candidatures-container fade-in">
@@ -316,6 +422,7 @@ ob_start();
                         <option value="date_desc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'date_desc') ? 'selected' : '' ?>>Plus récents</option>
                         <option value="name_asc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'name_asc') ? 'selected' : '' ?>>Prénom (A-Z)</option>
                         <option value="name_desc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'name_desc') ? 'selected' : '' ?>>Prénom (Z-A)</option>
+                        <option value="score_desc" style="background: #12161f;" <?= (($_GET['sort'] ?? '') === 'score_desc') ? 'selected' : '' ?>>Meilleur Match</option>
                     </select>
                 </div>
             </div>
@@ -336,6 +443,49 @@ ob_start();
         </form>
     </div>
 
+    <!-- Top 3 Candidates Section -->
+    <?php if (!empty($topCandidates)): ?>
+    <div class="top-candidates-section">
+        <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-crown text-warning me-2"></i>
+            <h5 class="text-white fw-800 mb-0">Top Candidats Recommandés</h5>
+        </div>
+        <div class="row g-4">
+            <?php $rank = 1; foreach ($topCandidates as $top): ?>
+            <div class="col-md-4">
+                <div class="top-candidate-card">
+                    <div class="top-rank">#<?= $rank++ ?></div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="candidate-avatar" style="width: 46px; height: 46px; font-size: 0.9rem;">
+                            <?= strtoupper(substr($top['prenom'], 0, 1) . substr($top['nom'], 0, 1)) ?>
+                        </div>
+                        <div class="ms-3">
+                            <div class="text-white fw-700"><?= htmlspecialchars($top['prenom'] . ' ' . $top['nom']) ?></div>
+                            <div class="text-muted small"><?= htmlspecialchars($top['mission_titre']) ?></div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="match-badge match-badge-excellent"><i class="fas fa-star me-1"></i> Excellent Match</span>
+                        <span class="text-white fw-800"><?= (int)$top['matching_score'] ?>%</span>
+                    </div>
+                    <div class="top-score-bar">
+                        <div class="top-score-fill" style="width: <?= (int)$top['matching_score'] ?>%"></div>
+                    </div>
+                    <div class="mt-3 d-flex gap-2">
+                        <button class="btn-action btn-action-view w-100" onclick="showCandidateDetails(<?= htmlspecialchars(json_encode($top)) ?>)">
+                            <i class="fas fa-eye"></i> Voir
+                        </button>
+                        <a href="index.php?action=update_candidature_statut&id=<?= $top['id'] ?>&statut=acceptee" class="btn-action btn-action-accept w-100 text-center text-decoration-none">
+                            <i class="fas fa-check"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Data Table Section -->
     <?php if (empty($candidatures)): ?>
         <div class="text-center py-5">
@@ -352,6 +502,7 @@ ob_start();
                         <th>Candidat</th>
                         <th>Mission</th>
                         <th>Contact</th>
+                        <th class="text-center">Matching</th>
                         <th>Statut</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -383,6 +534,22 @@ ob_start();
                                 <a href="tel:<?= htmlspecialchars($c['telephone']) ?>" class="text-muted text-decoration-none small">
                                     <i class="fas fa-phone me-1"></i> Contact
                                 </a>
+                            </td>
+                            <td class="text-center">
+                                <?php
+                                    $score = (int)($c['matching_score'] ?? 0);
+                                    $scoreClass = $score >= 80 ? 'score-excellent' : ($score >= 60 ? 'score-good' : ($score >= 40 ? 'score-average' : 'score-low'));
+                                    $badgeClass = $score >= 80 ? 'match-badge-excellent' : ($score >= 60 ? 'match-badge-good' : ($score >= 40 ? 'match-badge-average' : 'match-badge-low'));
+                                    $label = $score >= 80 ? 'Excellent' : ($score >= 60 ? 'Bon' : ($score >= 40 ? 'Moyen' : 'Faible'));
+                                ?>
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="score-circle <?= $scoreClass ?>"><?= $score ?>%</div>
+                                    <?php if ($score >= 80): ?>
+                                        <span class="match-badge <?= $badgeClass ?>"><i class="fas fa-star me-1"></i> <?= $label ?></span>
+                                    <?php else: ?>
+                                        <span class="match-badge <?= $badgeClass ?>"><?= $label ?></span>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                             <td>
                                 <?php 
@@ -474,6 +641,13 @@ ob_start();
                             <span class="label-forge">Mission Postulée</span>
                             <div id="modalMission" class="text-primary fw-700">--</div>
                         </div>
+                        <div class="info-card-forge mb-3">
+                            <span class="label-forge">Score de Matching</span>
+                            <div class="d-flex align-items-center gap-3">
+                                <div id="modalScoreCircle" class="score-circle" style="width: 46px; height: 46px; font-size: 0.8rem;">--</div>
+                                <div id="modalScoreLabel" class="match-badge">--</div>
+                            </div>
+                        </div>
                         <div class="row g-3">
                             <div class="col-12">
                                 <div class="info-card-forge">
@@ -522,7 +696,31 @@ ob_start();
         document.getElementById('modalPhone').innerText = data.telephone;
         document.getElementById('modalPhone').href = 'tel:' + data.telephone;
         document.getElementById('modalMotivation').innerText = data.motivation;
-        
+
+        // Score handling
+        const score = data.matching_score ?? 0;
+        const scoreCircle = document.getElementById('modalScoreCircle');
+        const scoreLabel = document.getElementById('modalScoreLabel');
+        scoreCircle.innerText = score + '%';
+        scoreCircle.className = 'score-circle';
+        if (score >= 80) {
+            scoreCircle.classList.add('score-excellent');
+            scoreLabel.className = 'match-badge match-badge-excellent';
+            scoreLabel.innerHTML = '<i class="fas fa-star me-1"></i> Excellent Match';
+        } else if (score >= 60) {
+            scoreCircle.classList.add('score-good');
+            scoreLabel.className = 'match-badge match-badge-good';
+            scoreLabel.innerText = 'Bon Match';
+        } else if (score >= 40) {
+            scoreCircle.classList.add('score-average');
+            scoreLabel.className = 'match-badge match-badge-average';
+            scoreLabel.innerText = 'Match Moyen';
+        } else {
+            scoreCircle.classList.add('score-low');
+            scoreLabel.className = 'match-badge match-badge-low';
+            scoreLabel.innerText = 'Faible Match';
+        }
+
         // CV handling
         const cvContainer = document.getElementById('modalCvContainer');
         const cvLink = document.getElementById('modalCvLink');
