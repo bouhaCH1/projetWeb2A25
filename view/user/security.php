@@ -26,6 +26,31 @@ if ($isAdmin) {
     </div>
 <?php endif; ?>
 
+<?php if (!empty($_SESSION['demo_2fa_code'])): ?>
+<?php $demoCode = $_SESSION['demo_2fa_code']; unset($_SESSION['demo_2fa_code']); ?>
+<div style="margin-bottom:20px;padding:20px 24px;background:linear-gradient(135deg,rgba(0,255,204,0.08),rgba(0,179,255,0.06));border:2px solid rgba(0,255,204,0.4);border-radius:12px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span style="font-size:1.6rem;">🔐</span>
+        <div>
+            <div style="font-weight:800;color:#00ffcc;font-size:1rem;">Code OTP Généré — Double Authentification (2FA)</div>
+            <div style="font-size:0.78rem;color:#666;margin-top:2px;">Généré le <?= htmlspecialchars($demoCode['sent_at']) ?> · Valide 5 minutes</div>
+        </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;background:rgba(0,0,0,0.3);border-radius:10px;padding:16px 24px;">
+        <div>
+            <div style="font-size:0.72rem;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Votre code de vérification</div>
+            <div style="font-size:2.5rem;font-weight:900;color:#00ffcc;letter-spacing:14px;font-family:monospace;"><?= htmlspecialchars($demoCode['code']) ?></div>
+        </div>
+        <div style="text-align:right;">
+            <div style="font-size:0.75rem;color:#555;">Entrez ce code lors de<br>votre prochaine connexion</div>
+        </div>
+    </div>
+    <div style="margin-top:12px;font-size:0.77rem;color:#555;border-top:1px solid rgba(0,255,204,0.1);padding-top:10px;">
+        💡 <strong style="color:#888;">Note :</strong> Ce code est aussi envoyé à votre email enregistré si la configuration SMTP est active.
+    </div>
+</div>
+<?php endif; ?>
+
 <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start;">
     
     <!-- Section 1: Historique de connexion -->
@@ -99,14 +124,13 @@ if ($isAdmin) {
             </div>
             
             <?php if ($is2faEnabled): ?>
-            <div style="margin-top:16px; padding:12px; border-radius:6px; background:rgba(0,179,255,0.05); border:1px solid rgba(0,179,255,0.15);">
-                <div style="font-size:0.8rem; color:#00b3ff; font-weight:600; margin-bottom:8px;">📱 Envoyer un code de test</div>
-                <p style="font-size:0.75rem; color:#666; margin-bottom:12px;">Testez la réception des codes SMS sur votre numéro.</p>
-                <form action="/workwave/Controller/index.php?action=send_2fa_code" method="POST" style="display:flex; gap:8px;">
-                    <input type="tel" name="phone" placeholder="Votre numéro" value="<?= htmlspecialchars($userData['phone'] ?? '') ?>" 
-                           style="flex:1; padding:6px 10px; border:1px solid rgba(0,179,255,0.2); border-radius:4px; background:rgba(255,255,255,0.04); color:#ddd; font-size:0.8rem;" required>
-                    <button type="submit" style="padding:6px 12px; background:rgba(0,179,255,0.1); color:#00b3ff; border:1px solid rgba(0,179,255,0.3); border-radius:4px; font-size:0.75rem; font-weight:600; cursor:pointer;">
-                        Envoyer
+            <div style="margin-top:16px;padding:12px;border-radius:6px;background:rgba(0,179,255,0.05);border:1px solid rgba(0,179,255,0.15);">
+                <div style="font-size:0.8rem;color:#00b3ff;font-weight:600;margin-bottom:8px;">📱 Générer un code OTP de test</div>
+                <p style="font-size:0.75rem;color:#666;margin-bottom:12px;">Cliquez pour générer votre code et le voir directement sur cette page. Le code sera aussi envoyé à votre email si le serveur SMTP est actif.</p>
+                <form action="/workwave/Controller/index.php?action=send_2fa_code" method="POST" style="display:flex;gap:8px;">
+                    <input type="hidden" name="phone" value="<?= htmlspecialchars($userData['phone'] ?? '') ?>">
+                    <button type="submit" style="width:100%;padding:10px 12px;background:linear-gradient(135deg,rgba(0,255,204,0.15),rgba(0,179,255,0.1));color:#00ffcc;border:1px solid rgba(0,255,204,0.3);border-radius:6px;font-size:0.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                        🔐 Générer &amp; Afficher mon Code OTP
                     </button>
                 </form>
             </div>

@@ -161,6 +161,47 @@ switch ($action) {
     case 'ai_interview_coach':
         require_once __DIR__ . '/../View/user/ai_interview_coach.php';
         break;
+    case 'ai_user_management':
+        require_once __DIR__ . '/../View/admin/ai_user_management.php';
+        break;
+    case 'ai_user_management_simple':
+        require_once __DIR__ . '/../View/admin/ai_user_management_simple.php';
+        break;
+    case 'ai_user_segmentation':
+        require_once __DIR__ . '/AdminAIController.php';
+        $aiController = new AdminAIController();
+        $result = $aiController->getUserSegmentation();
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    case 'ai_journey_mapping':
+        require_once __DIR__ . '/AdminAIController.php';
+        $aiController = new AdminAIController();
+        $result = $aiController->getUserJourneyMapping();
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    case 'ai_fraud_detection':
+        require_once __DIR__ . '/AdminAIController.php';
+        $aiController = new AdminAIController();
+        $result = $aiController->getFraudDetection();
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    case 'ai_satisfaction_prediction':
+        require_once __DIR__ . '/AdminAIController.php';
+        $aiController = new AdminAIController();
+        $result = $aiController->getUserSatisfactionPrediction();
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
+    case 'ai_admin_recommendations':
+        require_once __DIR__ . '/AdminAIController.php';
+        $aiController = new AdminAIController();
+        $result = $aiController->getAdminRecommendations();
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        exit;
     case 'job_search':
         require_once __DIR__ . '/../View/user/enhanced_job_search.php';
         break;

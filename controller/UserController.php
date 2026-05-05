@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../Model/User.php';
+require_once __DIR__ . '/../Model/SmtpMailer.php';
 
 class UserController {
 
@@ -158,20 +159,45 @@ class UserController {
 
         if ($result['success']) {
             if ($result['requires_2fa'] ?? false) {
-                // User has 2FA enabled, redirect to verification page
-                $_SESSION['pending_2fa_user_id'] = $result['user_id'];
-                $_SESSION['pending_2fa_role'] = $result['role'];
+
+                // ── 2FA FLOW ───────────────────────────────────────────
+                // 1. Generate a secure 6-digit code
+                $otpCode = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+
+                // 2. Save it to the DB with a 5-minute expiry
+                $otpUser = new User();
+                $otpUser->id = (int)$result['user_id'];
+                $otpUser->update2FACode($otpCode);
+
+                // 3. Fetch user email and send the code
+                $userData = $otpUser->getById((int)$result['user_id']);
+                $sentOk = false;
+                if (!empty($userData['email'])) {
+                    $sentOk = $this->sendOTPEmail(
+                        $userData['email'],
+                        $userData['first_name'] ?? '',
+                        $otpCode
+                    );
+                }
+
+                // 4. Store minimal session data for the verification step
+                $_SESSION['pending_2fa_user_id'] = (int)$result['user_id'];
+                // Store masked email for display only (e.g. b***@gmail.com)
+                $_SESSION['pending_2fa_email_hint'] = $this->maskEmail($userData['email'] ?? '');
+                $_SESSION['pending_2fa_sent_ok']    = $sentOk;
+
                 header('Location: index.php?action=login_2fa');
                 exit;
+                // ──────────────────────────────────────────────────────
             }
 
             // Normal login (no 2FA)
-            $_SESSION['user_id'] = $user->id;
-            $_SESSION['user_role'] = $user->role;
-            $_SESSION['user_first_name'] = $user->first_name;
-            $_SESSION['user_last_name'] = $user->last_name;
-            $_SESSION['user_pic'] = $user->profile_pic;
-            $_SESSION['user_verified'] = (int)($user->is_verified ?? 0);
+            $_SESSION['user_id']         = $user->id;
+            $_SESSION['user_role']        = $user->role;
+            $_SESSION['user_first_name']  = $user->first_name;
+            $_SESSION['user_last_name']   = $user->last_name;
+            $_SESSION['user_pic']         = $user->profile_pic;
+            $_SESSION['user_verified']    = (int)($user->is_verified ?? 0);
 
             if ($user->role === 'admin') {
                 header('Location: index.php?action=admin_dashboard');
@@ -185,6 +211,14 @@ class UserController {
             header('Location: index.php?action=login');
         }
         exit;
+    }
+
+    /** Mask an email for display: beha@gmail.com → b***@gmail.com */
+    private function maskEmail(string $email): string {
+        if (empty($email) || strpos($email, '@') === false) return '***';
+        [$local, $domain] = explode('@', $email, 2);
+        $masked = substr($local, 0, 1) . str_repeat('*', max(3, strlen($local) - 1));
+        return $masked . '@' . $domain;
     }
 
     public function showLogin2FA(): void {
@@ -201,67 +235,61 @@ class UserController {
             exit;
         }
 
-        $code = trim($_POST['code'] ?? '');
-        
-        // Get user info to check database for valid 2FA code
-        $user = new User();
-        $user = $user->getById((int)$_SESSION['pending_2fa_user_id']);
-        
-        if ($user) {
-            $userObj = new User();
-            $userObj->id = $user['id'];
-            $validCode = $userObj->getValid2FACode();
-        }
-        
-        // Debug: Store for troubleshooting
-        $_SESSION['debug_expected_code'] = $validCode ?? 'NOT_SET';
-        $_SESSION['debug_submitted_code'] = $code;
-        $_SESSION['debug_session_code'] = $_SESSION['sms_2fa_code'] ?? 'NOT_SET';
-        
-        // Verify the SMS code - check database, session, or fallback 123456
-        $isValidCode = ($code === $validCode) || ($code === ($_SESSION['sms_2fa_code'] ?? '')) || ($code === '123456');
-        
-        if ($isValidCode) {
-            $user = new User();
-            $user = $user->getById((int)$_SESSION['pending_2fa_user_id']);
-            
-            if ($user) {
-                // Re-instantiate User to call logConnection
-                $loggedUser = new User();
-                $loggedUser->id = $user['id'];
-                $loggedUser->first_name = $user['first_name'];
-                $loggedUser->last_name = $user['last_name'];
-                $loggedUser->role = $user['role'];
-                $loggedUser->profile_pic = $user['profile_pic'] ?? '';
-                
-                // Set session variables
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_role'] = $user['role'];
-                $_SESSION['user_first_name'] = $user['first_name'];
-                $_SESSION['user_last_name'] = $user['last_name'];
-                $_SESSION['user_pic'] = $user['profile_pic'] ?? '';
-                $_SESSION['user_verified'] = (int)($user['is_verified'] ?? 0);
+        $enteredCode = trim($_POST['code'] ?? '');
 
-                // Clear 2FA session data
-                unset($_SESSION['pending_2fa_user_id']);
-                unset($_SESSION['pending_2fa_role']);
-                unset($_SESSION['sms_2fa_code']);
+        // Fetch the valid (non-expired) code from DB
+        $userObj = new User();
+        $userObj->id = (int)$_SESSION['pending_2fa_user_id'];
+        $validCode   = $userObj->getValid2FACode(); // returns null if expired/missing
 
-                if ($user['role'] === 'admin') {
-                    header('Location: index.php?action=admin_dashboard');
-                } elseif ($user['role'] === 'employer') {
-                    header('Location: index.php?action=dashboard_employer');
-                } else {
-                    header('Location: index.php?action=dashboard_seeker');
-                }
-                exit;
+        // Strict check: entered code must match DB code exactly
+        if ($enteredCode !== '' && $validCode !== null && $enteredCode === $validCode) {
+
+            // Code is correct — clear it from DB immediately (one-time use)
+            $userObj->clear2FACode();
+
+            // Load full user data and start session
+            $userData = $userObj->getById((int)$_SESSION['pending_2fa_user_id']);
+
+            if ($userData) {
+                $_SESSION['user_id']         = $userData['id'];
+                $_SESSION['user_role']        = $userData['role'];
+                $_SESSION['user_first_name']  = $userData['first_name'];
+                $_SESSION['user_last_name']   = $userData['last_name'];
+                $_SESSION['user_pic']         = $userData['profile_pic'] ?? '';
+                $_SESSION['user_verified']    = (int)($userData['is_verified'] ?? 0);
             }
+
+            // Clean up 2FA session data
+            unset($_SESSION['pending_2fa_user_id'],
+                  $_SESSION['pending_2fa_email_hint'],
+                  $_SESSION['pending_2fa_sent_ok']);
+
+            if (($userData['role'] ?? '') === 'admin') {
+                header('Location: index.php?action=admin_dashboard');
+            } elseif (($userData['role'] ?? '') === 'employer') {
+                header('Location: index.php?action=dashboard_employer');
+            } else {
+                header('Location: index.php?action=dashboard_seeker');
+            }
+            exit;
         }
 
-        $_SESSION['errors'] = ['Le code SMS est incorrect.'];
-        header('Location: index.php?action=login_2fa');
+        // Wrong or expired code
+        if ($validCode === null) {
+            $_SESSION['errors'] = ['Ce code a expiré. Veuillez vous reconnecter pour recevoir un nouveau code.'];
+            // Clear pending session so they restart from login
+            unset($_SESSION['pending_2fa_user_id'],
+                  $_SESSION['pending_2fa_email_hint'],
+                  $_SESSION['pending_2fa_sent_ok']);
+            header('Location: index.php?action=login');
+        } else {
+            $_SESSION['errors'] = ['Code incorrect. Vérifiez votre email et réessayez.'];
+            header('Location: index.php?action=login_2fa');
+        }
         exit;
     }
+
 
     public function send2FACode(): void {
         $this->requireLogin();
@@ -271,75 +299,60 @@ class UserController {
             exit;
         }
         
-        // Get phone from form submission
-        $phone = trim($_POST['phone'] ?? '');
+        // Get contact info (phone OR email used for 2FA notification)
+        $contact = trim($_POST['phone'] ?? '');
         
-        if (!empty($phone)) {
-            // Generate 6-digit code
-            $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-            
-            // Store code in session AND database for persistence
-            $_SESSION['sms_2fa_code'] = $code;
-            
-            // Store in user record for persistence across login
-            $user = new User();
-            $user->id = (int)$_SESSION['user_id'];
-            $user->update2FACode($code);
-            
-            // Send SMS
-            $result = $this->sendSMSCode($phone, $code);
-            
-            if ($result['success']) {
-                $_SESSION['success'] = "Code SMS envoyé à $phone avec succès!";
-                // Debug: Force display the code immediately
-                $_SESSION['last_sms_code'] = [
-                    'phone' => $phone,
-                    'code' => $code,
-                    'sent_at' => date('Y-m-d H:i:s')
-                ];
-            } else {
-                $_SESSION['errors'] = [$result['message']];
-            }
-        } else {
-            $_SESSION['errors'] = ['Numéro de téléphone requis pour l\'authentification SMS.'];
+        // Generate 6-digit OTP code
+        $code = str_pad(random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+        
+        // Store code in session for display (demo mode) and in DB for persistence
+        $_SESSION['sms_2fa_code'] = $code;
+        $_SESSION['demo_2fa_code'] = [
+            'code'     => $code,
+            'contact'  => $contact,
+            'sent_at'  => date('H:i:s'),
+        ];
+        
+        // Persist in DB so it survives across the login redirect
+        $user = new User();
+        $user->id = (int)$_SESSION['user_id'];
+        $user->update2FACode($code);
+        
+        // Attempt real email delivery
+        $userEmail = $_SESSION['user_email'] ?? '';
+        // Fetch email from DB if not in session
+        $userData = $user->getById((int)$_SESSION['user_id']);
+        $userEmail = $userData['email'] ?? '';
+        $firstName = $userData['first_name'] ?? 'Utilisateur';
+
+        $emailSent = false;
+        if (!empty($userEmail)) {
+            $emailSent = $this->sendOTPEmail($userEmail, $firstName, $code);
         }
+        
+        $method = $emailSent ? "email ($userEmail)" : 'mode démonstration';
+        $_SESSION['success'] = "✅ Code OTP généré avec succès — envoyé via $method. Voir ci-dessous.";
         
         header('Location: index.php?action=security');
         exit;
     }
 
-    private function sendSMSCode(string $phone, string $code): array {
-        try {
-            // For demo purposes, we'll simulate SMS sending
-            // In production, you'd use an SMS API like Twilio, Vonage, etc.
-            
-            $message = "WorkWave: Votre code de sécurité est {$code}. Valide 5 minutes.";
-            
-            // Simulate SMS API call
-            $smsSent = $this->simulateSMSAPI($phone, $message);
-            
-            if ($smsSent) {
-                return ['success' => true, 'message' => 'SMS envoyé'];
-            } else {
-                return ['success' => false, 'message' => 'Échec de l\'envoi SMS'];
-            }
-            
-        } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Erreur SMS: ' . $e->getMessage()];
-        }
-    }
+    /**
+     * Send OTP via SmtpMailer (Gmail SMTP) with php mail() fallback.
+     */
+    private function sendOTPEmail(string $toEmail, string $firstName, string $code): bool {
+        // Use the SmtpMailer class (configured in Model/SmtpMailer.php)
+        $sent = SmtpMailer::sendOTP($toEmail, $firstName, $code);
+        if ($sent) return true;
 
-    private function simulateSMSAPI(string $phone, string $message): bool {
-        // Simulate SMS API - in production, replace with real SMS service
-        // For demo, we'll just log the code to session for testing
-        
-        $_SESSION['last_sms_code'] = [
-            'phone' => $phone,
-            'code' => substr($message, -6), // Extract code from message
-            'sent_at' => date('Y-m-d H:i:s')
-        ];
-        
-        return true; // Simulate successful send
+        // Fallback: php mail()
+        $subject  = '=?UTF-8?B?' . base64_encode('WorkWave — Votre code de double authentification') . '?=';
+        $body     = "Bonjour $firstName,\n\nVotre code OTP WorkWave : $code\n\nValide 5 minutes.\n\nL'équipe WorkWave";
+        $headers  = "From: noreply@workwave.com\r\nContent-Type: text/plain; charset=UTF-8\r\n";
+        if (function_exists('mail')) {
+            return (bool) @mail($toEmail, $subject, $body, $headers);
+        }
+        return false;
     }
 
     public function toggle2FA(): void {

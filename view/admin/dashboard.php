@@ -119,6 +119,13 @@ include __DIR__ . '/../layout/dashboard_header.php';
             </div>
         </div>
         <div class="col-sm-12 col-md-3">
+            <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition:.3s;cursor:pointer;" onclick="window.location.href='/workwave/Controller/index.php?action=ai_user_management_ultra_simple'" onmouseover="this.style.background='#0a0f1e'" onmouseout="this.style.background=''">
+                <span style="font-size:2.5rem;margin-bottom:12px;">🎯</span>
+                <h6 class="mb-2" style="color:#4ade80;">Ultra-Simple AI Management</h6>
+                <p class="mb-0 text-muted small">Just the facts, no complexity</p>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
             <div class="h-100 bg-dark rounded p-4 d-flex flex-column align-items-center justify-content-center text-center shadow-sm" style="transition:.3s;cursor:pointer;" onclick="window.location.href='/workwave/Controller/index.php'" onmouseover="this.style.background='#1a1a2e'" onmouseout="this.style.background=''">
                 <i class="fa fa-globe fa-3x text-primary mb-3"></i>
                 <h6 class="mb-2">Site public</h6>

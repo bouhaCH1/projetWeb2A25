@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/SmtpMailer.php';
 
 class User {
 
@@ -170,18 +171,19 @@ class User {
     }
 
     public function sendWelcomeEmail(string $toEmail, string $firstName): void {
-        // Only attempt if mail() is available and no output has been sent
-        if (!function_exists('mail')) return;
-        $subject  = '=?UTF-8?B?' . base64_encode('Bienvenue sur WorkWave !') . '?=';
-        $body     = "Bonjour $firstName,\n\nBienvenue sur WorkWave ! Votre compte a été créé avec succès.\n\nBonne recherche !\n\nL'équipe WorkWave";
-        $headers  = "From: noreply@workwave.com\r\n";
-        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-        @mail($toEmail, $subject, $body, $headers);
+        // Try SMTP mailer first, fallback to php mail()
+        $sent = SmtpMailer::sendWelcome($toEmail, $firstName);
+        if (!$sent && function_exists('mail')) {
+            $subject  = '=?UTF-8?B?' . base64_encode('Bienvenue sur WorkWave !') . '?=';
+            $body     = "Bonjour $firstName,\n\nBienvenue sur WorkWave ! Votre compte a été créé avec succès.\n\nBonne recherche !\n\nL'équipe WorkWave";
+            $headers  = "From: noreply@workwave.com\r\n";
+            $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+            @mail($toEmail, $subject, $body, $headers);
+        }
     }
 
     public function analyzeProfileWithAI(string $profileText): array {
         // HuggingFace Inference API – zero-shot classification
-        // We classify the profile into job-related categories to give career suggestions
         $apiUrl = 'https://api-inference.huggingface.co/models/facebook/bart-large-mnli';
         $candidateLabels = [
             'Informatique & Développement',
@@ -194,40 +196,51 @@ class User {
             'Santé & Médecine'
         ];
 
+        // Optional: set your HuggingFace API token here for priority access
+        // Get a free token at: https://huggingface.co/settings/tokens
+        $hfToken = defined('HUGGINGFACE_API_TOKEN') ? HUGGINGFACE_API_TOKEN : '';
+
         $payload = json_encode([
             'inputs'     => $profileText,
             'parameters' => ['candidate_labels' => $candidateLabels],
             'options'    => ['wait_for_model' => true]
         ]);
 
-        $ch = curl_init($apiUrl);
-        curl_setopt($ch, CURLOPT_POST,          true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT,        30);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if (!$response || $httpCode !== 200) {
-            return $this->simulateAIAnalysis($profileText, $candidateLabels);
+        $headers = ['Content-Type: application/json'];
+        if (!empty($hfToken)) {
+            $headers[] = 'Authorization: Bearer ' . $hfToken;
         }
 
-        $data = json_decode($response, true);
-        if (!is_array($data) || isset($data['error']) || empty($data['labels'])) {
-            return $this->simulateAIAnalysis($profileText, $candidateLabels);
+        $apiSuccess = false;
+        if (function_exists('curl_init')) {
+            $ch = curl_init($apiUrl);
+            curl_setopt($ch, CURLOPT_POST,          true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT,        20);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER,     $headers);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($response && $httpCode === 200) {
+                $data = json_decode($response, true);
+                if (is_array($data) && !isset($data['error']) && !empty($data['labels'])) {
+                    $results = [];
+                    foreach ($data['labels'] as $i => $label) {
+                        $results[] = [
+                            'label' => $label,
+                            'score' => round(($data['scores'][$i] ?? 0) * 100, 1)
+                        ];
+                    }
+                    return ['success' => true, 'results' => $results, 'source' => 'HuggingFace API (facebook/bart-large-mnli)'];
+                }
+            }
         }
 
-        $results = [];
-        foreach ($data['labels'] as $i => $label) {
-            $results[] = [
-                'label' => $label,
-                'score' => round(($data['scores'][$i] ?? 0) * 100, 1)
-            ];
-        }
-        return ['success' => true, 'results' => $results, 'source' => 'HuggingFace API'];
+        // Fallback: local keyword-based analysis (always works)
+        return $this->simulateAIAnalysis($profileText, $candidateLabels);
     }
 
     private function simulateAIAnalysis(string $text, array $labels): array {
@@ -452,27 +465,26 @@ class User {
         }
         
         // Generate reset token
-        $token = bin2hex(random_bytes(32));
+        $token  = bin2hex(random_bytes(32));
         $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
         
         // Store token in database
         $stmt = $this->pdo->prepare('INSERT INTO password_resets (email, token, expiry) VALUES (:email, :token, :expiry)');
         $stmt->execute([':email' => $email, ':token' => $token, ':expiry' => $expiry]);
         
-        // Send email
-        $resetLink = "http://localhost/workwave/Controller/index.php?action=reset_password&token=" . $token;
-        $subject = '=?UTF-8?B?' . base64_encode('Réinitialisation de mot de passe - WorkWave') . '?=';
-        $body = "Bonjour {$user['first_name']},\n\n";
-        $body .= "Vous avez demandé une réinitialisation de mot de passe. Cliquez sur le lien ci-dessous pour continuer:\n\n";
-        $body .= $resetLink . "\n\n";
-        $body .= "Ce lien expirera dans 1 heure.\n\n";
-        $body .= "Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.\n\n";
-        $body .= "L'équipe WorkWave";
+        // Build reset link
+        $resetLink = "http://localhost/WorkWave/Controller/index.php?action=reset_password&token=" . $token;
         
-        $headers = "From: noreply@workwave.com\r\n";
-        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        // Try SMTP mailer first
+        $sent = SmtpMailer::sendPasswordReset($email, $user['first_name'], $resetLink);
         
-        if (function_exists('mail')) {
+        // Fallback to php mail()
+        if (!$sent && function_exists('mail')) {
+            $subject = '=?UTF-8?B?' . base64_encode('Réinitialisation de mot de passe - WorkWave') . '?=';
+            $body    = "Bonjour {$user['first_name']},\n\n";
+            $body   .= "Vous avez demandé une réinitialisation de mot de passe. Cliquez sur le lien ci-dessous :\n\n";
+            $body   .= $resetLink . "\n\nCe lien expirera dans 1 heure.\n\nL'équipe WorkWave";
+            $headers = "From: noreply@workwave.com\r\nContent-Type: text/plain; charset=UTF-8\r\n";
             @mail($email, $subject, $body, $headers);
         }
         
@@ -562,25 +574,33 @@ class User {
 
     public function getValid2FACode(): ?string {
         try {
-            $pdo = $this->pdo;
-            
-            $stmt = $pdo->prepare('
-                SELECT sms_2fa_code 
-                FROM users 
-                WHERE id = :id 
-                AND sms_2fa_code_expires > NOW()
-                AND sms_2fa_code IS NOT NULL
-            ');
-            
+            $stmt = $this->pdo->prepare(
+                'SELECT sms_2fa_code 
+                 FROM users 
+                 WHERE id = :id 
+                 AND sms_2fa_code_expires > NOW()
+                 AND sms_2fa_code IS NOT NULL'
+            );
             $stmt->execute([':id' => $this->id]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            
             return $result['sms_2fa_code'] ?? null;
-            
         } catch (Exception $e) {
             return null;
         }
     }
+
+    /** Delete the 2FA code after successful use (one-time use) */
+    public function clear2FACode(): void {
+        try {
+            $stmt = $this->pdo->prepare(
+                'UPDATE users SET sms_2fa_code = NULL, sms_2fa_code_expires = NULL WHERE id = :id'
+            );
+            $stmt->execute([':id' => $this->id]);
+        } catch (Exception $e) {
+            // silent
+        }
+    }
+
 
     private function emailExists(): bool {
         $stmt = $this->pdo->prepare('SELECT id FROM users WHERE email=:email LIMIT 1');

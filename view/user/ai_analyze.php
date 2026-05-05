@@ -162,9 +162,16 @@ $topData   = $topResult ? ($domainData[$topResult['label']] ?? null) : null;
 
         <?php if ($aiResult && !empty($aiResult['results'])): ?>
 
+        <?php
+        $isRealAPI = isset($aiResult['source']) && str_contains($aiResult['source'], 'HuggingFace API');
+        $badgeColor = $isRealAPI ? '#00ffcc' : '#ffd700';
+        $badgeBg    = $isRealAPI ? 'rgba(0,255,204,0.08)' : 'rgba(255,215,0,0.08)';
+        $badgeBorder= $isRealAPI ? 'rgba(0,255,204,0.2)'  : 'rgba(255,215,0,0.25)';
+        $sourceIcon = $isRealAPI ? '⚡' : '🧮';
+        ?>
         <!-- Source badge -->
-        <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(0,255,204,0.08);border:1px solid rgba(0,255,204,0.2);font-size:0.72rem;color:#00ffcc;margin-bottom:16px;">
-            <span>⚡</span> Source : <?= htmlspecialchars($aiResult['source'] ?? 'IA') ?>
+        <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:<?= $badgeBg ?>;border:1px solid <?= $badgeBorder ?>;font-size:0.72rem;color:<?= $badgeColor ?>;margin-bottom:16px;">
+            <span><?= $sourceIcon ?></span> Source : <?= htmlspecialchars($aiResult['source'] ?? 'IA') ?>
         </div>
 
         <!-- Top domain highlight -->
