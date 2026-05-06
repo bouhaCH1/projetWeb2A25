@@ -357,12 +357,16 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 const t = text.toLowerCase();
                 
                 // Greetings
-                if(t.includes('salut') || t.includes('bonjour') || t.includes('hello') || t.includes('hi') || t.includes('aslama') || t.includes('labes')) {
-                    reply = "Bonjour / Hello / Aslama! 👋 \nJe parle Français, English, et Tounsi. Chnowa t7eb ta3ref 3al site?";
+                if(t.includes('salut') || t.includes('bonjour') || t.includes('hello') || t.includes('aslama') || t.includes('labes') || t.includes('3aslama')) {
+                    reply = "Bonjour / Hello / Aslama! 👋 \nEna l'assistant mte3ek. Chnowa n3awnek?";
+                }
+                // AI Explanation (Fix for the user's question)
+                else if(t.includes('intelligence') || t.includes('artificielle') || t.includes('ia') || t.includes('ai')) {
+                    reply = "L'Intelligence Artificielle houni t3awnek bech tefhem el data mte3ek. \n- ChatBot: Nejwbek 3ala ay haja.\n- Prédiction: Na3tik el naje7 mte3 el event.\n- OCR: Na9ra el wra9 mte3ek automatiquement.";
                 }
                 // Explanations about the site
-                else if(t.includes('site') || t.includes('kifech') || t.includes('how') || t.includes('expliquer')) {
-                    reply = "Ce site est un Dashboard Pro pour gérer vos événements. \n- 📊 Graphiques: Statistiques mensuelles.\n- 🗺️ Carte: Localisation des événements.\n- 🔌 APIs: Stripe, Mail, et Calendar.\n- 🤖 IA: Prédiction et Chat interactif.";
+                else if(t.includes('site') || t.includes('kifech') || t.includes('how') || t.includes('expliquer') || t.includes('chnia') || t.includes('chnia heya')) {
+                    reply = "El site hatha fih kol chay n7ebou 3lih: \n1. 📊 Stats: Les chiffres mte3ek.\n2. 🗺️ Map: Win les events.\n3. 🔌 APIs: Paiement Stripe & Calendar.\n4. 📅 Planning: El wa9t mte3ek.";
                 }
                 // Events (Multi-lang)
                 else if(t.includes('évenement') || t.includes('event') || t.includes('evenement')) {
