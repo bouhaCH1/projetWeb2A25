@@ -412,6 +412,12 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 else if(t.includes('mail') || t.includes('email') || t.includes('envoyer')) {
                     reply = "Système d'Emails Automatiques (SendGrid) prêt bech yab3ath les confirmations l'ay client automatiquement. ✉️";
                 }
+                else if(t.includes('paiement') || t.includes('argent') || t.includes('stripe') || t.includes('rib') || t.includes('carte') || t.includes('methode')) {
+                    reply = "Le module de Paiement Stripe est configuré. 💳 \nVous pouvez gérer le RIB, l'email et les montants dans 'Méthode de Paiement'.";
+                }
+                else if(t.includes('calendar') || t.includes('google') || t.includes('sync') || t.includes('calendrier')) {
+                    reply = "La synchronisation Google Calendar est active. 📅 \nTous vos événements sont planifiés automatiquement sur votre calendrier.";
+                }
                 // 7. Global Site Search (Last resort before default)
                 else {
                     let found = false;
@@ -436,8 +442,6 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         if(t.includes('event')) reply = "Vous avez " + events.length + " événements. Cliquez sur 'Nouveau Event' à gauche pour en ajouter un.";
                         else if(t.includes('ressource')) reply = "Il y a " + resources.length + " ressources. Gérez-les via le menu 'Nouvelle Ressource'.";
                         else if(t.includes('dashboard') || t.includes('tableau')) reply = "C'est votre tableau de bord principal avec KPIs, Cartes et Graphiques.";
-                        else found = false;
-                        if(reply !== "") found = true;
                     }
                 }
                 
