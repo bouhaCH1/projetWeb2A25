@@ -29,9 +29,12 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <link href="../darkpan/css/bootstrap.min.css" rel="stylesheet">
     <link href="../darkpan/css/style.css" rel="stylesheet">
 
-    <!-- Leaflet & FullCalendar -->
+    <!-- Leaflet, FullCalendar & DataTables -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
 
@@ -44,6 +47,16 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
         .fc-daygrid-day-number { color: #fff !important; text-decoration: none; }
         .fc-col-header-cell-cushion { color: #00ffcc !important; text-decoration: none; }
         .fc-event { cursor: pointer; }
+        /* Floating Chat Button */
+        #chat-btn { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #eb1616; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000; transition: transform 0.3s; cursor: pointer; border: none; }
+        #chat-btn:hover { transform: scale(1.1); background: #00ffcc; color: #191c24; }
+        
+        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate { color: #888 !important; }
+        .dataTables_wrapper .dataTables_filter input { background: #191c24; border: 1px solid #333; color: #fff; border-radius: 5px; }
+        .dataTables_wrapper .dataTables_length select { background: #191c24; border: 1px solid #333; color: #fff; border-radius: 5px; }
+        .dt-buttons .btn { background: #eb1616 !important; border: none !important; color: #fff !important; margin-right: 5px; font-size: 12px; }
+        .page-item.active .page-link { background-color: #eb1616 !important; border-color: #eb1616 !important; }
+        .page-link { background-color: #191c24 !important; border: 1px solid #333 !important; color: #888 !important; }
         .activity-item { border-left: 2px solid #eb1616; padding-left: 15px; margin-bottom: 20px; position: relative; }
         .activity-item::before { content: ""; position: absolute; width: 10px; height: 10px; background: #eb1616; border-radius: 50%; left: -6px; top: 5px; }
         .empty-chart-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font-style: italic; }
@@ -139,6 +152,20 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                 <a href="index.php?action=api_config&service=Google Calendar" class="btn btn-outline-warning mb-2"><i class="fa fa-calendar-alt me-2"></i>G-Calendar : Sync</a>
                             </div>
                             <hr>
+                            <h6 class="mb-3 text-primary"><i class="fa fa-cloud-sun me-2"></i>Météo Locale</h6>
+                            <div class="bg-dark p-3 rounded mb-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div><h4 class="mb-0 text-white">24°C</h4><p class="small mb-0">Tunis, Tunisie</p></div>
+                                    <i class="fa fa-sun fa-3x text-warning"></i>
+                                </div>
+                            </div>
+                            <hr>
+                            <h6 class="mb-3 text-info"><i class="fa fa-brain me-2"></i>Intelligence Artificielle</h6>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-sm btn-outline-info" onclick="simulateApi('OCR')"><i class="fa fa-eye me-2"></i>OCR : Lecture Doc</button>
+                                <button class="btn btn-sm btn-outline-light" onclick="simulateApi('Prediction')"><i class="fa fa-magic me-2"></i>H.Face : Prédiction</button>
+                            </div>
+                            <hr>
                             <h6 class="mb-3">Tendance Mensuelle</h6>
                             <div class="chart-container" style="height: 150px;">
                                 <canvas id="line-chart"></canvas>
@@ -190,11 +217,10 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     </nav>
                     <div class="tab-content" id="nav-tabContent">
                         <div class="tab-pane fade show active" id="nav-events" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
+                            <div class="table-responsive p-3">
+                                <table id="eventsTable" class="table table-hover w-100">
                                     <thead><tr><th>ID</th><th>Titre</th><th>Date</th><th>Lieu</th><th>Statut</th><th>Actions</th></tr></thead>
                                     <tbody>
-                                        <?php if(empty($events)): ?><tr><td colspan="6" class="text-center p-4">La liste est vide.</td></tr><?php endif; ?>
                                         <?php foreach($events as $e): $st=getStatus($e['date']); ?>
                                         <tr>
                                             <td><?= $e['id'] ?></td>
@@ -213,11 +239,10 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-resources" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
+                            <div class="table-responsive p-3">
+                                <table id="resourcesTable" class="table table-hover w-100">
                                     <thead><tr><th>ID</th><th>Nom</th><th>Type</th><th>Quantité</th><th>Actions</th></tr></thead>
                                     <tbody>
-                                        <?php if(empty($resources)): ?><tr><td colspan="5" class="text-center p-4">La liste est vide.</td></tr><?php endif; ?>
                                         <?php foreach($resources as $r): ?>
                                         <tr>
                                             <td><?= $r['id'] ?></td>
@@ -246,6 +271,17 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../darkpan/js/main.js"></script>
 
+    <!-- DataTables & Buttons -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
     <script>
         // API Simulation Function
         function simulateApi(service) {
@@ -261,9 +297,18 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
             } else if(service === 'Google Calendar') {
                 msg = "Synchronisation avec Google Calendar en cours... \nStatut: 4 événements importés.";
                 color = "#4285f4";
+            } else if(service === 'OCR') {
+                msg = "Démarrage du moteur OCR... \nAnalyse du document en cours... \nRésultat: Texte extrait avec 98% de précision.";
+                color = "#17a2b8";
+            } else if(service === 'Prediction') {
+                msg = "Modèle Hugging Face (Bert-base) chargé. \nAnalyse prédictive: Forte probabilité de succès pour l'événement (89%).";
+                color = "#ffc107";
+            } else if(service === 'ChatBot') {
+                msg = "Assistant IA (GPT-4o) connecté. \nComment puis-je vous aider à gérer vos événements aujourd'hui ?";
+                color = "#00ffcc";
             }
 
-            alert("🌐 [API Service] " + service + "\n" + "----------------------------------\n" + msg);
+            alert("🌐 [Advanced AI Service] " + service + "\n" + "----------------------------------\n" + msg);
         }
 
         // Leaflet Map Initialization
@@ -296,6 +341,18 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 ]
             });
             calendar.render();
+        });
+
+        $(document).ready(function() {
+            const tableConfig = {
+                language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json' },
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                pageLength: 5,
+                responsive: true
+            };
+            $('#eventsTable').DataTable(tableConfig);
+            $('#resourcesTable').DataTable(tableConfig);
         });
 
         Chart.defaults.color = "#888";
