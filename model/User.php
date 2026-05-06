@@ -211,7 +211,7 @@ class User {
             $headers[] = 'Authorization: Bearer ' . $hfToken;
         }
 
-        $apiSuccess = false;
+        $apiResults = null;
         if (function_exists('curl_init')) {
             $ch = curl_init($apiUrl);
             curl_setopt($ch, CURLOPT_POST,          true);
@@ -234,13 +234,21 @@ class User {
                             'score' => round(($data['scores'][$i] ?? 0) * 100, 1)
                         ];
                     }
-                    return ['success' => true, 'results' => $results, 'source' => 'HuggingFace API (facebook/bart-large-mnli)'];
+                    $apiResults = $results;
                 }
             }
         }
 
-        // Fallback: local keyword-based analysis (always works)
-        return $this->simulateAIAnalysis($profileText, $candidateLabels);
+        // Toujours générer le feedback et l'amélioration de texte localement
+        $analysis = $this->simulateAIAnalysis($profileText, $candidateLabels);
+        
+        if ($apiResults !== null) {
+            // Utiliser les vrais scores de l'API mais garder les conseils locaux
+            $analysis['results'] = $apiResults;
+            $analysis['source'] = 'HuggingFace API (facebook/bart-large-mnli)';
+        }
+
+        return $analysis;
     }
 
     private function simulateAIAnalysis(string $text, array $labels): array {
