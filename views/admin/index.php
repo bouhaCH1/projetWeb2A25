@@ -390,9 +390,24 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 else if(t.includes('aslama') || t.includes('3aslama') || t.includes('labes') || t.includes('bonjour') || t.includes('salut') || t.includes('hello')) {
                     reply = "Aslama ya m3alem! 👋 Ena l'IA mte3ek. Teselny njewbek 3al site kollo!";
                 }
-                // 6. Site Explanation
-                else if(t.includes('site') || t.includes('chnia') || t.includes('intelligence') || t.includes('ia') || t.includes('ai') || t.includes('expliquer')) {
-                    reply = "Ena assistant IA. Najem na9ra el data (events, stock) w na3tik s7i7. Jarreb eselny 'wakteh el event jey?'";
+                // 6. Site Explanation / Métier (Simple & Avancé)
+                else if(t.includes('metier') || t.includes('métier') || t.includes('fika') || t.includes('service') || t.includes('kifech')) {
+                    reply = "Le site gère tout le 'Métier': \n- Simple: Tri, Recherche, Export (PDF/Excel), et Stats.\n- Avancé: Météo, IA Prédiction, OCR, et Chat interactif.";
+                }
+                else if(t.includes('ocr') || t.includes('lecture') || t.includes('document')) {
+                    reply = "L'OCR na9ra biha el wra9 (PDF/Images) bech n'extrayi el texte automatiquement. Démarré avec 98% de précision! 📄";
+                }
+                else if(t.includes('prediction') || t.includes('najeh') || t.includes('face')) {
+                    reply = "El IA (Hugging Face) ta3tik el 'Prédiction' mte3 el naje7 mte3 el event 7asb el data mte3ek. 🔮";
+                }
+                else if(t.includes('export') || t.includes('pdf') || t.includes('excel') || t.includes('imprimer')) {
+                    reply = "Tnajem t'exporti kol chay (PDF, Excel, CSV) mel boutons eli fou9 el tableau mte3 el events/ressources. 📥";
+                }
+                else if(t.includes('recherche') || t.includes('tri') || t.includes('pagination')) {
+                    reply = "El recherche wel tri automatiques houni (DataTables). Just ekteb esm el event fi 'Search' wela cliqui 3al colonnes! 🔍";
+                }
+                else if(t.includes('mail') || t.includes('email') || t.includes('envoyer')) {
+                    reply = "Système d'Emails Automatiques (SendGrid) prêt bech yab3ath les confirmations l'ay client automatiquement. ✉️";
                 }
                 // 7. Appreciation
                 else if(t.includes('m3alem') || t.includes('merci') || t.includes('bravo') || t.includes('ya3tik')) {
