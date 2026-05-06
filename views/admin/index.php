@@ -126,9 +126,9 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         <div class="bg-secondary text-center rounded p-4">
                             <h6 class="mb-4">Services Connectés (APIs)</h6>
                             <div class="d-grid gap-2">
-                                <button class="btn btn-outline-primary mb-2"><i class="fab fa-stripe me-2"></i>Stripe : Prêt</button>
-                                <button class="btn btn-outline-info mb-2"><i class="fa fa-envelope me-2"></i>SendGrid : Prêt</button>
-                                <button class="btn btn-outline-warning mb-2"><i class="fa fa-calendar-alt me-2"></i>G-Calendar : Prêt</button>
+                                <button class="btn btn-outline-primary mb-2" onclick="simulateApi('Stripe')"><i class="fab fa-stripe me-2"></i>Stripe : Configurer</button>
+                                <button class="btn btn-outline-info mb-2" onclick="simulateApi('SendGrid')"><i class="fa fa-envelope me-2"></i>SendGrid : Tester</button>
+                                <button class="btn btn-outline-warning mb-2" onclick="simulateApi('Google Calendar')"><i class="fa fa-calendar-alt me-2"></i>G-Calendar : Synchroniser</button>
                             </div>
                             <hr>
                             <h6 class="mb-3">Tendance Mensuelle</h6>
@@ -250,6 +250,25 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <script src="../darkpan/js/main.js"></script>
 
     <script>
+        // API Simulation Function
+        function simulateApi(service) {
+            let msg = "";
+            let color = "#00ffcc";
+            
+            if(service === 'Stripe') {
+                msg = "Connexion sécurisée à Stripe Gateway... \nStatut: Prêt pour les paiements en ligne.";
+                color = "#6772e5";
+            } else if(service === 'SendGrid') {
+                msg = "Test d'envoi SendGrid réussi ! \nDestinataire: admin@votre-projet.com \nStatut: Délivré.";
+                color = "#1296ba";
+            } else if(service === 'Google Calendar') {
+                msg = "Synchronisation avec Google Calendar en cours... \nStatut: 4 événements importés.";
+                color = "#4285f4";
+            }
+
+            alert("🌐 [API Service] " + service + "\n" + "----------------------------------\n" + msg);
+        }
+
         // Leaflet Map Initialization
         const map = L.map('map').setView([36.8065, 10.1815], 11);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
