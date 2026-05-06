@@ -12,14 +12,28 @@ class ApiService {
     }
 
     // --- SENDGRID (EMAIL) ---
-    public function sendEmailConfirmation($to, $subject, $content) {
-        // Simulation d'envoi via SendGrid
-        // $email = new \SendGrid\Mail\Mail();
-        // $email->setFrom("admin@votre-projet.com", "Admin Project");
-        // $email->addTo($to);
-        // $email->addContent("text/html", $content);
-        // $sendgrid = new \SendGrid('SG.YOUR_API_KEY');
-        return true;
+    public function sendRealEmail($apiKey, $from, $to, $subject, $message) {
+        $url = 'https://api.sendgrid.com/v3/mail/send';
+        $data = [
+            'personalizations' => [['to' => [['email' => $to]]]],
+            'from' => ['email' => $from, 'name' => 'Admin Event Pro'],
+            'subject' => $subject,
+            'content' => [['type' => 'text/html', 'value' => $message]]
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer ' . $apiKey,
+            'Content-Type: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return ($status == 202);
     }
 
     // --- GOOGLE CALENDAR ---

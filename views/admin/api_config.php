@@ -123,11 +123,57 @@
                                 </script>
 
                             <?php elseif($_GET['service'] == 'SendGrid'): ?>
-                                <div class="alert alert-info">
-                                    <h6><i class="fa fa-envelope me-2"></i>Emails Automatiques</h6>
-                                    <p class="small">Notifications système actives.</p>
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="text-white small">SendGrid API Key</label>
+                                        <input type="password" id="sg-key" class="form-control" placeholder="SG.xxxxx...">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Email Expéditeur (Vérifié)</label>
+                                        <input type="email" id="sg-from" class="form-control" placeholder="admin@domaine.com">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="text-white small">Email Destinataire</label>
+                                        <input type="email" id="sg-to" class="form-control" placeholder="client@mail.com">
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                        <label class="text-white small">Message Test</label>
+                                        <textarea id="sg-msg" class="form-control">Ceci est un test de notification réelle depuis Event Pro AI.</textarea>
+                                    </div>
                                 </div>
-                                <button class="btn btn-info w-100 py-3">Tester l'envoi global</button>
+                                <button class="btn btn-info w-100 py-3" id="btn-email" onclick="sendTestEmail()">Tester l'envoi réel</button>
+                                <div id="email-success" class="alert alert-success mt-3 d-none">Email envoyé avec succès !</div>
+                                <div id="email-error" class="alert alert-danger mt-3 d-none">Erreur lors de l'envoi (vérifiez votre clé).</div>
+
+                                <script>
+                                function sendTestEmail() {
+                                    const b = document.getElementById('btn-email');
+                                    const s = document.getElementById('email-success');
+                                    const e = document.getElementById('email-error');
+                                    
+                                    s.classList.add('d-none');
+                                    e.classList.add('d-none');
+                                    b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Envoi...';
+
+                                    const fd = new FormData();
+                                    fd.append('key', document.getElementById('sg-key').value);
+                                    fd.append('from', document.getElementById('sg-from').value);
+                                    fd.append('to', document.getElementById('sg-to').value);
+                                    fd.append('subject', 'Test Notification Réelle - Event Pro');
+                                    fd.append('message', document.getElementById('sg-msg').value);
+
+                                    fetch('index.php?action=send_email', {
+                                        method: 'POST',
+                                        body: fd
+                                    })
+                                    .then(r => r.text())
+                                    .then(data => {
+                                        b.disabled = false; b.innerHTML = "Tester l'envoi réel";
+                                        if(data === 'success') s.classList.remove('d-none');
+                                        else e.classList.remove('d-none');
+                                    });
+                                }
+                                </script>
 
                             <?php elseif($_GET['service'] == 'Google Calendar'): ?>
                                 <div class="alert alert-warning mb-4">

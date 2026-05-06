@@ -31,6 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $payment->create($_POST);
         echo "success"; exit;
     }
+    if ($action == 'send_email') {
+        require_once __DIR__ . '/../models/ApiService.php';
+        $api = new ApiService();
+        $res = $api->sendRealEmail($_POST['key'], $_POST['from'], $_POST['to'], $_POST['subject'], $_POST['message']);
+        echo $res ? "success" : "error"; exit;
+    }
 }
 
 if ($action == 'delete_event' && isset($_GET['id'])) {
