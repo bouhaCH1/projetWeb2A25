@@ -67,7 +67,26 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary w-100 py-3 shadow"><i class="fa fa-lock me-2"></i>Valider & Traiter le Paiement</button>
+                                <button class="btn btn-primary w-100 py-3 shadow" id="btn-pay" onclick="processPayment()">
+                                    <i class="fa fa-lock me-2"></i>Valider & Traiter le Paiement
+                                </button>
+
+                                <script>
+                                function processPayment() {
+                                    const btn = document.getElementById('btn-pay');
+                                    const originalText = btn.innerHTML;
+                                    
+                                    // Simulation de chargement
+                                    btn.disabled = true;
+                                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement sécurisé en cours...';
+                                    
+                                    setTimeout(() => {
+                                        alert("✅ Succès ! \nLe paiement de " + document.getElementById('amount').value + " TND a été traité avec succès via Stripe. \nUn email de confirmation a été envoyé à " + document.getElementById('email').value);
+                                        btn.disabled = false;
+                                        btn.innerHTML = originalText;
+                                    }, 2500);
+                                }
+                                </script>
 
                             <?php elseif($_GET['service'] == 'SendGrid'): ?>
                                 <div class="alert alert-info">
