@@ -99,11 +99,26 @@
                                     const b = document.getElementById('btn-pay');
                                     b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement...';
                                     
-                                    setTimeout(() => { 
-                                        b.disabled = false; 
-                                        b.innerHTML = 'Valider le Paiement'; 
-                                        document.getElementById('success-msg').classList.remove('d-none');
-                                    }, 2000);
+                                    // AJAX Save to Database
+                                    const formData = new FormData();
+                                    formData.append('rib', rib);
+                                    formData.append('email', email);
+                                    formData.append('amount', amount);
+
+                                    fetch('index.php?action=save_payment', {
+                                        method: 'POST',
+                                        body: formData
+                                    })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        if(data === 'success') {
+                                            setTimeout(() => { 
+                                                b.disabled = false; 
+                                                b.innerHTML = 'Valider le Paiement'; 
+                                                document.getElementById('success-msg').classList.remove('d-none');
+                                            }, 1500);
+                                        }
+                                    });
                                 }
                                 </script>
 
