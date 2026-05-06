@@ -395,7 +395,11 @@ Statut: Payé
         function sendMessage() {
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
-            if(!text) return;
+            if(!text) {
+                input.style.borderColor = '#eb1616';
+                setTimeout(() => input.style.borderColor = '#444', 1000);
+                return;
+            }
 
             addMessage(text, 'user');
             input.value = '';

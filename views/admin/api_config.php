@@ -61,17 +61,37 @@
                                     </div>
                                 </div>
                                 <button class="btn btn-primary w-100 py-3 shadow" id="btn-pay" onclick="processPayment()">Valider le Paiement</button>
+                                <div id="success-msg" class="alert alert-success mt-4 d-none">
+                                    <i class="fa fa-check-circle me-2"></i>Paiement validé avec succès !
+                                </div>
+
                                 <script>
                                 function processPayment() {
+                                    // Reset errors
+                                    document.querySelectorAll('.error-feedback').forEach(e => e.style.display='none');
+                                    document.getElementById('success-msg').classList.add('d-none');
+
                                     let v = true;
-                                    if(document.getElementById('rib').value.length < 10){ document.getElementById('err-rib').style.display='block'; v=false; }
-                                    if(!document.getElementById('email').value.includes('@')){ document.getElementById('err-email').style.display='block'; v=false; }
-                                    if(document.getElementById('card').value.replace(/\s/g,'').length != 16){ document.getElementById('err-card').style.display='block'; v=false; }
-                                    if(parseFloat(document.getElementById('amount').value) <= 0){ document.getElementById('err-amount').style.display='block'; v=false; }
+                                    const rib = document.getElementById('rib').value.trim();
+                                    const email = document.getElementById('email').value.trim();
+                                    const card = document.getElementById('card').value.replace(/\s/g,'');
+                                    const amount = parseFloat(document.getElementById('amount').value);
+
+                                    if(rib.length < 10){ document.getElementById('err-rib').style.display='block'; v=false; }
+                                    if(!email.includes('@') || email.length < 5){ document.getElementById('err-email').style.display='block'; v=false; }
+                                    if(card.length != 16 || isNaN(card)){ document.getElementById('err-card').style.display='block'; v=false; }
+                                    if(isNaN(amount) || amount <= 0){ document.getElementById('err-amount').style.display='block'; v=false; }
+                                    
                                     if(!v) return;
+                                    
                                     const b = document.getElementById('btn-pay');
-                                    b.disabled = true; b.innerHTML = 'Traitement...';
-                                    setTimeout(() => { alert('✅ Paiement validé !'); b.disabled = false; b.innerHTML = 'Valider le Paiement'; }, 2000);
+                                    b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement...';
+                                    
+                                    setTimeout(() => { 
+                                        b.disabled = false; 
+                                        b.innerHTML = 'Valider le Paiement'; 
+                                        document.getElementById('success-msg').classList.remove('d-none');
+                                    }, 2000);
                                 }
                                 </script>
 
@@ -113,7 +133,7 @@
                                             <?php endforeach; ?>
                                         ],
                                         eventClick: function(info) {
-                                            alert('Événement: ' + info.event.title + '\nLieu: ' + info.event.extendedProps.description);
+                                            // Silently ignore or show in a div, but NO ALERT
                                         }
                                     });
                                     calendar.render();
