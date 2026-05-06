@@ -10,6 +10,17 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20) DEFAULT NULL,
     role ENUM('job_seeker', 'employer', 'admin') NOT NULL DEFAULT 'job_seeker',
     profile_pic VARCHAR(255) DEFAULT NULL,
+    status ENUM('active', 'suspended') NOT NULL DEFAULT 'active',
+    two_factor_enabled INT NOT NULL DEFAULT 0,
+    sms_2fa_code VARCHAR(10) DEFAULT NULL,
+    sms_2fa_code_expires DATETIME DEFAULT NULL,
+    is_verified INT NOT NULL DEFAULT 0,
+    linkedin_headline TEXT,
+    linkedin_experience TEXT,
+    linkedin_skills TEXT,
+    linkedin_location VARCHAR(255),
+    linkedin_education TEXT,
+    linkedin_imported_at TIMESTAMP NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -57,12 +68,6 @@ CREATE TABLE IF NOT EXISTS password_resets (
     INDEX idx_token (token),
     INDEX idx_expiry (expiry)
 );
-
--- Update users table to include missing columns for advanced features
-ALTER TABLE users 
-ADD COLUMN IF NOT EXISTS status ENUM('active', 'suspended') NOT NULL DEFAULT 'active',
-ADD COLUMN IF NOT EXISTS two_factor_enabled INT NOT NULL DEFAULT 0,
-ADD COLUMN IF NOT EXISTS is_verified INT NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS login_history (
     id INT AUTO_INCREMENT PRIMARY KEY,
