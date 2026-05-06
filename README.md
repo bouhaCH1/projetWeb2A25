@@ -45,7 +45,6 @@ A comprehensive web platform connecting job seekers with employers in Tunisia. B
 ### APIs & Integrations
 - **HuggingFace**: AI profile analysis
 - **OCR.space**: Document verification
-- **OpenWeatherMap**: Weather widget
 - **PHP Mail**: Email notifications
 
 ## 📁 Project Structure

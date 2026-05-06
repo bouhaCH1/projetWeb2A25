@@ -120,16 +120,11 @@ include __DIR__ . '/../layout/pl_dashboard_header.php';
                 <div>📝 <?= $stats['applications_count'] ?? 0 ?></div>
                 <div>💼 <?= $stats['saved_jobs'] ?? 0 ?></div>
                 <div>👁 <?= $stats['searches'] ?? 0 ?></div>
-                </div>
-                <div style="padding:8px;border-radius:7px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.1);">
-                    <div style="font-size:0.65rem;color:#555;margin-bottom:3px;">VENT</div>
-                    <div id="weatherWind" style="font-size:0.88rem;font-weight:700;color:#a78bfa;">-- km/h</div>
-                </div>
             </div>
         </div>
 
         <div style="text-align:center;font-size:0.68rem;color:#444;margin-top:8px;">
-            Mis à jour : <span id="weatherUpdated">--</span>
+            Mis à jour : <span id="analyticsUpdated">--</span>
         </div>
     </div>
 
