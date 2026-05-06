@@ -50,6 +50,8 @@ if ($action == 'admin') {
 } elseif ($action == 'form_resource') {
     $resourceData = isset($_GET['id']) ? $resourceController->getResource($_GET['id']) : null;
     require_once $viewsPath . 'admin/form_resource.php';
+} elseif ($action == 'api_config') {
+    require_once $viewsPath . 'admin/api_config.php';
 } else {
     $events    = $eventController->getEvents();
     $resources = $resourceController->getResources();
