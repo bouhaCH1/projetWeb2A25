@@ -28,14 +28,22 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../darkpan/css/bootstrap.min.css" rel="stylesheet">
     <link href="../darkpan/css/style.css" rel="stylesheet">
-    
-    <!-- Leaflet (Free Map Alternative) -->
+
+    <!-- Leaflet & FullCalendar -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
 
     <style>
         .chart-container { position: relative; height: 250px; width: 100%; }
         .map-container { height: 400px; width: 100%; border-radius: 10px; z-index: 1; }
+        #calendar { background: #191c24; padding: 10px; border-radius: 10px; border: 1px solid #333; font-size: 0.85em; }
+        .fc-header-toolbar { margin-bottom: 1em !important; }
+        .fc-toolbar-title { font-size: 1.2em !important; color: #fff; }
+        .fc-daygrid-day-number { color: #fff !important; text-decoration: none; }
+        .fc-col-header-cell-cushion { color: #00ffcc !important; text-decoration: none; }
+        .fc-event { cursor: pointer; }
         .activity-item { border-left: 2px solid #eb1616; padding-left: 15px; margin-bottom: 20px; position: relative; }
         .activity-item::before { content: ""; position: absolute; width: 10px; height: 10px; background: #eb1616; border-radius: 50%; left: -6px; top: 5px; }
         .empty-chart-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font-style: italic; }
@@ -163,19 +171,8 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     </div>
                     <div class="col-sm-12 col-md-12 col-xl-4">
                         <div class="bg-secondary p-4 h-100 rounded">
-                            <h6 class="mb-4">Dernières Actions</h6>
-                            <?php if(empty($events)): ?>
-                                <p class="text-muted italic">Aucune activité enregistrée.</p>
-                            <?php else: ?>
-                                <div class="activity-item">
-                                    <div class="d-flex justify-content-between"><strong>Système Corrigé</strong> <small class="text-muted">À l'instant</small></div>
-                                    <p class="text-muted small mb-0">Réparation de la carte et du layout effectuée.</p>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="d-flex justify-content-between"><strong>Dashboard Expert</strong> <small class="text-muted">En cours</small></div>
-                                    <p class="text-muted small mb-0">Visualisation 4-points activée.</p>
-                                </div>
-                            <?php endif; ?>
+                            <h6 class="mb-4">Planning des Événements</h6>
+                            <div id="calendar"></div>
                         </div>
                     </div>
                 </div>
@@ -280,6 +277,26 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
             L.marker([36.8 + (Math.random() * 0.1), 10.1 + (Math.random() * 0.1)]).addTo(map)
                 .bindPopup("<b><?= htmlspecialchars($e['title']) ?></b><br><?= htmlspecialchars($e['location']) ?>");
         <?php endforeach; ?>
+
+        // FullCalendar Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 350,
+                headerToolbar: { left: 'prev,next', center: 'title', right: '' },
+                events: [
+                    <?php foreach($events as $e): ?>
+                    {
+                        title: '<?= addslashes($e['title']) ?>',
+                        start: '<?= date('Y-m-d\TH:i:s', strtotime($e['date'])) ?>',
+                        color: '#eb1616'
+                    },
+                    <?php endforeach; ?>
+                ]
+            });
+            calendar.render();
+        });
 
         Chart.defaults.color = "#888";
         Chart.defaults.borderColor = "rgba(255,255,255,0.05)";
