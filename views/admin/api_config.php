@@ -41,7 +41,7 @@
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="text-white small">RIB / IBAN</label>
-                                        <input type="text" id="rib" class="form-control" placeholder="TN59 ...">
+                                        <input type="text" id="rib" class="form-control" placeholder="20 chiffres" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                         <div id="err-rib" class="error-feedback">Veuillez saisir votre RIB (min. 10 car.)</div>
                                     </div>
                                     <div class="col-md-12 mb-3">
@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="text-white small">N° Carte Bancaire</label>
-                                        <input type="text" id="card" class="form-control" placeholder="16 chiffres">
+                                        <input type="text" id="card" class="form-control" placeholder="16 chiffres" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                         <div id="err-card" class="error-feedback">16 chiffres requis</div>
                                     </div>
                                     <div class="col-md-12 mb-4">
@@ -77,9 +77,13 @@
                                     const card = document.getElementById('card').value.replace(/\s/g,'');
                                     const amount = parseFloat(document.getElementById('amount').value);
 
-                                    // Strong Regex for RIB (IBAN Style: starts with letters, then numbers)
-                                    const ribRegex = /^[A-Z]{2}[0-9A-Z\s]{10,30}$/i;
-                                    if(!ribRegex.test(rib)){ document.getElementById('err-rib').style.display='block'; v=false; }
+                                    // Strict numeric RIB (20 digits for Tunisia)
+                                    const ribRegex = /^\d{20}$/;
+                                    if(!ribRegex.test(rib)){ 
+                                        document.getElementById('err-rib').innerText = "Le RIB doit contenir exactement 20 chiffres.";
+                                        document.getElementById('err-rib').style.display='block'; 
+                                        v=false; 
+                                    }
                                     
                                     // Strict Email Regex
                                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
