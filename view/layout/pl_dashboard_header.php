@@ -371,6 +371,9 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
         <a href="/workwave/Controller/index.php?action=verify_identity" class="<?= $action === 'verify_identity' ? 'active' : '' ?>" style="<?= (int)($_SESSION['user_verified'] ?? 0) === 1 ? 'color:#00ffcc;' : 'color:#ffd700;' ?>">
             <i class="fa fa-id-card"></i> <?= (int)($_SESSION['user_verified'] ?? 0) === 1 ? '&#10003; Vérifié' : 'Vérifier CIN' ?>
         </a>
+        <a href="/workwave/Controller/index.php?action=ai_interview_coach" class="<?= $action === 'ai_interview_coach' ? 'active' : '' ?>" style="<?= $action !== 'ai_interview_coach' ? 'color:#a855f7;' : '' ?>">
+            <i class="fa fa-microphone"></i> Interview Coach
+        </a>
 
         <div class="ww-sb-section" style="margin-top:10px;">Compte</div>
         <a href="/workwave/Controller/index.php?action=security" class="<?= $action === 'security' ? 'active' : '' ?>">
