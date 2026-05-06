@@ -8,7 +8,11 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-define('BREVO_API_KEY',   'VOTRE_CLE_API_BREVO_ICI');
+if (file_exists(__DIR__ . '/api_keys.php')) {
+    require_once __DIR__ . '/api_keys.php';
+} else {
+    define('BREVO_API_KEY',   'VOTRE_CLE_API_BREVO_ICI');
+}
 define('BREVO_FROM_EMAIL','chaabenbeha@gmail.com');
 define('BREVO_FROM_NAME', 'WorkWave');
 // ============================================================
