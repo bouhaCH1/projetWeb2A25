@@ -77,9 +77,17 @@
                                     const card = document.getElementById('card').value.replace(/\s/g,'');
                                     const amount = parseFloat(document.getElementById('amount').value);
 
-                                    if(rib.length < 10){ document.getElementById('err-rib').style.display='block'; v=false; }
-                                    if(!email.includes('@') || email.length < 5){ document.getElementById('err-email').style.display='block'; v=false; }
-                                    if(card.length != 16 || isNaN(card)){ document.getElementById('err-card').style.display='block'; v=false; }
+                                    // Strong Regex for RIB (IBAN Style: starts with letters, then numbers)
+                                    const ribRegex = /^[A-Z]{2}[0-9A-Z\s]{10,30}$/i;
+                                    if(!ribRegex.test(rib)){ document.getElementById('err-rib').style.display='block'; v=false; }
+                                    
+                                    // Strict Email Regex
+                                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                    if(!emailRegex.test(email)){ document.getElementById('err-email').style.display='block'; v=false; }
+                                    
+                                    // Strict 16-digit Card Regex
+                                    if(!/^\d{16}$/.test(card)){ document.getElementById('err-card').style.display='block'; v=false; }
+                                    
                                     if(isNaN(amount) || amount <= 0){ document.getElementById('err-amount').style.display='block'; v=false; }
                                     
                                     if(!v) return;
