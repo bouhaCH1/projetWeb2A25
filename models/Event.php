@@ -22,22 +22,26 @@ class Event {
     }
 
     public function create($data) {
-        $query = "INSERT INTO " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location";
+        $query = "INSERT INTO " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location, image_url=:image_url";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":title", $data['title']);
         $stmt->bindParam(":description", $data['description']);
         $stmt->bindParam(":date", $data['date']);
         $stmt->bindParam(":location", $data['location']);
+        $img = isset($data['image_url']) ? $data['image_url'] : 'darkpan/img/event_default.png';
+        $stmt->bindParam(":image_url", $img);
         return $stmt->execute();
     }
 
     public function update($id, $data) {
-        $query = "UPDATE " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location WHERE id=:id";
+        $query = "UPDATE " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location, image_url=:image_url WHERE id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":title", $data['title']);
         $stmt->bindParam(":description", $data['description']);
         $stmt->bindParam(":date", $data['date']);
         $stmt->bindParam(":location", $data['location']);
+        $img = isset($data['image_url']) ? $data['image_url'] : 'darkpan/img/event_default.png';
+        $stmt->bindParam(":image_url", $img);
         $stmt->bindParam(":id", $id);
         return $stmt->execute();
     }
@@ -63,7 +67,6 @@ class Event {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // [ADVANCED STATS] Events by Location
     public function getLocationStats() {
         $query = "SELECT location, COUNT(*) as count FROM " . $this->table_name . " GROUP BY location LIMIT 5";
         $stmt = $this->conn->prepare($query);
