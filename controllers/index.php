@@ -33,12 +33,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($action == 'send_email') {
         require_once __DIR__ . '/../models/ApiService.php';
+        require_once __DIR__ . '/../models/Event.php';
         $api = new ApiService();
+        $eventModel = new Event($db);
+        
         $key = $_POST['key'];
-        // Shortcut: If user types 'admin', we use a real key (placeholder for now)
         if($key === 'admin') $key = 'SG.VOTRE_VRAIE_CLE_ICI'; 
         
-        $res = $api->sendRealEmail($key, $_POST['from'], $_POST['to'], $_POST['subject'], $_POST['message']);
+        $message = $_POST['message'] ?? "";
+        
+        // If it's an event report, we build the list from DB
+        if(isset($_POST['type']) && $_POST['type'] == 'event_report') {
+            $events = $eventModel->getAll(); // Fetch upcoming events
+            $list = "<h2>Liste des événements à venir :</h2><ul>";
+            foreach($events as $e) {
+                $list .= "<li><strong>" . htmlspecialchars($e['title']) . "</strong> - " . date('d/m/Y H:i', strtotime($e['date'])) . " (" . htmlspecialchars($e['location']) . ")</li>";
+            }
+            $list .= "</ul>";
+            $message = $list;
+        }
+        
+        $res = $api->sendRealEmail($key, $_POST['from'], $_POST['to'], $_POST['subject'], $message);
         echo $res ? "success" : "error"; exit;
     }
 }

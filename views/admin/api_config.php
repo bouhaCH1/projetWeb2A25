@@ -125,26 +125,24 @@
 
                             <?php elseif($_GET['service'] == 'SendGrid'): ?>
                                 <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label class="text-white small">SendGrid API Key</label>
-                                        <input type="password" id="sg-key" class="form-control" placeholder="SG.xxxxx...">
-                                    </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Email Expéditeur (Vérifié)</label>
-                                        <input type="email" id="sg-from" class="form-control" placeholder="admin@domaine.com">
+                                        <input type="email" id="sg-from" class="form-control" placeholder="admin@domaine.com" value="admin@event-pro.tn">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Email Destinataire</label>
                                         <input type="email" id="sg-to" class="form-control" placeholder="client@mail.com">
                                     </div>
                                     <div class="col-md-12 mb-4">
-                                        <label class="text-white small">Message Test</label>
-                                        <textarea id="sg-msg" class="form-control">Ceci est un test de notification réelle depuis Event Pro AI.</textarea>
+                                        <div class="bg-dark p-3 rounded border border-info">
+                                            <h6 class="text-info small mb-2"><i class="fa fa-info-circle me-2"></i>Contenu Automatique</h6>
+                                            <p class="text-white mb-0 small">L'email inclura automatiquement la liste des <strong>événements à venir</strong> (Titre, Date, Lieu) pour tenir le client informé.</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-info w-100 py-3" id="btn-email" onclick="sendTestEmail()">Tester l'envoi réel</button>
-                                <div id="email-success" class="alert alert-success mt-3 d-none">Email envoyé avec succès !</div>
-                                <div id="email-error" class="alert alert-danger mt-3 d-none">Erreur lors de l'envoi (vérifiez votre clé).</div>
+                                <button class="btn btn-info w-100 py-3 shadow" id="btn-email" onclick="sendTestEmail()">Envoyer le Rapport d'Événements</button>
+                                <div id="email-success" class="alert alert-success mt-3 d-none"><i class="fa fa-check me-2"></i>Rapport envoyé avec succès !</div>
+                                <div id="email-error" class="alert alert-danger mt-3 d-none"><i class="fa fa-exclamation-triangle me-2"></i>Erreur d'envoi. Vérifiez l'expéditeur.</div>
 
                                 <script>
                                 function sendTestEmail() {
@@ -154,14 +152,14 @@
                                     
                                     s.classList.add('d-none');
                                     e.classList.add('d-none');
-                                    b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Envoi...';
+                                    b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Génération & Envoi...';
 
                                     const fd = new FormData();
-                                    fd.append('key', document.getElementById('sg-key').value);
+                                    fd.append('key', 'admin'); // On utilise l'alias interne
                                     fd.append('from', document.getElementById('sg-from').value);
                                     fd.append('to', document.getElementById('sg-to').value);
-                                    fd.append('subject', 'Test Notification Réelle - Event Pro');
-                                    fd.append('message', document.getElementById('sg-msg').value);
+                                    fd.append('subject', 'Rapport des Événements à Venir - Event Pro');
+                                    fd.append('type', 'event_report'); // On signale au contrôleur d'ajouter les events
 
                                     fetch('index.php?action=send_email', {
                                         method: 'POST',
@@ -169,7 +167,7 @@
                                     })
                                     .then(r => r.text())
                                     .then(data => {
-                                        b.disabled = false; b.innerHTML = "Tester l'envoi réel";
+                                        b.disabled = false; b.innerHTML = "Envoyer le Rapport d'Événements";
                                         if(data === 'success') s.classList.remove('d-none');
                                         else e.classList.remove('d-none');
                                     });
