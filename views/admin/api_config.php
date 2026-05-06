@@ -41,23 +41,23 @@
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="text-white small">RIB / IBAN</label>
-                                        <input type="text" id="rib" class="form-control" value="TN59 1234 5678 9012 3456 7890">
-                                        <div id="err-rib" class="error-feedback">RIB invalide</div>
+                                        <input type="text" id="rib" class="form-control" placeholder="TN59 ...">
+                                        <div id="err-rib" class="error-feedback">Veuillez saisir votre RIB (min. 10 car.)</div>
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="text-white small">Email Client</label>
-                                        <input type="email" id="email" class="form-control" value="client@exemple.com">
-                                        <div id="err-email" class="error-feedback">Email invalide</div>
+                                        <input type="email" id="email" class="form-control" placeholder="exemple@mail.com">
+                                        <div id="err-email" class="error-feedback">Email valide obligatoire</div>
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="text-white small">N° Carte Bancaire</label>
-                                        <input type="text" id="card" class="form-control" value="4242 4242 4242 4242">
+                                        <input type="text" id="card" class="form-control" placeholder="16 chiffres">
                                         <div id="err-card" class="error-feedback">16 chiffres requis</div>
                                     </div>
                                     <div class="col-md-12 mb-4">
                                         <label class="text-white small">Montant (TND)</label>
-                                        <input type="number" id="amount" class="form-control" value="150.00">
-                                        <div id="err-amount" class="error-feedback">Montant invalide</div>
+                                        <input type="number" id="amount" class="form-control" placeholder="0.00">
+                                        <div id="err-amount" class="error-feedback">Le montant doit être supérieur à 0</div>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary w-100 py-3 shadow" id="btn-pay" onclick="processPayment()">Valider le Paiement</button>
