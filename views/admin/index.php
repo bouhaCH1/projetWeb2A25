@@ -351,38 +351,47 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
             addMessage(text, 'user');
             input.value = '';
 
-            // AI Advanced Multilingual Logic
+            // AI Expert Logic (Context-Aware)
             setTimeout(() => {
-                let reply = "I am your assistant. Je suis votre assistant. Ena l'assistant mte3ek! \n(Ask me about events, resources, or how the site works!)";
                 const t = text.toLowerCase();
+                let reply = "Ena l'assistant mte3ek! 🤖 \n(Asma3ni, najem n3awnek fi ay haja: events, resources, meteo...)";
                 
-                // Greetings
-                if(t.includes('salut') || t.includes('bonjour') || t.includes('hello') || t.includes('aslama') || t.includes('labes') || t.includes('3aslama')) {
-                    reply = "Bonjour / Hello / Aslama! 👋 \nEna l'assistant mte3ek. Chnowa n3awnek?";
+                // Get dynamic data from PHP to JS
+                const events = <?= json_encode($events) ?>;
+                const resources = <?= json_encode($resources) ?>;
+
+                // 1. Next Event Logic (Wakteh / Next / Jey)
+                if(t.includes('wakteh') || t.includes('jey') || t.includes('next') || t.includes('prochain')) {
+                    const now = new Date();
+                    let nextEvent = null;
+                    events.forEach(e => {
+                        const ed = new Date(e.date);
+                        if(ed > now && (!nextEvent || ed < new Date(nextEvent.date))) nextEvent = e;
+                    });
+                    if(nextEvent) reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + ". 📅";
+                    else reply = "Mafama hata événement jey fel wa9t el 7ather. Najmou nzidou wa7ed jdid! ✨";
                 }
-                // AI Explanation (Fix for the user's question)
-                else if(t.includes('intelligence') || t.includes('artificielle') || t.includes('ia') || t.includes('ai')) {
-                    reply = "L'Intelligence Artificielle houni t3awnek bech tefhem el data mte3ek. \n- ChatBot: Nejwbek 3ala ay haja.\n- Prédiction: Na3tik el naje7 mte3 el event.\n- OCR: Na9ra el wra9 mte3ek automatiquement.";
+                // 2. Location Logic (Win / Fin / Location)
+                else if(t.includes('win') || t.includes('fin') || t.includes('location') || t.includes('blasat')) {
+                    const counts = {};
+                    events.forEach(e => counts[e.location] = (counts[e.location] || 0) + 1);
+                    const top = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b, '...');
+                    reply = "Akther blasa fiha events hiya " + top + ". Tnajem tchoufhom lkol fel carte fou9! 🗺️";
                 }
-                // Explanations about the site
-                else if(t.includes('site') || t.includes('kifech') || t.includes('how') || t.includes('expliquer') || t.includes('chnia') || t.includes('chnia heya')) {
-                    reply = "El site hatha fih kol chay n7ebou 3lih: \n1. 📊 Stats: Les chiffres mte3ek.\n2. 🗺️ Map: Win les events.\n3. 🔌 APIs: Paiement Stripe & Calendar.\n4. 📅 Planning: El wa9t mte3ek.";
+                // 3. Resources/Stock Logic (9adech / stock / ressource)
+                else if(t.includes('9adech') || t.includes('stock') || t.includes('ressource') || t.includes('fama')) {
+                    const low = resources.filter(r => parseInt(r.quantity) < 3);
+                    reply = "3andek " + resources.length + " types de ressources. \n⚠️ Attention: " + low.length + " ressources 9rib youfaw (e.g. " + (low[0]?.name || 'none') + "). Thabet fel tableau!";
                 }
-                // Events (Multi-lang)
-                else if(t.includes('évenement') || t.includes('event') || t.includes('evenement')) {
-                    reply = "You have " + <?= count($events) ?> + " events. \n3andek " + <?= count($events) ?> + " evenements. \nVous pouvez les gérer dans l'onglet 'Événements'.";
+                // 4. Greetings / AI Explanation
+                else if(t.includes('salut') || t.includes('bonjour') || t.includes('aslama') || t.includes('labes') || t.includes('3aslama')) {
+                    reply = "Aslama ya m3alem! 👋 \nEna l'IA mte3ek. Najem n9olek wakteh el event el jey, win akther blasa, wela chnowa na9es fel stock.";
                 }
-                // Resources (Multi-lang)
-                else if(t.includes('ressource') || t.includes('stock')) {
-                    reply = "Stock: " + <?= count($resources) ?> + " types. \nEl stock mte3ek fih " + <?= count($resources) ?> + " types de ressources. Ta9dar tchoufhom fi tableau 'Ressources'.";
+                else if(t.includes('intelligence') || t.includes('artificielle') || t.includes('ia') || t.includes('ai') || t.includes('chnia')) {
+                    reply = "Ena n'analysi el data mte3ek bech nsahel 3lik el khidma. \nExemple: n9olek chnowa el event el jey wela chnowa el stock eli na9es automatiquement!";
                 }
-                // Tunsi Specifics
                 else if(t.includes('m3alem') || t.includes('ya m3alem') || t.includes('merci') || t.includes('ya3tik sa7a')) {
-                    reply = "Ya m3alem! Men wejbi. Rabi ywaf9ek fi projetek! 🚀🔥";
-                }
-                // Weather
-                else if(t.includes('meteo') || t.includes('temps') || t.includes('weather')) {
-                    reply = "It's 24°C in Tunis. El ta9es lyoum mezyen barcha! ☀️";
+                    reply = "Ya m3alem! Men wejbi. Rabi ywaf9ek! 🚀🔥";
                 }
                 
                 addMessage(reply, 'ai');
