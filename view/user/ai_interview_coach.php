@@ -817,55 +817,116 @@ function toggleRecording() {
     }
 }
 
-function startVoiceSimulation() {
-    // Simulate voice recognition with sample text
-    const sampleAnswers = [
-        'I have extensive experience with PHP development, working with frameworks like Laravel and Symfony. I focus on writing clean, maintainable code and follow best practices for security and performance.',
-        'In my previous role, I worked on a complex e-commerce platform where I implemented several performance optimizations that reduced page load times by 40%.',
-        'I believe in collaborative development and regularly participate in code reviews. I also mentor junior developers and contribute to team knowledge sharing sessions.',
-        'I handle pressure well by prioritizing tasks and maintaining clear communication with stakeholders. I\'m comfortable working in fast-paced environments.'
-    ];
+let speechRecognition = null;
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    speechRecognition = new SpeechRecognition();
+    speechRecognition.continuous = true;
+    speechRecognition.interimResults = true;
+    speechRecognition.lang = 'en-US'; 
     
-    const randomAnswer = sampleAnswers[Math.floor(Math.random() * sampleAnswers.length)];
-    
-    // Simulate typing effect
-    const transcript = document.getElementById('answerTranscript');
-    transcript.value = '';
-    let charIndex = 0;
-    
-    const typeInterval = setInterval(() => {
-        if (charIndex < randomAnswer.length && isRecording) {
-            transcript.value += randomAnswer[charIndex];
-            charIndex++;
-        } else {
-            clearInterval(typeInterval);
+    speechRecognition.onresult = function(event) {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                finalTranscript += event.results[i][0].transcript + ' ';
+            }
         }
-    }, 50);
+        
+        const transcript = document.getElementById('answerTranscript');
+        if (finalTranscript) {
+            if(transcript.innerText.trim() === '' || transcript.innerText.includes('Your answer will appear here')) {
+                transcript.innerText = finalTranscript;
+            } else {
+                transcript.innerText += ' ' + finalTranscript;
+            }
+        }
+    };
+    
+    speechRecognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+    };
+}
+
+function startVoiceSimulation() {
+    const transcript = document.getElementById('answerTranscript');
+    if (transcript.innerText.trim() === '' || transcript.innerText.includes('Your answer will appear here')) {
+        transcript.innerText = '';
+    }
+    
+    if (speechRecognition) {
+        try {
+            speechRecognition.start();
+        } catch(e) {
+            console.error(e);
+        }
+    } else {
+        transcript.innerText = "[Your browser does not support voice recognition. Please type your answer manually.]\n";
+    }
 }
 
 function stopVoiceSimulation() {
-    // Voice simulation stops when toggleRecording is called
+    if (speechRecognition) {
+        try {
+            speechRecognition.stop();
+        } catch(e) {
+            console.error(e);
+        }
+    }
 }
 
 function generateFeedback() {
-    // Simulate AI feedback generation
+    const transcriptText = document.getElementById('answerTranscript').innerText.trim();
+    const wordCount = transcriptText === '' ? 0 : transcriptText.split(/\s+/).length;
+    
+    let clarity = 50;
+    let confidence = 50;
+    let relevance = 50;
+    let completeness = 50;
+    
+    let strengths = [];
+    let improvements = [];
+    
+    if (wordCount < 15) {
+        clarity = 40; confidence = 35; relevance = 40; completeness = 20;
+        improvements.push("Your answer is too short to fully evaluate.");
+        improvements.push("Try using the STAR method (Situation, Task, Action, Result) to expand your answer.");
+        strengths.push("Direct to the point.");
+    } else {
+        completeness = Math.min(100, 40 + (wordCount / 2));
+        clarity = Math.min(100, 65 + (Math.random() * 15));
+        confidence = Math.min(100, 60 + (wordCount > 40 ? 20 : 0) + (Math.random() * 15));
+        relevance = Math.min(100, 75 + (Math.random() * 15));
+        
+        strengths.push("Good length and detailed explanation provided.");
+        
+        const textLower = transcriptText.toLowerCase();
+        if (textLower.includes("because") || textLower.includes("result") || textLower.includes("achieved") || textLower.includes("led to")) {
+            strengths.push("Excellent use of reasoning and results-oriented language.");
+            confidence += 10;
+        } else {
+            improvements.push("Focus more on the concrete results of your actions (quantify if possible).");
+        }
+        
+        if (textLower.includes("i ") || textLower.includes("my ")) {
+            strengths.push("Strong use of first-person language to take ownership of your actions.");
+        } else {
+            improvements.push("Use 'I' instead of 'We' to highlight your specific contributions.");
+        }
+        
+        if (wordCount > 150) {
+            improvements.push("Your answer was quite long. Try to be more concise to keep the interviewer engaged.");
+            clarity -= 10;
+        }
+    }
+    
     const feedback = {
-        clarity: Math.floor(Math.random() * 30) + 70,
-        confidence: Math.floor(Math.random() * 25) + 75,
-        relevance: Math.floor(Math.random() * 20) + 80,
-        completeness: Math.floor(Math.random() * 25) + 75,
-        strengths: [
-            'Strong technical knowledge demonstrated',
-            'Clear communication of complex concepts',
-            'Good problem-solving approach',
-            'Confidence in responses'
-        ],
-        improvements: [
-            'Could provide more specific examples',
-            'Consider mentioning quantifiable results',
-            'Add more detail about team collaboration',
-            'Include more industry-specific terminology'
-        ],
+        clarity: Math.floor(Math.min(100, clarity)),
+        confidence: Math.floor(Math.min(100, confidence)),
+        relevance: Math.floor(Math.min(100, relevance)),
+        completeness: Math.floor(Math.min(100, completeness)),
+        strengths: strengths.length > 0 ? strengths : ['Good effort'],
+        improvements: improvements.length > 0 ? improvements : ['Keep practicing'],
         coaching: [
             'Practice the STAR method for behavioral questions',
             'Prepare specific metrics and achievements',
@@ -874,7 +935,6 @@ function generateFeedback() {
         ]
     };
     
-    // Update feedback display
     updateFeedbackDisplay(feedback);
 }
 
