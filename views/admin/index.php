@@ -366,8 +366,8 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 if(t.includes('meteo') || t.includes('ta9es') || t.includes('temps') || t.includes('weather')) {
                     reply = "El ta9es lyoum fi Tunis 24°C, chams mezyena! ☀️ C'est parfait pour vos activités.";
                 }
-                // 2. Next Event Logic (Wakteh / Jey / Next / Prochain)
-                else if(t.includes('wakteh') || t.includes('jey') || t.includes('next') || t.includes('prochain') || t.includes('wa9t')) {
+                // 2. Next Event Logic (Wakteh / Jey / Next / Prochain / Upcoming)
+                else if(t.includes('wakteh') || t.includes('jey') || t.includes('next') || t.includes('prochain') || t.includes('wa9t') || t.includes('upcoming')) {
                     const now = new Date();
                     let nextEvent = null;
                     events.forEach(e => {
@@ -375,23 +375,31 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         if(ed > now && (!nextEvent || ed < new Date(nextEvent.date))) nextEvent = e;
                     });
                     if(nextEvent) reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + ". 📅";
-                    else reply = "Mafama hata événement jey fel wa9t el 7ather. 3andek " + events.length + " events lkol fel base.";
+                    else reply = "Mafama hata événement jey (upcoming) fel wa9t el 7ather. 3andek " + events.length + " events lkol.";
                 }
-                // 3. Location Logic (Win / Fin / Location / Blasa)
-                else if(t.includes('win') || t.includes('fin') || t.includes('location') || t.includes('blasa') || t.includes('blasat')) {
+                // 3. Location Logic (Win / Fin / Location / Blasa / Localisation / Carte / Map)
+                else if(t.includes('win') || t.includes('fin') || t.includes('location') || t.includes('blasa') || t.includes('blasat') || t.includes('localisation') || t.includes('carte') || t.includes('map')) {
                     const counts = {};
                     events.forEach(e => counts[e.location] = (counts[e.location] || 0) + 1);
                     const top = Object.keys(counts).reduce((a, b) => (counts[a] || 0) > (counts[b] || 0) ? a : b, 'Tunis');
-                    reply = "Akther blasa fiha 7arka hiya " + top + ". Tnajem tchoufhom lkol fel carte! 🗺️";
+                    reply = "Akther blasa fiha 7arka hiya " + top + ". Tnajem tchouf les localisations lkol fel carte (Map) houni! 🗺️";
                 }
-                // 4. Resources/Stock Logic (9adech / stock / ressource / fama / quantity)
-                else if(t.includes('9adech') || t.includes('stock') || t.includes('ressource') || t.includes('fama') || t.includes('quantité')) {
+                // 4. Resources/Stock Logic (9adech / stock / ressource / fama / quantité / recourse)
+                else if(t.includes('9adech') || t.includes('stock') || t.includes('ressource') || t.includes('fama') || t.includes('quantité') || t.includes('recourse')) {
                     const low = resources.filter(r => parseInt(r.quantity) < 3);
-                    reply = "Stock fih " + resources.length + " types. 📦 \n⚠️ Alerte: " + low.length + " ressources 9rib youfaw (e.g. " + (low[0]?.name || 'matériel') + ").";
+                    reply = "El stock fih " + resources.length + " types. 📦 \n⚠️ Alerte: " + low.length + " ressources 9rib youfaw (e.g. " + (low[0]?.name || 'matériel') + ").";
                 }
-                // 5. Greetings
+                // 5. Planning/Calendar Logic
+                else if(t.includes('planning') || t.includes('calendrier') || t.includes('calendar')) {
+                    reply = "El Planning mte3ek fih kol chay (dates w evènements). Tnajem t'accedi l'FullCalendar men houni bech t-sync-i el wa9t! 🗓️";
+                }
+                // 6. Users Logic
+                else if(t.includes('user') || t.includes('utilisateur') || t.includes('nes') || t.includes('client')) {
+                    reply = "Les utilisateurs (clients) yesta3mlou el site mte3ek bech ychoufou el events w y-reserviw. Kol chay m-organisé houni!";
+                }
+                // 7. Greetings
                 else if(t.includes('aslama') || t.includes('3aslama') || t.includes('labes') || t.includes('bonjour') || t.includes('salut') || t.includes('hello')) {
-                    reply = "Aslama ya m3alem! 👋 Ena l'IA mte3ek. Teselny njewbek 3al site kollo!";
+                    reply = "Aslama ya m3alem! 👋 Ena l'IA mte3ek. Teselny njewbek 3al site kollo (Stock, Planning, Maps, etc.)!";
                 }
                 // 6. Site Explanation / Métier (Simple & Avancé)
                 else if(t.includes('metier') || t.includes('métier') || t.includes('fika') || t.includes('service') || t.includes('kifech')) {
