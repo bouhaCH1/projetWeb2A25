@@ -829,7 +829,7 @@ class UserController {
         
         $search  = trim($_GET['search'] ?? '');
         $sort    = trim($_GET['sort'] ?? 'created_at_desc');
-        $perPage = 8;
+        $perPage = 10;
         $page    = max(1, (int)($_GET['page'] ?? 1));
 
         $user      = new User();

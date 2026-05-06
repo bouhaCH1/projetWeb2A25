@@ -15,7 +15,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
     <div class="d-flex gap-2">
         <button onclick="exportTableToCSV('utilisateurs.csv')" class="btn btn-success"><i class="fa fa-file-csv me-2"></i>CSV</button>
         <button onclick="exportTableToExcel('usersTable', 'utilisateurs')" class="btn btn-success" style="background:#207245;"><i class="fa fa-file-excel me-2"></i>Excel</button>
-        <button onclick="exportTableToPDF()" class="btn btn-danger"><i class="fa fa-file-pdf me-2"></i>PDF</button>
+        <button onclick="window.print()" class="btn btn-danger"><i class="fa fa-file-pdf me-2"></i>PDF</button>
         <a href="/workwave/Controller/index.php?action=admin_add_user" class="btn btn-primary"><i class="fa fa-plus me-2"></i>Ajouter</a>
     </div>
 </div>
@@ -37,7 +37,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
     </div>
 <?php endif; ?>
 
-<div class="bg-secondary rounded p-4 mb-4">
+<div class="bg-secondary rounded p-4 mb-4 print-hide">
     <form method="GET" action="/workwave/Controller/index.php" class="row g-3 align-items-end">
         <input type="hidden" name="action" value="admin_users">
         
@@ -73,23 +73,21 @@ include __DIR__ . '/../layout/dashboard_header.php';
         <table class="table text-start align-middle table-hover mb-0" id="usersTable">
             <thead>
                 <tr class="text-white">
-                    <th scope="col">#</th>
                     <th scope="col">Nom</th>
                     <th scope="col">E-mail</th>
                     <th scope="col">Téléphone</th>
                     <th scope="col">Rôle</th>
                     <th scope="col">Statut</th>
                     <th scope="col">Enregistré le</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col" class="print-hide">Actions</th>
                 </tr>
             </thead>
             <tbody>
             <?php if (empty($users)): ?>
-                <tr><td colspan="8" class="text-center py-4">Aucun utilisateur trouvé.</td></tr>
+                <tr><td colspan="7" class="text-center py-4">Aucun utilisateur trouvé.</td></tr>
             <?php else: ?>
                 <?php foreach ($users as $u): ?>
                 <tr>
-                    <td><?= $u['id'] ?></td>
                     <td class="fw-bold">
                         <?= htmlspecialchars($u['first_name'] . ' ' . $u['last_name']) ?>
                         <?php if (($u['is_verified'] ?? 0) == 1): ?>
@@ -113,7 +111,7 @@ include __DIR__ . '/../layout/dashboard_header.php';
                         <?php endif; ?>
                     </td>
                     <td><?= htmlspecialchars(substr((string)$u['created_at'], 0, 10)) ?></td>
-                    <td>
+                    <td class="print-hide">
                         <div class="d-flex gap-1">
                             <a href="/workwave/Controller/index.php?action=admin_edit_user&id=<?= $u['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
                             <?php if (($u['status'] ?? 'active') === 'active'): ?>
@@ -137,9 +135,8 @@ include __DIR__ . '/../layout/dashboard_header.php';
     </div>
 
     <!-- Pagination -->
-    <?php if (($totalPages ?? 1) > 1): ?>
-    <div class="d-flex justify-content-between align-items-center mt-4">
-        <small class="text-muted">Affichage de la page <?= $page ?> sur <?= $totalPages ?> &mdash; <?= $total ?> utilisateur(s) au total</small>
+    <div class="d-flex justify-content-between align-items-center mt-4 print-hide">
+        <small class="text-muted">Affichage de la page <?= $page ?> sur <?= max(1, $totalPages ?? 1) ?> &mdash; <?= $total ?> utilisateur(s) au total</small>
         <nav>
             <ul class="pagination mb-0" style="gap:4px; display:flex;">
                 <?php
@@ -149,27 +146,107 @@ include __DIR__ . '/../layout/dashboard_header.php';
                 ?>
                 <!-- Prev -->
                 <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= $baseUrl ?>&page=<?= $page - 1 ?>" style="background:#1a1a2e;border-color:rgba(230,57,70,0.2);color:#e63946;">&laquo;</a>
+                    <a class="page-link" href="<?= $baseUrl ?>&page=<?= max(1, $page - 1) ?>" style="background:#1a1a2e;border-color:rgba(230,57,70,0.2);color:#e63946;">&laquo;</a>
                 </li>
-                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <?php for ($i = 1; $i <= max(1, $totalPages ?? 1); $i++): ?>
                 <li class="page-item <?= $i === $page ? 'active' : '' ?>">
                     <a class="page-link" href="<?= $baseUrl ?>&page=<?= $i ?>" style="<?= $i === $page ? 'background:#e63946;border-color:#e63946;color:#fff;' : 'background:#1a1a2e;border-color:rgba(230,57,70,0.2);color:#e63946;' ?>"><?= $i ?></a>
                 </li>
                 <?php endfor; ?>
                 <!-- Next -->
-                <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
-                    <a class="page-link" href="<?= $baseUrl ?>&page=<?= $page + 1 ?>" style="background:#1a1a2e;border-color:rgba(230,57,70,0.2);color:#e63946;">&raquo;</a>
+                <li class="page-item <?= $page >= ($totalPages ?? 1) ? 'disabled' : '' ?>">
+                    <a class="page-link" href="<?= $baseUrl ?>&page=<?= min($totalPages ?? 1, $page + 1) ?>" style="background:#1a1a2e;border-color:rgba(230,57,70,0.2);color:#e63946;">&raquo;</a>
                 </li>
             </ul>
         </nav>
     </div>
-    <?php else: ?>
-    <small class="text-muted d-block mt-3"><?= ($total ?? 0) ?> utilisateur(s) au total. Les comptes administrateurs sont exclus.</small>
-    <?php endif; ?>
 </div>
 
-<!-- html2pdf library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+@media print {
+    @page { margin: 1cm; size: portrait; }
+    body, html, .content, .bg-secondary {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        box-shadow: none !important;
+    }
+    body * {
+        color: #000000 !important;
+    }
+    
+    /* Hide specific UI elements (sidebar, top nav, headers, buttons, action columns) */
+    .sidebar, .navbar, .page-header, .btn, .print-hide, .d-flex.align-items-center.justify-content-between.mb-4, .alert, footer, .footer {
+        display: none !important;
+    }
+    
+    /* Ensure the table wrapper and its parents are fully visible */
+    .container-fluid, .content {
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    #exportContent {
+        display: block !important;
+        width: 100%;
+        margin: 0 !important;
+    }
+    
+    /* Format the table for print to override Bootstrap dark mode */
+    .table, .table *, .table-hover tbody tr:hover * {
+        background: #ffffff !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+    }
+    .table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-bottom: 0 !important;
+        font-size: 11px !important; /* Smaller font to fit portrait mode */
+        table-layout: fixed !important; /* Force columns to fit within 100% */
+    }
+    .table th, .table td {
+        border: 1px solid #dddddd !important;
+        padding: 6px 4px !important;
+        text-align: left !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+    .table thead th, .table thead tr * {
+        background-color: #f0f0f0 !important;
+        font-weight: bold !important;
+    }
+    
+    /* Ensure badges are readable, fix broken nested borders */
+    .badge {
+        background: none !important;
+        color: #000000 !important;
+        border: 1px solid #000000 !important;
+        padding: 2px 4px !important;
+        font-weight: normal !important;
+    }
+    
+    td .text-success, td .text-danger, td .text-info {
+        color: #000000 !important;
+        border: none !important;
+        background: none !important;
+    }
+    
+    /* Hide decorative font-awesome circles in print as they break */
+    .table i.fa-circle {
+        display: none !important;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+}
+</style>
+
 <script>
     function downloadCSV(csv, filename) {
         let csvFile = new Blob([csv], {type: "text/csv"});
@@ -187,8 +264,10 @@ include __DIR__ . '/../layout/dashboard_header.php';
         for (let i = 0; i < rows.length; i++) {
             let row = [], cols = rows[i].querySelectorAll("td, th");
             for (let j = 0; j < cols.length - 1; j++) { // Exclude Actions column
-                let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "").trim();
-                row.push('"' + data + '"');
+                if (!cols[j].classList.contains('print-hide')) {
+                    let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, "").trim();
+                    row.push('"' + data + '"');
+                }
             }
             csv.push(row.join(","));
         }
@@ -219,22 +298,6 @@ include __DIR__ . '/../layout/dashboard_header.php';
             downloadLink.download = filename;
             downloadLink.click();
         }
-    }
-
-    function exportTableToPDF() {
-        let element = document.getElementById('exportContent').cloneNode(true);
-        // Remove actions column
-        let rows = element.querySelectorAll('tr');
-        rows.forEach(row => row.lastElementChild.remove());
-
-        let opt = {
-            margin:       0.5,
-            filename:     'utilisateurs.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
-        };
-        html2pdf().set(opt).from(element).save();
     }
 </script>
 

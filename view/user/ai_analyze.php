@@ -243,6 +243,44 @@ $topData   = $topResult ? ($domainData[$topResult['label']] ?? null) : null;
         </div>
     </div>
 
+    <!-- NEW: Coach IA Text Feedback -->
+    <?php if (!empty($aiResult['feedback'])): ?>
+    <div class="dsh-card" style="flex:1;min-width:300px;padding:22px;background:linear-gradient(135deg,rgba(167,139,250,0.05),rgba(244,114,182,0.05));border-color:rgba(167,139,250,0.2);">
+        <div style="font-weight:700;color:#fff;margin-bottom:14px;font-size:0.95rem;display:flex;align-items:center;gap:8px;">
+            <span>🤖</span> Coach IA : Retours sur votre texte
+        </div>
+        <div style="font-size:0.82rem;color:#ccc;line-height:1.6;margin-bottom:14px;">
+            Notre IA a analysé la façon dont vous vous présentez. Voici comment l'améliorer pour les recruteurs :
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <?php foreach ($aiResult['feedback'] as $tip): ?>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:12px;background:rgba(0,0,0,0.2);border-radius:8px;border-left:3px solid #a78bfa;">
+                <span style="color:#a78bfa;margin-top:2px;">💡</span>
+                <span style="color:#ddd;font-size:0.85rem;line-height:1.5;"><?= htmlspecialchars($tip) ?></span>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <?php if (!empty($aiResult['improved_text'])): ?>
+        <div style="margin-top:18px;padding-top:18px;border-top:1px solid rgba(167,139,250,0.2);">
+            <div style="font-size:0.75rem;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">
+                ✨ Suggestion de réécriture (prêt à copier)
+            </div>
+            <div style="background:rgba(0,0,0,0.25);border:1px solid rgba(167,139,250,0.15);border-radius:8px;padding:14px;position:relative;">
+                <p id="improvedTextOutput" style="color:#fff;font-size:0.88rem;line-height:1.6;margin:0;font-style:italic;">
+                    "<?= htmlspecialchars($aiResult['improved_text']) ?>"
+                </p>
+                <button onclick="navigator.clipboard.writeText(document.getElementById('improvedTextOutput').innerText); this.innerText='Copié !'; setTimeout(()=>this.innerText='Copier', 2000);" 
+                        style="position:absolute;top:10px;right:10px;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;border-radius:4px;padding:4px 8px;font-size:0.7rem;cursor:pointer;transition:all .2s;">
+                    Copier
+                </button>
+            </div>
+        </div>
+        <?php endif; ?>
+        
+    </div>
+    <?php endif; ?>
+
 </div>
 <?php endif; ?>
 
