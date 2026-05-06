@@ -185,13 +185,12 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         <div class="tab-pane fade show active" id="nav-events" role="tabpanel">
                             <div class="table-responsive">
                                 <table class="table table-hover">
-                                    <thead><tr><th>ID</th><th>Aperçu</th><th>Titre</th><th>Date</th><th>Lieu</th><th>Statut</th><th>Actions</th></tr></thead>
+                                    <thead><tr><th>ID</th><th>Titre</th><th>Date</th><th>Lieu</th><th>Statut</th><th>Actions</th></tr></thead>
                                     <tbody>
-                                        <?php if(empty($events)): ?><tr><td colspan="7" class="text-center p-4">La liste est vide.</td></tr><?php endif; ?>
+                                        <?php if(empty($events)): ?><tr><td colspan="6" class="text-center p-4">La liste est vide.</td></tr><?php endif; ?>
                                         <?php foreach($events as $e): $st=getStatus($e['date']); ?>
                                         <tr>
                                             <td><?= $e['id'] ?></td>
-                                            <td><img src="../<?= $e['image_url'] ? $e['image_url'] : 'darkpan/img/event_default.png' ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;"></td>
                                             <td><?= htmlspecialchars($e['title']) ?></td>
                                             <td><?= $e['date'] ?></td>
                                             <td><?= htmlspecialchars($e['location']) ?></td>

@@ -22,26 +22,22 @@ class Event {
     }
 
     public function create($data) {
-        $query = "INSERT INTO " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location, image_url=:image_url";
+        $query = "INSERT INTO " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":title", $data['title']);
         $stmt->bindParam(":description", $data['description']);
         $stmt->bindParam(":date", $data['date']);
         $stmt->bindParam(":location", $data['location']);
-        $img = isset($data['image_url']) ? $data['image_url'] : 'darkpan/img/event_default.png';
-        $stmt->bindParam(":image_url", $img);
         return $stmt->execute();
     }
 
     public function update($id, $data) {
-        $query = "UPDATE " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location, image_url=:image_url WHERE id=:id";
+        $query = "UPDATE " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location WHERE id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":title", $data['title']);
         $stmt->bindParam(":description", $data['description']);
         $stmt->bindParam(":date", $data['date']);
         $stmt->bindParam(":location", $data['location']);
-        $img = isset($data['image_url']) ? $data['image_url'] : 'darkpan/img/event_default.png';
-        $stmt->bindParam(":image_url", $img);
         $stmt->bindParam(":id", $id);
         return $stmt->execute();
     }
