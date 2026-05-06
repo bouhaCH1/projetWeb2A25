@@ -27,10 +27,32 @@
                 <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
                     <div class="col-12 col-sm-12 col-md-10 col-lg-8">
                         <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3 shadow-lg">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h3 class="text-primary"><i class="fa fa-plug me-2"></i><?= htmlspecialchars($_GET['service']) ?></h3>
-                                <a href="index.php?action=admin" class="btn btn-sm btn-outline-light">Retour Dashboard</a>
+                            <div id="security-gate" class="text-center p-5">
+                                <i class="fa fa-lock fa-4x text-primary mb-4"></i>
+                                <h4>Zone Sécurisée</h4>
+                                <p class="small mb-4">Veuillez entrer le mot de passe administrateur.</p>
+                                <input type="password" id="admin-pass" class="form-control mb-3 text-center" placeholder="Mot de passe">
+                                <button class="btn btn-primary w-100" onclick="checkAdmin()">Déverrouiller</button>
+                                <div id="admin-err" class="text-danger small mt-2 d-none">Mot de passe incorrect.</div>
                             </div>
+
+                            <div id="api-content" class="d-none">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h3 class="text-primary"><i class="fa fa-plug me-2"></i><?= htmlspecialchars($_GET['service']) ?></h3>
+                                    <a href="index.php?action=admin" class="btn btn-sm btn-outline-light">Retour Dashboard</a>
+                                </div>
+
+                                <script>
+                                function checkAdmin() {
+                                    const p = document.getElementById('admin-pass').value;
+                                    if(p === 'admin') {
+                                        document.getElementById('security-gate').classList.add('d-none');
+                                        document.getElementById('api-content').classList.remove('d-none');
+                                    } else {
+                                        document.getElementById('admin-err').classList.remove('d-none');
+                                    }
+                                }
+                                </script>
 
                             <?php if($_GET['service'] == 'Stripe'): ?>
                                 <!-- Stripe Section (Same as before) -->
@@ -216,7 +238,8 @@
                             
                             <hr class="my-4">
                             <p class="text-muted small text-center">Propulsé par EventResource API Hub</p>
-                        </div>
+                        </div> <!-- End api-content -->
+                        </div> <!-- End main container div -->
                     </div>
                 </div>
             </div>
