@@ -47,6 +47,12 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
         .fc-daygrid-day-number { color: #fff !important; text-decoration: none; }
         .fc-col-header-cell-cushion { color: #00ffcc !important; text-decoration: none; }
         .fc-event { cursor: pointer; }
+        /* AI Modal Styles */
+        #ai-modal .modal-content { background: #191c24; color: #fff; border: 1px solid #eb1616; border-radius: 15px; }
+        #ai-modal .modal-header { border-bottom: 1px solid #333; }
+        #ai-modal .modal-footer { border-top: 1px solid #333; }
+        .ai-spinner { width: 3rem; height: 3rem; color: #eb1616; }
+        
         /* Floating Chat Button & Window */
         #chat-btn { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #eb1616; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border: none; }
         #chat-btn:hover { transform: scale(1.1) rotate(15deg); background: #00ffcc; color: #191c24; }
@@ -95,6 +101,24 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
 
         <!-- Content Start -->
         <div class="content">
+            <!-- AI Result Modal -->
+            <div class="modal fade" id="aiModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content bg-dark border-primary">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-primary" id="aiModalLabel">Analyse IA en cours...</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center p-5" id="aiModalBody">
+                            <div class="spinner-border text-primary ai-spinner mb-3" role="status"></div>
+                            <p class="mb-0">Traitement des données via le moteur IA...</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
                 <a href="#" class="sidebar-toggler flex-shrink-0"><i class="fa fa-bars"></i></a>
@@ -179,7 +203,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         <div class="bg-secondary text-center rounded p-4">
                             <h6 class="mb-4">Services Connectés (APIs)</h6>
                             <div class="d-grid gap-2">
-                                <a href="index.php?action=api_config&service=Stripe" class="btn btn-outline-primary mb-2"><i class="fab fa-stripe me-2"></i>Méthode de Paiement</a>
+                                <button onclick="simulateApi('Stripe')" class="btn btn-outline-primary mb-2"><i class="fab fa-stripe me-2"></i>Méthode de Paiement</button>
                                 <a href="index.php?action=api_config&service=SendGrid" class="btn btn-outline-info mb-2"><i class="fa fa-envelope me-2"></i>Emails Automatiques</a>
                                 <a href="index.php?action=api_config&service=Google Calendar" class="btn btn-outline-warning mb-2"><i class="fa fa-calendar-alt me-2"></i>G-Calendar : Sync</a>
                             </div>
@@ -315,29 +339,51 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
     <script>
-        // API Simulation Function
+        // Professional AI Simulation
         function simulateApi(service) {
-            let msg = "";
-            let color = "#00ffcc";
+            const modal = new bootstrap.Modal(document.getElementById('aiModal'));
+            const label = document.getElementById('aiModalLabel');
+            const body = document.getElementById('aiModalBody');
             
-            if(service === 'Stripe') {
-                msg = "Connexion sécurisée à Stripe Gateway... \nStatut: Prêt pour les paiements en ligne.";
-                color = "#6772e5";
-            } else if(service === 'SendGrid') {
-                msg = "Test d'envoi SendGrid réussi ! \nDestinataire: admin@votre-projet.com \nStatut: Délivré.";
-                color = "#1296ba";
-            } else if(service === 'Google Calendar') {
-                msg = "Synchronisation avec Google Calendar en cours... \nStatut: 4 événements importés.";
-                color = "#4285f4";
-            } else if(service === 'OCR') {
-                msg = "Démarrage du moteur OCR... \nAnalyse du document en cours... \nRésultat: Texte extrait avec 98% de précision.";
-                color = "#17a2b8";
-            } else if(service === 'Prediction') {
-                msg = "Modèle Hugging Face (Bert-base) chargé. \nAnalyse prédictive: Forte probabilité de succès pour l'événement (89%).";
-                color = "#ffc107";
-            }
+            label.innerText = "IA : Analyse de " + service + "...";
+            body.innerHTML = `
+                <div class="spinner-border text-danger ai-spinner mb-3" role="status"></div>
+                <p class="text-white">Connexion aux serveurs de calcul haute performance...</p>
+            `;
+            modal.show();
 
-            alert("🌐 [Advanced AI Service] " + service + "\n" + "----------------------------------\n" + msg);
+            setTimeout(() => {
+                let result = "";
+                if(service === 'OCR') {
+                    result = `
+                        <div class="text-start">
+                            <h6 class="text-info"><i class="fa fa-file-alt me-2"></i>Texte Extrait (OCR) :</h6>
+                            <pre class="bg-black p-3 rounded small text-light" style="white-space: pre-wrap;">
+Facture #4509
+Date: 06/05/2026
+Client: Ayoub Event Pro
+Total: 1,250.00 TND
+Statut: Payé
+                            </pre>
+                            <p class="small text-success"><i class="fa fa-check-circle me-1"></i>Analyse terminée avec 98.4% de confiance.</p>
+                        </div>
+                    `;
+                } else if(service === 'Prediction') {
+                    result = `
+                        <div class="p-3">
+                            <h6 class="text-warning mb-3"><i class="fa fa-magic me-2"></i>Prédiction de Succès (H.Face) :</h6>
+                            <div class="progress mb-3" style="height: 25px; background: #333;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 89%">89%</div>
+                            </div>
+                            <p class="text-white small">Analyse basée sur les <b><?= count($events) ?> événements</b> passés. Probabilité de succès élevée pour votre prochain événement !</p>
+                        </div>
+                    `;
+                } else if(service === 'Stripe') {
+                    result = `<div class="p-4"><i class="fab fa-stripe fa-4x text-primary mb-3"></i><h5 class="text-white">Passerelle de Paiement</h5><p>Module Stripe prêt pour les transactions. (TND activé)</p></div>`;
+                }
+                body.innerHTML = result;
+                label.innerText = "IA : Résultat de " + service;
+            }, 2500);
         }
 
         // Real-time Chat Logic
