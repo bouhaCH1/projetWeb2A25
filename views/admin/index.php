@@ -409,8 +409,37 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 else if(t.includes('mail') || t.includes('email') || t.includes('envoyer')) {
                     reply = "Système d'Emails Automatiques (SendGrid) prêt bech yab3ath les confirmations l'ay client automatiquement. ✉️";
                 }
-                // 7. Appreciation
-                else if(t.includes('m3alem') || t.includes('merci') || t.includes('bravo') || t.includes('ya3tik')) {
+                // 7. Global Site Search (Last resort before default)
+                else {
+                    let found = false;
+                    // Search in Events
+                    events.forEach(e => {
+                        if(t.includes(e.title.toLowerCase()) || t.includes(e.location.toLowerCase())) {
+                            reply = "J'ai trouvé l'événement: '" + e.title + "' le " + e.date + " à " + e.location + ". 📍";
+                            found = true;
+                        }
+                    });
+                    // Search in Resources
+                    if(!found) {
+                        resources.forEach(r => {
+                            if(t.includes(r.name.toLowerCase())) {
+                                reply = "La ressource '" + r.name + "' est disponible en stock (Quantité: " + r.quantity + "). 📦";
+                                found = true;
+                            }
+                        });
+                    }
+                    // Search in Menu / General Keywords
+                    if(!found) {
+                        if(t.includes('event')) reply = "Vous avez " + events.length + " événements. Cliquez sur 'Nouveau Event' à gauche pour en ajouter un.";
+                        else if(t.includes('ressource')) reply = "Il y a " + resources.length + " ressources. Gérez-les via le menu 'Nouvelle Ressource'.";
+                        else if(t.includes('dashboard') || t.includes('tableau')) reply = "C'est votre tableau de bord principal avec KPIs, Cartes et Graphiques.";
+                        else found = false;
+                        if(reply !== "") found = true;
+                    }
+                }
+                
+                // 8. Appreciation
+                if(t.includes('m3alem') || t.includes('merci') || t.includes('bravo') || t.includes('ya3tik')) {
                     reply = "Ya m3alem enta! Men wejbi. 🚀🔥";
                 }
                 
