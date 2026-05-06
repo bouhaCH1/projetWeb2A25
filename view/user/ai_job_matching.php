@@ -28,8 +28,8 @@
           <div class="ww-upload-icon">📁</div>
           <h3>Upload Your Resume</h3>
           <p>Drag and drop your resume or click to browse</p>
-          <p class="ww-upload-hint">Supported formats: PDF, DOC, DOCX (Max 5MB)</p>
-          <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="display: none;">
+          <p class="ww-upload-hint">Supported formats: TXT, PDF, DOC, DOCX (Max 5MB)</p>
+          <input type="file" id="resumeFile" accept=".pdf,.doc,.docx,.txt" style="display: none;">
           <button class="ww-btn-primary" onclick="document.getElementById('resumeFile').click()">Choose File</button>
         </div>
       </div>
@@ -507,6 +507,8 @@
 </style>
 
 <script>
+let currentExtractedSkills = [];
+
 document.addEventListener('DOMContentLoaded', function() {
     // File upload handling
     const resumeFile = document.getElementById('resumeFile');
@@ -536,15 +538,57 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function handleFileSelect(file) {
     if (file && file.size <= 5242880) { // 5MB limit
-        // Simulate file processing
-        setTimeout(() => {
-            processResume(file);
-        }, 1500);
+        if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                setTimeout(() => {
+                    processResumeText(e.target.result);
+                }, 800);
+            };
+            reader.readAsText(file);
+        } else {
+            // Simulated fallback for PDF/DOCX
+            setTimeout(() => {
+                processResume(file);
+            }, 1500);
+        }
+    } else {
+        alert("File is too large or invalid.");
     }
 }
 
+function processResumeText(text) {
+    const textLower = text.toLowerCase();
+    
+    const dictProgramming = ['php', 'javascript', 'python', 'java', 'c++', 'ruby', 'go', 'mysql', 'sql', 'mongodb', 'react', 'angular', 'vue', 'node.js', 'typescript', 'html', 'css', 'laravel', 'symfony', 'bash'];
+    const dictSoft = ['communication', 'teamwork', 'leadership', 'problem solving', 'agile', 'scrum', 'management', 'critical thinking', 'adaptability', 'organization'];
+    const dictTools = ['git', 'docker', 'jira', 'vs code', 'aws', 'azure', 'linux', 'kubernetes', 'jenkins', 'figma', 'github', 'gitlab'];
+    
+    const foundProgramming = dictProgramming.filter(skill => textLower.includes(skill));
+    const foundSoft = dictSoft.filter(skill => textLower.includes(skill));
+    const foundTools = dictTools.filter(skill => textLower.includes(skill));
+    
+    let years = 1;
+    if (textLower.includes('senior') || textLower.includes('lead')) years += 4;
+    if (textLower.includes('mid') || textLower.match(/\b(3|4|5) (years|ans|années)\b/)) years += 2;
+    if (textLower.length > 1000) years += 1;
+    
+    const analysis = {
+        skills: {
+            programming: foundProgramming.length > 0 ? foundProgramming.map(s => s.toUpperCase()) : ['PHP', 'HTML'],
+            soft_skills: foundSoft.length > 0 ? foundSoft.map(s => s.charAt(0).toUpperCase() + s.slice(1)) : ['Communication'],
+            tools: foundTools.length > 0 ? foundTools.map(s => s.toUpperCase()) : ['GIT']
+        },
+        experience: { years: Math.min(10, years), level: years > 4 ? 'senior' : (years > 2 ? 'mid' : 'junior') },
+        education: { level: textLower.includes('bachelor') || textLower.includes('master') || textLower.includes('diploma') || textLower.includes('licence') || textLower.includes('ingénieur') ? 'bachelor' : 'unknown', detected: true },
+        confidence: 94
+    };
+    
+    currentExtractedSkills = [...foundProgramming, ...foundTools, ...foundSoft];
+    displayAnalysisResults(analysis);
+}
+
 function processResume(file) {
-    // Simulate AI processing
     const mockAnalysis = {
         skills: {
             programming: ['PHP', 'JavaScript', 'MySQL', 'React'],
@@ -556,6 +600,7 @@ function processResume(file) {
         confidence: 85
     };
     
+    currentExtractedSkills = ['php', 'javascript', 'mysql', 'react', 'git', 'docker', 'jira', 'communication'];
     displayAnalysisResults(mockAnalysis);
 }
 
@@ -563,13 +608,11 @@ function displayAnalysisResults(analysis) {
     const resultsDiv = document.getElementById('analysisResults');
     resultsDiv.style.display = 'block';
     
-    // Update metrics
     document.getElementById('skillCount').textContent = 
         Object.values(analysis.skills).flat().length;
     document.getElementById('experienceYears').textContent = analysis.experience.years;
     document.getElementById('confidenceScore').textContent = analysis.confidence + '%';
     
-    // Update skills
     displaySkills('technicalSkills', analysis.skills.programming);
     displaySkills('softSkills', analysis.skills.soft_skills);
     displaySkills('tools', analysis.skills.tools);
@@ -583,22 +626,41 @@ function displaySkills(elementId, skills) {
 }
 
 function analyzeJobCompatibility() {
-    const jobId = document.getElementById('jobSelector').value;
-    if (!jobId) return;
+    const jobSelector = document.getElementById('jobSelector');
+    const jobId = jobSelector.value;
     
-    // Simulate API call
+    if (!jobId) return;
+    if (currentExtractedSkills.length === 0) {
+        alert("Please upload and analyze a resume first.");
+        return;
+    }
+    
+    const jobRequirements = {
+        '1': ['php', 'mysql', 'laravel', 'git', 'javascript'],
+        '2': ['javascript', 'react', 'node.js', 'mongodb', 'html', 'css'],
+        '3': ['docker', 'aws', 'linux', 'kubernetes', 'python', 'git'],
+        '4': ['figma', 'html', 'css', 'javascript', 'communication'],
+        '5': ['agile', 'scrum', 'jira', 'leadership', 'communication']
+    };
+    
+    const required = jobRequirements[jobId] || [];
+    const missing = required.filter(skill => !currentExtractedSkills.includes(skill));
+    const matched = required.filter(skill => currentExtractedSkills.includes(skill));
+    
+    const skillScore = required.length > 0 ? Math.round((matched.length / required.length) * 100) : 0;
+    
     setTimeout(() => {
         const mockCompatibility = {
-            overall_score: 78,
-            skill_match: 85,
-            experience_match: 70,
-            education_match: 80,
-            recommendation: 'Good match - Recommended to apply',
-            missing_skills: ['TypeScript', 'AWS', 'GraphQL']
+            overall_score: Math.round((skillScore * 0.7) + 25),
+            skill_match: skillScore,
+            experience_match: currentExtractedSkills.length > 5 ? 85 : 50,
+            education_match: 90,
+            recommendation: skillScore > 60 ? 'Strong Match - You are highly recommended to apply!' : 'Low Match - Consider developing the missing skills.',
+            missing_skills: missing.map(s => s.toUpperCase())
         };
         
         displayCompatibilityResults(mockCompatibility);
-    }, 1000);
+    }, 800);
 }
 
 function displayCompatibilityResults(data) {
