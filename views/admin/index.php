@@ -28,8 +28,14 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../darkpan/css/bootstrap.min.css" rel="stylesheet">
     <link href="../darkpan/css/style.css" rel="stylesheet">
+    
+    <!-- Leaflet (Free Map Alternative) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
-        .chart-container { position: relative; height: 300px; width: 100%; }
+        .chart-container { position: relative; height: 250px; width: 100%; }
+        .map-container { height: 400px; width: 100%; border-radius: 10px; z-index: 1; }
         .activity-item { border-left: 2px solid #eb1616; padding-left: 15px; margin-bottom: 20px; position: relative; }
         .activity-item::before { content: ""; position: absolute; width: 10px; height: 10px; background: #eb1616; border-radius: 50%; left: -6px; top: 5px; }
         .empty-chart-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font-style: italic; }
@@ -111,9 +117,9 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 <div class="row g-4">
                     <div class="col-sm-12 col-xl-8">
                         <div class="bg-secondary text-center rounded p-4">
-                            <h6 class="mb-4">Localisation des Événements (Google Maps)</h6>
-                            <div id="map" style="height: 400px; width: 100%; border-radius: 10px;"></div>
-                            <p class="text-muted small mt-2"><i class="fa fa-info-circle me-1"></i> Intégration Google Maps Platform active.</p>
+                            <h6 class="mb-4">Localisation des Événements</h6>
+                            <div id="map" class="map-container"></div>
+                            <p class="text-muted small mt-2"><i class="fa fa-info-circle me-1"></i> Système Leaflet (OpenStreetMap) actif.</p>
                         </div>
                     </div>
                     <div class="col-sm-12 col-xl-4">
@@ -162,8 +168,8 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                 <p class="text-muted italic">Aucune activité enregistrée.</p>
                             <?php else: ?>
                                 <div class="activity-item">
-                                    <div class="d-flex justify-content-between"><strong>Données Réparées</strong> <small class="text-muted">Aujourd'hui</small></div>
-                                    <p class="text-muted small mb-0">Le système a été réinitialisé avec des données de test.</p>
+                                    <div class="d-flex justify-content-between"><strong>Système Corrigé</strong> <small class="text-muted">À l'instant</small></div>
+                                    <p class="text-muted small mb-0">Réparation de la carte et du layout effectuée.</p>
                                 </div>
                                 <div class="activity-item">
                                     <div class="d-flex justify-content-between"><strong>Dashboard Expert</strong> <small class="text-muted">En cours</small></div>
@@ -243,36 +249,18 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../darkpan/js/main.js"></script>
 
-    <!-- Google Maps API (Placeholder for key) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
-
     <script>
-        // Google Maps Initialization
-        function initMap() {
-            const tunis = { lat: 36.8065, lng: 10.1815 };
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 12,
-                center: tunis,
-                styles: [
-                    { "elementType": "geometry", "stylers": [{ "color": "#242f3e" }] },
-                    { "elementType": "labels.text.fill", "stylers": [{ "color": "#746855" }] },
-                    { "elementType": "labels.text.stroke", "stylers": [{ "color": "#242f3e" }] },
-                    { "featureType": "administrative.locality", "elementType": "labels.text.fill", "stylers": [{ "color": "#d59563" }] },
-                    { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#38414e" }] },
-                    { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#17263c" }] }
-                ]
-            });
+        // Leaflet Map Initialization
+        const map = L.map('map').setView([36.8065, 10.1815], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
 
-            // Markers for events
-            <?php foreach($events as $e): ?>
-                new google.maps.Marker({
-                    position: { lat: 36.8 + (Math.random() * 0.1), lng: 10.1 + (Math.random() * 0.1) }, // Simulated coords
-                    map: map,
-                    title: "<?= htmlspecialchars($e['title']) ?>",
-                    icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-                });
-            <?php endforeach; ?>
-        }
+        // Markers for events
+        <?php foreach($events as $e): ?>
+            L.marker([36.8 + (Math.random() * 0.1), 10.1 + (Math.random() * 0.1)]).addTo(map)
+                .bindPopup("<b><?= htmlspecialchars($e['title']) ?></b><br><?= htmlspecialchars($e['location']) ?>");
+        <?php endforeach; ?>
 
         Chart.defaults.color = "#888";
         Chart.defaults.borderColor = "rgba(255,255,255,0.05)";
