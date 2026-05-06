@@ -819,14 +819,25 @@ ob_start();
             statusArea.innerHTML = '';
             
             const statusBadge = document.createElement('span');
-            statusBadge.className = 'badge rounded-pill px-3 py-2';
+            statusBadge.className = 'badge rounded-pill px-3 py-2 me-2';
             statusBadge.style.background = statusColor;
             statusBadge.style.color = '#0a0e27';
             statusBadge.style.fontWeight = '700';
             const iconClass = type === 'acceptation' ? 'fa-check' : 'fa-times';
             statusBadge.innerHTML = '<i class="fas ' + iconClass + ' me-1"></i> ' + statusLabel;
-
             statusArea.appendChild(statusBadge);
+            
+            // Badge email envoyé
+            if (data.sent) {
+                const sentBadge = document.createElement('span');
+                sentBadge.className = 'badge rounded-pill px-3 py-2';
+                sentBadge.style.background = '#00ccff';
+                sentBadge.style.color = '#0a0e27';
+                sentBadge.style.fontWeight = '600';
+                sentBadge.style.fontSize = '11px';
+                sentBadge.innerHTML = '<i class="fas fa-paper-plane me-1"></i> Email envoyé à ' + data.recipient;
+                statusArea.appendChild(sentBadge);
+            }
         })
         .catch(err => {
             alert('Erreur réseau : ' + err);

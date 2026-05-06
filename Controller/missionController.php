@@ -413,9 +413,11 @@ class MissionController {
         $candidateName = htmlspecialchars($candidature['prenom'] . ' ' . $candidature['nom']);
         $missionTitle = htmlspecialchars($candidature['mission_titre']);
         $motivation = $candidature['motivation'] ?? '';
+        $candidateEmail = $candidature['email'];
 
         try {
-            $email = EmailService::generateEmail($type, $candidateName, $missionTitle, $motivation);
+            // Générer ET envoyer l'email
+            $email = EmailService::generateAndSendEmail($type, $candidateEmail, $candidateName, $missionTitle, $motivation);
 
             // Mettre à jour le statut automatiquement
             $newStatut = ($type === 'acceptation') ? 'acceptee' : 'refusee';
