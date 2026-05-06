@@ -32,6 +32,7 @@
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="rib" placeholder="Numéro de RIB" value="TN59 1234 5678 9012 3456 7890">
                                             <label for="rib">Numéro de RIB / IBAN</label>
+                                            <div id="err-rib" class="text-danger small mt-1" style="display:none;">RIB invalide (min 20 caractères)</div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -39,10 +40,12 @@
                                         <div class="form-floating mb-3">
                                             <input type="email" class="form-control" id="email" placeholder="Email" value="client@exemple.com">
                                             <label for="email">Adresse Email du Client</label>
+                                            <div id="err-email" class="text-danger small mt-1" style="display:none;">Email invalide</div>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="card" placeholder="N° Carte Bancaire" value="4242 4242 4242 4242">
                                             <label for="card">Numéro de Carte Bancaire (16 chiffres)</label>
+                                            <div id="err-card" class="text-danger small mt-1" style="display:none;">Doit contenir 16 chiffres</div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -64,6 +67,7 @@
                                         <div class="form-floating mb-4">
                                             <input type="number" class="form-control" id="amount" placeholder="Somme" value="150.00">
                                             <label for="amount">La Somme à Prélever (TND)</label>
+                                            <div id="err-amount" class="text-danger small mt-1" style="display:none;">Montant invalide</div>
                                         </div>
                                     </div>
                                 </div>
@@ -73,18 +77,40 @@
 
                                 <script>
                                 function processPayment() {
+                                    let isValid = true;
+                                    
+                                    // RIB Validation
+                                    if(document.getElementById('rib').value.replace(/\s/g, '').length < 20) {
+                                        document.getElementById('err-rib').style.display = 'block'; isValid = false;
+                                    } else document.getElementById('err-rib').style.display = 'none';
+
+                                    // Email Validation
+                                    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value)) {
+                                        document.getElementById('err-email').style.display = 'block'; isValid = false;
+                                    } else document.getElementById('err-email').style.display = 'none';
+
+                                    // Card Validation
+                                    if(document.getElementById('card').value.replace(/\s/g, '').length !== 16) {
+                                        document.getElementById('err-card').style.display = 'block'; isValid = false;
+                                    } else document.getElementById('err-card').style.display = 'none';
+
+                                    // Amount Validation
+                                    if(parseFloat(document.getElementById('amount').value) <= 0 || isNaN(parseFloat(document.getElementById('amount').value))) {
+                                        document.getElementById('err-amount').style.display = 'block'; isValid = false;
+                                    } else document.getElementById('err-amount').style.display = 'none';
+
+                                    if(!isValid) return;
+
                                     const btn = document.getElementById('btn-pay');
                                     const originalText = btn.innerHTML;
                                     
-                                    // Simulation de chargement
                                     btn.disabled = true;
-                                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement sécurisé en cours...';
+                                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Traitement sécurisé...';
                                     
                                     setTimeout(() => {
-                                        alert("✅ Succès ! \nLe paiement de " + document.getElementById('amount').value + " TND a été traité avec succès via Stripe. \nUn email de confirmation a été envoyé à " + document.getElementById('email').value);
-                                        btn.disabled = false;
-                                        btn.innerHTML = originalText;
-                                    }, 2500);
+                                        alert("✅ Succès ! \nPaiement de " + document.getElementById('amount').value + " TND validé.");
+                                        btn.disabled = false; btn.innerHTML = originalText;
+                                    }, 2000);
                                 }
                                 </script>
 
