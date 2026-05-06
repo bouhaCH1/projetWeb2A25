@@ -248,20 +248,22 @@ switch ($action) {
         }
 
         $msgLower = mb_strtolower($msg, 'UTF-8');
-        $reply = "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Je peux vous aider avec la Double Authentification (2FA), l'Analyse IA, ou la vérification d'identité.";
+        $reply = "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Je peux vous aider avec votre profil, la Double Authentification (2FA), l'Analyse IA, ou la vérification d'identité.";
 
-        if (preg_match('/\b(2fa|double authentification|sécurité|sms|code|auth)\b/i', $msgLower)) {
+        if (preg_match('/\b(mot de passe|password|oublié)\b/i', $msgLower)) {
+            $reply = "Pour changer votre mot de passe, allez dans **'Sécurité & 2FA'** et descendez jusqu'à la section de changement de mot de passe. Si vous n'arrivez pas à vous connecter, utilisez le bouton 'Mot de passe oublié' sur la page de connexion.";
+        } elseif (preg_match('/\b(modifier|changer|editer|mettre à jour|nom|prénom|prenom|telephone|téléphone|photo|image|profil)\b/i', $msgLower) && !preg_match('/\b(ia|analyse|coach)\b/i', $msgLower)) {
+            $reply = "Pour modifier vos informations (nom, prénom, téléphone, photo, etc.) :\n1. Allez dans l'onglet **'Mon Profil'** dans le menu.\n2. Modifiez les champs souhaités.\n3. Cliquez sur **'Enregistrer les modifications'** au bas de la page.";
+        } elseif (preg_match('/\b(2fa|double authentification|sécurité|sms|code|auth)\b/i', $msgLower)) {
             $reply = "Pour activer la **Double Authentification (2FA)** :\n1. Allez dans l'onglet **'Sécurité & 2FA'** dans le menu de gauche.\n2. Cliquez sur le bouton 'Activer la double authentification'.\n3. Lors de votre prochaine connexion, un code à 6 chiffres sera envoyé à votre adresse email !";
-        } elseif (preg_match('/\b(ia|analyse|profil|coach|améliorer)\b/i', $msgLower)) {
-            $reply = "L'**Analyse IA** vous aide à perfectionner votre profil.\n1. Allez dans **'Analyse IA'** dans le menu.\n2. Décrivez vos compétences et expériences.\n3. L'IA va corriger vos fautes, réécrire votre texte de manière professionnelle, et vous suggérer les métiers qui vous correspondent le mieux !";
+        } elseif (preg_match('/\b(ia|analyse|coach|améliorer|perfectionner)\b/i', $msgLower)) {
+            $reply = "L'**Analyse IA** vous aide à perfectionner votre profil professionnel.\n1. Allez dans **'Analyse IA'** dans le menu.\n2. Décrivez vos compétences et expériences.\n3. L'IA va corriger vos fautes, réécrire votre texte de manière professionnelle, et vous suggérer les métiers qui vous correspondent le mieux !";
         } elseif (preg_match('/\b(cin|identité|vérification|ocr|document)\b/i', $msgLower)) {
             $reply = "Pour avoir le **Badge Vérifié** :\n1. Allez dans **'Vérifier CIN'**.\n2. Uploadez une photo de votre pièce d'identité.\n3. Notre IA OCR extraira votre nom et validera instantanément votre compte si les noms correspondent.";
         } elseif (preg_match('/\b(bonjour|salut|hello|coucou)\b/i', $msgLower)) {
-            $reply = "Bonjour ! 👋 Je suis l'assistant WorkWave. Comment puis-je vous aider aujourd'hui ? (Essayez de me demander comment activer la 2FA !)";
+            $reply = "Bonjour ! 👋 Je suis l'assistant WorkWave. Comment puis-je vous aider aujourd'hui ? (Essayez de me demander comment modifier votre profil ou activer la 2FA !)";
         } elseif (preg_match('/\b(merci|thanks)\b/i', $msgLower)) {
             $reply = "Avec plaisir ! N'hésitez pas si vous avez d'autres questions. 😊";
-        } elseif (preg_match('/\b(mot de passe|password|oublié)\b/i', $msgLower)) {
-            $reply = "Pour changer votre mot de passe, allez dans **'Sécurité & 2FA'** et descendez jusqu'à la section de changement de mot de passe. Si vous n'arrivez pas à vous connecter, utilisez le bouton 'Mot de passe oublié' sur la page de connexion.";
         }
 
         // Simulate a small typing delay to feel like a real bot
