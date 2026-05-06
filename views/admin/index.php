@@ -351,16 +351,35 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
             addMessage(text, 'user');
             input.value = '';
 
-            // AI Logic
+            // AI Advanced Multilingual Logic
             setTimeout(() => {
-                let reply = "Je ne suis pas sûr de comprendre, mais je peux vous aider à gérer vos " + <?= count($events) ?> + " événements !";
+                let reply = "I am your assistant. Je suis votre assistant. Ena l'assistant mte3ek! \n(Ask me about events, resources, or how the site works!)";
                 const t = text.toLowerCase();
                 
-                if(t.includes('salut') || t.includes('bonjour')) reply = "Bonjour ! Je suis prêt à analyser vos données. Que voulez-vous savoir ?";
-                else if(t.includes('évenement') || t.includes('event')) reply = "Vous avez actuellement " + <?= count($events) ?> + " événements enregistrés. Voulez-vous que j'en analyse un en particulier ?";
-                else if(t.includes('ressource')) reply = "Votre stock contient " + <?= count($resources) ?> + " types de ressources. Certaines sont en stock faible (en rouge dans le tableau).";
-                else if(t.includes('meteo') || t.includes('temps')) reply = "Il fait 24°C à Tunis actuellement. C'est parfait pour vos événements en extérieur !";
-                else if(t.includes('argent') || t.includes('paiement')) reply = "Le module de paiement Stripe est configuré et prêt pour des transactions sécurisées.";
+                // Greetings
+                if(t.includes('salut') || t.includes('bonjour') || t.includes('hello') || t.includes('hi') || t.includes('aslama') || t.includes('labes')) {
+                    reply = "Bonjour / Hello / Aslama! 👋 \nJe parle Français, English, et Tounsi. Chnowa t7eb ta3ref 3al site?";
+                }
+                // Explanations about the site
+                else if(t.includes('site') || t.includes('kifech') || t.includes('how') || t.includes('expliquer')) {
+                    reply = "Ce site est un Dashboard Pro pour gérer vos événements. \n- 📊 Graphiques: Statistiques mensuelles.\n- 🗺️ Carte: Localisation des événements.\n- 🔌 APIs: Stripe, Mail, et Calendar.\n- 🤖 IA: Prédiction et Chat interactif.";
+                }
+                // Events (Multi-lang)
+                else if(t.includes('évenement') || t.includes('event') || t.includes('evenement')) {
+                    reply = "You have " + <?= count($events) ?> + " events. \n3andek " + <?= count($events) ?> + " evenements. \nVous pouvez les gérer dans l'onglet 'Événements'.";
+                }
+                // Resources (Multi-lang)
+                else if(t.includes('ressource') || t.includes('stock')) {
+                    reply = "Stock: " + <?= count($resources) ?> + " types. \nEl stock mte3ek fih " + <?= count($resources) ?> + " types de ressources. Ta9dar tchoufhom fi tableau 'Ressources'.";
+                }
+                // Tunsi Specifics
+                else if(t.includes('m3alem') || t.includes('ya m3alem') || t.includes('merci') || t.includes('ya3tik sa7a')) {
+                    reply = "Ya m3alem! Men wejbi. Rabi ywaf9ek fi projetek! 🚀🔥";
+                }
+                // Weather
+                else if(t.includes('meteo') || t.includes('temps') || t.includes('weather')) {
+                    reply = "It's 24°C in Tunis. El ta9es lyoum mezyen barcha! ☀️";
+                }
                 
                 addMessage(reply, 'ai');
             }, 800);
