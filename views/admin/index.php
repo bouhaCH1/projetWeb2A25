@@ -203,7 +203,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         <div class="bg-secondary text-center rounded p-4">
                             <h6 class="mb-4">Services Connectés (APIs)</h6>
                             <div class="d-grid gap-2">
-                                <button onclick="simulateApi('Stripe')" class="btn btn-outline-primary mb-2"><i class="fab fa-stripe me-2"></i>Méthode de Paiement</button>
+                                <a href="index.php?action=api_config&service=Stripe" class="btn btn-outline-primary mb-2"><i class="fab fa-stripe me-2"></i>Méthode de Paiement</a>
                                 <a href="index.php?action=api_config&service=SendGrid" class="btn btn-outline-info mb-2"><i class="fa fa-envelope me-2"></i>Emails Automatiques</a>
                                 <a href="index.php?action=api_config&service=Google Calendar" class="btn btn-outline-warning mb-2"><i class="fa fa-calendar-alt me-2"></i>G-Calendar : Sync</a>
                             </div>
