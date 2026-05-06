@@ -62,4 +62,4 @@ L'objectif principal est de mettre en pratique les concepts fondamentaux du dév
 
 Ce projet représente une synthèse des compétences acquises durant la formation, avec une attention particulière portée à la structuration du code et à l’intégration de services modernes.
 
----
+
