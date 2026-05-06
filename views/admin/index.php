@@ -47,9 +47,19 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
         .fc-daygrid-day-number { color: #fff !important; text-decoration: none; }
         .fc-col-header-cell-cushion { color: #00ffcc !important; text-decoration: none; }
         .fc-event { cursor: pointer; }
-        /* Floating Chat Button */
+        /* Floating Chat Button & Window */
         #chat-btn { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #eb1616; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000; transition: transform 0.3s; cursor: pointer; border: none; }
         #chat-btn:hover { transform: scale(1.1); background: #00ffcc; color: #191c24; }
+        
+        #chat-window { position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px; background: #191c24; border: 1px solid #333; border-radius: 15px; display: none; flex-direction: column; z-index: 1001; box-shadow: 0 10px 30px rgba(0,0,0,0.8); overflow: hidden; }
+        #chat-header { background: #eb1616; padding: 15px; color: #fff; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 80%; padding: 8px 12px; border-radius: 10px; font-size: 14px; }
+        .msg-ai { background: #333; color: #00ffcc; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg-user { background: #eb1616; color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
+        #chat-input-area { padding: 10px; background: #111; display: flex; gap: 10px; border-top: 1px solid #333; }
+        #chat-input { background: #191c24; border: 1px solid #444; color: #fff; border-radius: 20px; padding: 5px 15px; flex: 1; outline: none; }
+        #chat-send { background: #eb1616; border: none; color: #fff; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; }
         
         .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate { color: #888 !important; }
         .dataTables_wrapper .dataTables_filter input { background: #191c24; border: 1px solid #333; color: #fff; border-radius: 5px; }
@@ -90,6 +100,25 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 </div>
             </nav>
             <!-- Navbar End -->
+
+            <!-- AI Chat Interface -->
+            <div id="chat-window">
+                <div id="chat-header">
+                    <span><i class="fa fa-robot me-2"></i>Assistant IA Pro</span>
+                    <button class="btn btn-sm text-white" onclick="toggleChat()"><i class="fa fa-times"></i></button>
+                </div>
+                <div id="chat-messages">
+                    <div class="msg msg-ai">Bonjour ! Je suis l'IA de votre site. Comment puis-je vous aider aujourd'hui ?</div>
+                </div>
+                <div id="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Posez une question..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button id="chat-send" onclick="sendMessage()"><i class="fa fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <button id="chat-btn" onclick="toggleChat()">
+                <i class="fa fa-comments"></i>
+            </button>
 
             <!-- KPI Cards -->
             <div class="container-fluid pt-4 px-4">
@@ -303,12 +332,47 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
             } else if(service === 'Prediction') {
                 msg = "Modèle Hugging Face (Bert-base) chargé. \nAnalyse prédictive: Forte probabilité de succès pour l'événement (89%).";
                 color = "#ffc107";
-            } else if(service === 'ChatBot') {
-                msg = "Assistant IA (GPT-4o) connecté. \nComment puis-je vous aider à gérer vos événements aujourd'hui ?";
-                color = "#00ffcc";
             }
 
             alert("🌐 [Advanced AI Service] " + service + "\n" + "----------------------------------\n" + msg);
+        }
+
+        // Real-time Chat Logic
+        function toggleChat() {
+            const win = document.getElementById('chat-window');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if(!text) return;
+
+            addMessage(text, 'user');
+            input.value = '';
+
+            // AI Logic
+            setTimeout(() => {
+                let reply = "Je ne suis pas sûr de comprendre, mais je peux vous aider à gérer vos " + <?= count($events) ?> + " événements !";
+                const t = text.toLowerCase();
+                
+                if(t.includes('salut') || t.includes('bonjour')) reply = "Bonjour ! Je suis prêt à analyser vos données. Que voulez-vous savoir ?";
+                else if(t.includes('évenement') || t.includes('event')) reply = "Vous avez actuellement " + <?= count($events) ?> + " événements enregistrés. Voulez-vous que j'en analyse un en particulier ?";
+                else if(t.includes('ressource')) reply = "Votre stock contient " + <?= count($resources) ?> + " types de ressources. Certaines sont en stock faible (en rouge dans le tableau).";
+                else if(t.includes('meteo') || t.includes('temps')) reply = "Il fait 24°C à Tunis actuellement. C'est parfait pour vos événements en extérieur !";
+                else if(t.includes('argent') || t.includes('paiement')) reply = "Le module de paiement Stripe est configuré et prêt pour des transactions sécurisées.";
+                
+                addMessage(reply, 'ai');
+            }, 800);
+        }
+
+        function addMessage(text, type) {
+            const area = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = 'msg msg-' + type;
+            div.innerText = text;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
         }
 
         // Leaflet Map Initialization
