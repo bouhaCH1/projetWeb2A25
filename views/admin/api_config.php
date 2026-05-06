@@ -125,6 +125,10 @@
 
                             <?php elseif($_GET['service'] == 'SendGrid'): ?>
                                 <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="text-white small">SendGrid API Key (Laissez vide pour config par défaut)</label>
+                                        <input type="password" id="sg-key" class="form-control" placeholder="SG.xxxxx...">
+                                    </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="text-white small">Email Expéditeur (Vérifié)</label>
                                         <input type="email" id="sg-from" class="form-control" placeholder="admin@domaine.com" value="admin@event-pro.tn">
@@ -155,7 +159,7 @@
                                     b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Génération & Envoi...';
 
                                     const fd = new FormData();
-                                    fd.append('key', 'admin'); // On utilise l'alias interne
+                                    fd.append('key', document.getElementById('sg-key').value);
                                     fd.append('from', document.getElementById('sg-from').value);
                                     fd.append('to', document.getElementById('sg-to').value);
                                     fd.append('subject', 'Rapport des Événements à Venir - Event Pro');

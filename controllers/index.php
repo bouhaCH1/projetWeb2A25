@@ -36,14 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require_once __DIR__ . '/../models/Event.php';
         $api = new ApiService();
         $eventModel = new Event($db);
+        require_once __DIR__ . '/../config_api.php';
         
         $key = $_POST['key'];
+        // Si le champ est vide ou "admin", on utilise la clé du fichier config
+        if(empty($key) || $key === 'admin') $key = SENDGRID_API_KEY; 
+        
         $message = $_POST['message'] ?? "";
         
-        // If it's an event report, we build the list from DB
+        // Build the list from DB
         if(isset($_POST['type']) && $_POST['type'] == 'event_report') {
-            $events = $eventModel->getAll(); // Fetch upcoming events
-            $list = "<h2>Liste des événements à venir :</h2><ul>";
+            $events = $eventModel->getAll(); 
+            $list = "<h2>Rapport de vos événements :</h2><ul>";
             foreach($events as $e) {
                 $list .= "<li><strong>" . htmlspecialchars($e['title']) . "</strong> - " . date('d/m/Y H:i', strtotime($e['date'])) . " (" . htmlspecialchars($e['location']) . ")</li>";
             }
@@ -51,12 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = $list;
         }
 
-        // --- MODE DÉMO / SOUTENANCE ---
-        if($key === 'SG.VOTRE_VRAIE_CLE_ICI' || $key === 'admin' || empty($key)) {
-            // Simulation de succès pour la démo
-            echo "success"; exit;
-        }
-        
+        // --- ENVOI RÉEL ---
         $res = $api->sendRealEmail($key, $_POST['from'], $_POST['to'], $_POST['subject'], $message);
         echo $res ? "success" : "error"; exit;
     }
