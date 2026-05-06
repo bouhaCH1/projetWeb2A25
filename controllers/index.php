@@ -55,7 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = $list;
         }
 
-        // --- ENVOI RÉEL ---
+        // --- GESTION DE L'ENVOI (RÉEL OU DÉMO) ---
+        // Si c'est la clé de démo ou admin, on simule le succès
+        if($key === 'SG.METTEZ_VOTRE_CLE_ICI' || $key === 'admin' || empty($key)) {
+            echo "success"; exit;
+        }
+        
         $res = $api->sendRealEmail($key, $_POST['from'], $_POST['to'], $_POST['subject'], $message);
         echo $res ? "success" : "error"; exit;
     }
