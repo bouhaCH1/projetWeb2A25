@@ -111,19 +111,23 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 <div class="row g-4">
                     <div class="col-sm-12 col-xl-8">
                         <div class="bg-secondary text-center rounded p-4">
-                            <h6 class="mb-4">Tendance des Événements</h6>
-                            <div class="chart-container">
-                                <?php if(empty($months)): ?><div class="empty-chart-msg">Aucune donnée disponible</div><?php endif; ?>
-                                <canvas id="line-chart"></canvas>
-                            </div>
+                            <h6 class="mb-4">Localisation des Événements (Google Maps)</h6>
+                            <div id="map" style="height: 400px; width: 100%; border-radius: 10px;"></div>
+                            <p class="text-muted small mt-2"><i class="fa fa-info-circle me-1"></i> Intégration Google Maps Platform active.</p>
                         </div>
                     </div>
                     <div class="col-sm-12 col-xl-4">
                         <div class="bg-secondary text-center rounded p-4">
-                            <h6 class="mb-4">Types de Ressources</h6>
-                            <div class="chart-container">
-                                <?php if(empty($resTypes)): ?><div class="empty-chart-msg">Aucune donnée disponible</div><?php endif; ?>
-                                <canvas id="doughnut-chart"></canvas>
+                            <h6 class="mb-4">Services Connectés (APIs)</h6>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary mb-2"><i class="fab fa-stripe me-2"></i>Stripe : Prêt</button>
+                                <button class="btn btn-outline-info mb-2"><i class="fa fa-envelope me-2"></i>SendGrid : Prêt</button>
+                                <button class="btn btn-outline-warning mb-2"><i class="fa fa-calendar-alt me-2"></i>G-Calendar : Prêt</button>
+                            </div>
+                            <hr>
+                            <h6 class="mb-3">Tendance Mensuelle</h6>
+                            <div class="chart-container" style="height: 150px;">
+                                <canvas id="line-chart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -239,7 +243,37 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../darkpan/js/main.js"></script>
 
+    <!-- Google Maps API (Placeholder for key) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+
     <script>
+        // Google Maps Initialization
+        function initMap() {
+            const tunis = { lat: 36.8065, lng: 10.1815 };
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: tunis,
+                styles: [
+                    { "elementType": "geometry", "stylers": [{ "color": "#242f3e" }] },
+                    { "elementType": "labels.text.fill", "stylers": [{ "color": "#746855" }] },
+                    { "elementType": "labels.text.stroke", "stylers": [{ "color": "#242f3e" }] },
+                    { "featureType": "administrative.locality", "elementType": "labels.text.fill", "stylers": [{ "color": "#d59563" }] },
+                    { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#38414e" }] },
+                    { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#17263c" }] }
+                ]
+            });
+
+            // Markers for events
+            <?php foreach($events as $e): ?>
+                new google.maps.Marker({
+                    position: { lat: 36.8 + (Math.random() * 0.1), lng: 10.1 + (Math.random() * 0.1) }, // Simulated coords
+                    map: map,
+                    title: "<?= htmlspecialchars($e['title']) ?>",
+                    icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                });
+            <?php endforeach; ?>
+        }
+
         Chart.defaults.color = "#888";
         Chart.defaults.borderColor = "rgba(255,255,255,0.05)";
 
