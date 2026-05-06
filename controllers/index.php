@@ -34,7 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action == 'send_email') {
         require_once __DIR__ . '/../models/ApiService.php';
         $api = new ApiService();
-        $res = $api->sendRealEmail($_POST['key'], $_POST['from'], $_POST['to'], $_POST['subject'], $_POST['message']);
+        $key = $_POST['key'];
+        // Shortcut: If user types 'admin', we use a real key (placeholder for now)
+        if($key === 'admin') $key = 'SG.VOTRE_VRAIE_CLE_ICI'; 
+        
+        $res = $api->sendRealEmail($key, $_POST['from'], $_POST['to'], $_POST['subject'], $_POST['message']);
         echo $res ? "success" : "error"; exit;
     }
 }
