@@ -22,18 +22,52 @@
 
                             <?php if($_GET['service'] == 'Stripe'): ?>
                                 <div class="alert alert-primary">
-                                    <h6><i class="fab fa-stripe me-2"></i>Configuration Stripe Gateway</h6>
-                                    <p>Connectez votre compte pour accepter les paiements par carte bancaire.</p>
+                                    <h6><i class="fab fa-stripe me-2"></i>Passerelle de Paiement Stripe</h6>
+                                    <p class="small">Configurez les informations de transaction et les détails du compte de réception.</p>
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" placeholder="Clé Publique" value="pk_test_51...xxxx">
-                                    <label>Clé Publique (Publishable Key)</label>
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h6 class="text-white mb-3">Informations de Réception (Virement)</h6>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="rib" placeholder="Numéro de RIB" value="TN59 1234 5678 9012 3456 7890">
+                                            <label for="rib">Numéro de RIB / IBAN</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h6 class="text-white mb-3">Détails de Paiement Client</h6>
+                                        <div class="form-floating mb-3">
+                                            <input type="email" class="form-control" id="email" placeholder="Email" value="client@exemple.com">
+                                            <label for="email">Adresse Email du Client</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="card" placeholder="N° Carte Bancaire" value="4242 4242 4242 4242">
+                                            <label for="card">Numéro de Carte Bancaire (16 chiffres)</label>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="expiry" placeholder="MM/YY" value="12/28">
+                                                    <label for="expiry">Date d'expiration</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="cvc" placeholder="CVC" value="123">
+                                                    <label for="cvc">CVC / Code</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h6 class="text-white mb-3">Transaction</h6>
+                                        <div class="form-floating mb-4">
+                                            <input type="number" class="form-control" id="amount" placeholder="Somme" value="150.00">
+                                            <label for="amount">La Somme à Prélever (TND)</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" placeholder="Clé Secrète" value="sk_test_51...xxxx">
-                                    <label>Clé Secrète (Secret Key)</label>
-                                </div>
-                                <button class="btn btn-primary w-100 py-3">Enregistrer & Connecter</button>
+                                <button class="btn btn-primary w-100 py-3 shadow"><i class="fa fa-lock me-2"></i>Valider & Traiter le Paiement</button>
 
                             <?php elseif($_GET['service'] == 'SendGrid'): ?>
                                 <div class="alert alert-info">
