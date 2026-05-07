@@ -572,7 +572,13 @@ Statut: Payé
             };
             $('#eventsTable').DataTable(tableConfig);
             $('#resourcesTable').DataTable(tableConfig);
-            $('#paymentsTable').DataTable(tableConfig);
+            
+            // Version simplifiée pour les paiements (sans boutons export)
+            $('#paymentsTable').DataTable({
+                ...tableConfig,
+                dom: 'frtip',
+                buttons: []
+            });
         });
 
         Chart.defaults.color = "#888";
