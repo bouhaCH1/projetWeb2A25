@@ -468,6 +468,127 @@ class MissionController {
         exit;
     }
 
+    // ============ CHAT API METHODS ============
+    
+    public function sendChatMessage() {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['error' => 'Requête invalide']);
+            exit;
+        }
+        
+        require_once __DIR__ . '/../Model/Chat.php';
+        $chat = new Chat();
+        
+        $senderId = isset($_POST['sender_id']) ? (int)$_POST['sender_id'] : 0;
+        $senderType = isset($_POST['sender_type']) ? trim($_POST['sender_type']) : '';
+        $receiverId = isset($_POST['receiver_id']) ? (int)$_POST['receiver_id'] : 0;
+        $message = isset($_POST['message']) ? trim($_POST['message']) : '';
+        
+        if ($senderId <= 0 || empty($message) || empty($senderType)) {
+            echo json_encode(['error' => 'Paramètres invalides']);
+            exit;
+        }
+        
+        // Si admin envoie à candidat, receiver est le candidat
+        // Si candidat envoie, receiver est admin (id=1 par défaut)
+        if ($receiverId === 0) {
+            $receiverId = 1; // ID admin par défaut
+        }
+        
+        $success = $chat->sendMessage($senderId, $senderType, $receiverId, $message);
+        
+        if ($success) {
+            echo json_encode(['success' => true, 'message' => 'Message envoyé']);
+        } else {
+            echo json_encode(['error' => 'Erreur lors de l\'envoi']);
+        }
+        exit;
+    }
+    
+    public function getChatMessages() {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        
+        $userId = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
+        $otherId = isset($_GET['other_id']) ? (int)$_GET['other_id'] : 0;
+        $userType = isset($_GET['user_type']) ? trim($_GET['user_type']) : 'candidat';
+        
+        if ($userId <= 0 || $otherId <= 0) {
+            echo json_encode(['error' => 'Paramètres invalides']);
+            exit;
+        }
+        
+        require_once __DIR__ . '/../Model/Chat.php';
+        $chat = new Chat();
+        
+        $messages = $chat->getConversation($userId, $userType, $otherId);
+        
+        // Marquer comme lu les messages reçus
+        $chat->markAsRead($otherId, $userId);
+        
+        echo json_encode(['messages' => $messages]);
+        exit;
+    }
+    
+    public function getUnreadCount() {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        
+        $userId = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
+        $userType = isset($_GET['user_type']) ? trim($_GET['user_type']) : 'candidat';
+        
+        if ($userId <= 0) {
+            echo json_encode(['count' => 0]);
+            exit;
+        }
+        
+        require_once __DIR__ . '/../Model/Chat.php';
+        $chat = new Chat();
+        
+        $count = $chat->getUnreadCount($userId, $userType);
+        
+        echo json_encode(['count' => $count]);
+        exit;
+    }
+
+    // ============ END CHAT API ============
+
+    public function aiChat() {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/json; charset=utf-8');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['error' => 'Requête invalide']);
+            exit;
+        }
+
+        $message = isset($_POST['message']) ? trim($_POST['message']) : '';
+
+        if (empty($message)) {
+            echo json_encode(['error' => 'Message vide']);
+            exit;
+        }
+
+        try {
+            $response = AIService::chat($message);
+            echo json_encode(['response' => $response]);
+        } catch (Exception $e) {
+            echo json_encode(['error' => 'Erreur: ' . $e->getMessage()]);
+        }
+        exit;
+    }
+
     private function hydrateMission($data) {
         $this->mission->titre = trim($data['titre']);
         $this->mission->description = trim($data['description']);

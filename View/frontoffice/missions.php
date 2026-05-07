@@ -347,5 +347,95 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <?php
 $content = ob_get_clean();
-require_once 'layout.php';
+
+// ========== AI CHAT WIDGET ==========
 ?>
+<!-- Chat Button -->
+<button id="chatBtn" onclick="toggleChat()" style="
+    position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%;
+    background:linear-gradient(135deg,#00ffcc,#00ccff); border:none; color:#0a0e27;
+    font-size:24px; cursor:pointer; z-index:9999; box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+">
+    <i class="fa fa-comments"></i>
+</button>
+
+<!-- Chat Window -->
+<div id="chatWindow" style="
+    position:fixed; bottom:90px; right:20px; width:350px; height:450px;
+    background:#fff; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    z-index:9998; display:none; overflow:hidden; border: 1px solid rgba(0,255,204,0.2);
+">
+    <div style="background:linear-gradient(135deg,#00ffcc,#00ccff); padding:15px; color:#0a0e27; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
+        <span><i class="fa fa-robot"></i> Assistant IA Support</span>
+        <button onclick="toggleChat()" style="background:none;border:none;font-size:18px;cursor:pointer;color:#0a0e27;">×</button>
+    </div>
+    <div id="chatMessages" style="height:320px; padding:15px; overflow-y:auto; background:#f8f9fa; color:#333;">
+        <div style="background:#fff; padding:10px 15px; border-radius:15px; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); font-size: 14px;">
+            <strong>Support:</strong> Bonjour ! Je suis votre assistant IA. Comment puis-je vous aider aujourd'hui ?
+            <div style="font-size:11px;color:#666;margin-top:5px;"><?php echo date('H:i'); ?></div>
+        </div>
+    </div>
+    <div style="padding:10px; border-top:1px solid #eee; display:flex; gap:10px; background: #fff;">
+        <input type="text" id="msgInput" placeholder="Votre message..." style="flex:1; padding:10px 15px; border:1px solid #ddd; border-radius:25px; outline:none; font-size: 14px;" onkeypress="if(event.key==='Enter')sendChatMessage()">
+        <button onclick="sendChatMessage()" id="sendBtn" style="width:40px;height:40px;border-radius:50%;background:#00ffcc;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#0a0e27;">
+            <i class="fa fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+function toggleChat() {
+    const w = document.getElementById('chatWindow');
+    w.style.display = w.style.display === 'block' ? 'none' : 'block';
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('msgInput');
+    const messages = document.getElementById('chatMessages');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    // Add user message
+    const userDiv = document.createElement('div');
+    userDiv.style.cssText = 'background:#00ffcc;color:#0a0e27;padding:10px 15px;border-radius:15px;margin-bottom:10px;margin-left:auto;max-width:80%;border-bottom-right-radius:5px;font-size:14px;';
+    userDiv.innerHTML = `<strong>Vous:</strong> ${text}<div style="font-size:11px;color:#0a0e27;opacity:0.6;margin-top:5px;"><?php echo date('H:i'); ?></div>`;
+    messages.appendChild(userDiv);
+    input.value = '';
+    messages.scrollTop = messages.scrollHeight;
+
+    // Loading indicator
+    const loadingDiv = document.createElement('div');
+    loadingDiv.style.cssText = 'font-style:italic;font-size:12px;color:#666;margin-bottom:10px;';
+    loadingDiv.innerHTML = "L'IA réfléchit...";
+    messages.appendChild(loadingDiv);
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
+        const formData = new FormData();
+        formData.append('message', text);
+        
+        const response = await fetch('index.php?action=ai_chat', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        loadingDiv.remove();
+
+        if (result.response) {
+            const aiDiv = document.createElement('div');
+            aiDiv.style.cssText = 'background:#fff;color:#333;padding:10px 15px;border-radius:15px;margin-bottom:10px;max-width:80%;border-bottom-left-radius:5px;box-shadow:0 2px 5px rgba(0,0,0,0.1);font-size:14px;';
+            aiDiv.innerHTML = `<strong>Support:</strong> ${result.response}<div style="font-size:11px;color:#666;margin-top:5px;"><?php echo date('H:i'); ?></div>`;
+            messages.appendChild(aiDiv);
+        } else {
+            throw new Error(result.error || 'Erreur inconnue');
+        }
+    } catch (err) {
+        loadingDiv.innerHTML = `<span style="color:red">Erreur: ${err.message}</span>`;
+    }
+    messages.scrollTop = messages.scrollHeight;
+}
+</script>
+
+<?php require_once 'layout.php'; ?>

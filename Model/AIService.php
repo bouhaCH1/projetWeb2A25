@@ -2,7 +2,7 @@
 require_once __DIR__ . '/config.php';
 
 class AIService {
-    private static $model = 'gemini-1.5-flash';
+    private static $model = 'gemini-pro';
 
     /**
      * Classifies a mission based on its title and description.
@@ -125,5 +125,46 @@ class AIService {
             'competences' => $competences,
             'is_fallback' => true
         ];
+    }
+
+    /**
+     * Responds to a user chat message as a support assistant.
+     */
+    public static function chat($message) {
+        // Simple rule-based responses for demo
+        $message = strtolower(trim($message));
+        
+        // Greetings
+        if (preg_match('/(salut|bonjour|hello|hi|hey)/', $message)) {
+            return "Bonjour ! Je suis votre assistant IA pour Work Wave. Comment puis-je vous aider aujourd'hui ?";
+        }
+        
+        // Help requests
+        if (preg_match('/(aide|help|comment|aidez)/', $message)) {
+            return "Je peux vous aider avec :\n• Créer une mission\n• Postuler à une mission\n• Gérer vos candidatures\n• Informations sur la plateforme\nQue souhaitez-vous savoir ?";
+        }
+        
+        // Mission creation
+        if (preg_match('/(créer|mission|nouvelle|ajouter)/', $message)) {
+            return "Pour créer une mission :\n1. Allez dans la section 'Mes Missions'\n2. Cliquez sur 'Nouvelle Mission'\n3. Remplissez le formulaire avec les détails\n4. Publiez votre mission\nBesoin d'aide pour une étape spécifique ?";
+        }
+        
+        // Applications
+        if (preg_match('/(postuler|candidature|appliquer)/', $message)) {
+            return "Pour postuler à une mission :\n1. Parcourez les missions disponibles\n2. Cliquez sur celle qui vous intéresse\n3. Cliquez sur 'Postuler'\n4. Envoyez votre proposition\nJe peux vous aider à trouver des missions adaptées à vos compétences !";
+        }
+        
+        // Platform info
+        if (preg_match('/(work wave|plateforme|site)/', $message)) {
+            return "Work Wave est une plateforme de missions freelances où :\n• Les entreprises publient des missions\n• Les freelances postulent et travaillent\n• Tout est géré en ligne\n• Paiement sécurisé et suivi simple\nVous avez d'autres questions sur la plateforme ?";
+        }
+        
+        // Payment
+        if (preg_match('/(paiement|payer|argent|prix)/', $message)) {
+            return "Concernant les paiements :\n• Les paiements sont sécurisés via la plateforme\n• Vous êtes payé après validation du travail\n• Les délais de paiement sont de 7-14 jours\n• Plusieurs méthodes de paiement disponibles\nBesoin de détails sur un aspect spécifique ?";
+        }
+        
+        // Default response
+        return "Je comprends votre demande. Pour une aide plus personnalisée, n'hésitez pas à consulter notre centre d'aide ou contacter directement le support technique. Y a-t-il autre chose que je puisse faire pour vous ?";
     }
 }

@@ -34,6 +34,12 @@ switch ($action) {
     case 'delete_candidature': $controller->deleteCandidature(); break;
     case 'generate_email': $controller->generateEmail(); break;
     case 'ai_classify': $controller->aiClassify(); break;
+    case 'ai_chat': $controller->aiChat(); break;
+    
+    // --- CHAT API ---
+    case 'sendChatMessage': $controller->sendChatMessage(); break;
+    case 'getChatMessages': $controller->getChatMessages(); break;
+    case 'getUnreadCount': $controller->getUnreadCount(); break;
 
     // --- FRONTOFFICE ACTIONS ---
     case 'missions':
