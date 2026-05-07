@@ -31,20 +31,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $payment->create($_POST);
         echo "success"; exit;
     }
+    if ($action == 'api_config' && isset($_GET['service'])) {
+        include __DIR__ . '/../views/admin/api_config.php'; exit;
+    }
+    if ($action == 'inbox') {
+        include __DIR__ . '/../views/admin/inbox.php'; exit;
+    }
     if ($action == 'send_email') {
         require_once __DIR__ . '/../models/ApiService.php';
         require_once __DIR__ . '/../models/Event.php';
+        require_once __DIR__ . '/../models/Notification.php';
+        require_once __DIR__ . '/../config_api.php';
         $api = new ApiService();
         $eventModel = new Event($db);
-        require_once __DIR__ . '/../config_api.php';
+        $notifModel = new Notification($db);
         
         $key = $_POST['key'];
-        // Si le champ est vide ou "admin", on utilise la clé du fichier config
         if(empty($key) || $key === 'admin') $key = SENDGRID_API_KEY; 
         
         $message = $_POST['message'] ?? "";
         
-        // Build the list from DB
         if(isset($_POST['type']) && $_POST['type'] == 'event_report') {
             $events = $eventModel->getAll(); 
             $list = "<h2>Rapport de vos événements :</h2><ul>";
@@ -55,8 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = $list;
         }
 
-        // --- GESTION DE L'ENVOI (RÉEL OU DÉMO) ---
-        // Si c'est la clé de démo ou admin, on simule le succès
+        // Sauvegarde interne (Pour que l'utilisateur voit le mail dans son dashboard)
+        $notifModel->save($_POST['from'], $_POST['to'], $_POST['subject'], $message);
+
+        // --- GESTION DE L'ENVOI ---
         if($key === 'SG.METTEZ_VOTRE_CLE_ICI' || $key === 'admin' || empty($key)) {
             echo "success"; exit;
         }
