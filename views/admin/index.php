@@ -90,7 +90,8 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     <h3 class="text-primary"><i class="fa fa-chart-line me-2"></i>ER PRO</h3>
                 </a>
                 <div class="navbar-nav w-100">
-                    <a href="index.php?action=admin" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="index.php?action=admin" class="nav-item nav-link <?= !isset($_GET['view']) ? 'active' : '' ?>"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="index.php?action=admin&view=payments" class="nav-item nav-link <?= (isset($_GET['view']) && $_GET['view'] == 'payments') ? 'active' : '' ?>"><i class="fa fa-receipt me-2"></i>Historique Pay.</a>
                     <a href="index.php?action=form_event" class="nav-item nav-link"><i class="fa fa-calendar-plus me-2"></i>Nouveau Event</a>
                     <a href="index.php?action=form_resource" class="nav-item nav-link"><i class="fa fa-plus-square me-2"></i>Nouvelle Ressource</a>
                     <a href="index.php" class="nav-item nav-link"><i class="fa fa-home me-2"></i>Retour Site</a>
@@ -101,6 +102,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
 
         <!-- Content Start -->
         <div class="content">
+            <?php if(!isset($_GET['view'])): ?>
             <!-- AI Result Modal -->
             <div class="modal fade" id="aiModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -216,22 +218,23 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     </div>
                 </div>
             </div>
-
+            <?php else: ?>
             <!-- Paiements Récents -->
-            <div class="container-fluid pt-4 px-4">
+            <div class="container-fluid pt-4 px-4 pb-4">
                 <div class="bg-secondary text-center rounded p-4 shadow-lg border-top border-primary border-3">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0 text-white"><i class="fa fa-credit-card me-2"></i>Historique des Paiements</h6>
-                        <span class="badge bg-success">Validé</span>
+                        <h6 class="mb-0 text-white"><i class="fa fa-receipt me-2"></i>Historique Complet des Paiements</h6>
+                        <span class="badge bg-success">Transactions Validées</span>
                     </div>
                     <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                        <table id="paymentsTable" class="table text-start align-middle table-bordered table-hover mb-0">
                             <thead>
                                 <tr class="text-white">
                                     <th scope="col">Date</th>
                                     <th scope="col">RIB / Card</th>
-                                    <th scope="col">Client</th>
+                                    <th scope="col">Client / Email</th>
                                     <th scope="col">Montant</th>
+                                    <th scope="col">Statut</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -243,9 +246,10 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                 ?>
                                 <tr>
                                     <td><?= date('d/m/Y H:i', strtotime($p['created_at'])) ?></td>
-                                    <td><?= htmlspecialchars($p['rib']) ?></td>
+                                    <td><code class="text-info"><?= htmlspecialchars($p['rib']) ?></code></td>
                                     <td><?= htmlspecialchars($p['email']) ?></td>
                                     <td class="text-primary fw-bold"><?= number_format($p['amount'], 2) ?> TND</td>
+                                    <td><span class="badge bg-success">Validé</span></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -253,6 +257,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- Advanced Charts Row 2 -->
             <div class="container-fluid pt-4 px-4">
@@ -569,6 +574,7 @@ Statut: Payé
             };
             $('#eventsTable').DataTable(tableConfig);
             $('#resourcesTable').DataTable(tableConfig);
+            $('#paymentsTable').DataTable(tableConfig);
         });
 
         Chart.defaults.color = "#888";
