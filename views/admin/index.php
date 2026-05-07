@@ -207,6 +207,16 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                 <button class="btn btn-sm btn-outline-warning" onclick="simulateApi('Prediction')"><i class="fa fa-magic me-2"></i>H.Face : Prédiction</button>
                             </div>
                             <hr class="border-secondary">
+                            <h6 class="mb-3 text-white">Services Connectés (APIs)</h6>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-danger btn-sm py-2" style="border-radius: 8px;" onclick="simulateApi('Stripe')">
+                                    <i class="fab fa-stripe me-2"></i> Méthode de Paiement
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm py-2" style="border-radius: 8px;" onclick="simulateApi('G-Calendar')">
+                                    <i class="fa fa-calendar-alt me-2"></i> G-Calendar : Sync
+                                </button>
+                            </div>
+                            <hr class="border-secondary">
                             <h6 class="mb-3 text-primary"><i class="fa fa-chart-line me-2"></i>Tendance Mensuelle</h6>
                             <div class="chart-container" style="height: 150px;">
                                 <canvas id="line-chart"></canvas>
@@ -405,6 +415,8 @@ Statut: Payé
                     `;
                 } else if(service === 'Stripe') {
                     result = `<div class="p-4"><i class="fab fa-stripe fa-4x text-primary mb-3"></i><h5 class="text-white">Passerelle de Paiement</h5><p>Module Stripe prêt pour les transactions. (TND activé)</p></div>`;
+                } else if(service === 'G-Calendar') {
+                    result = `<div class="p-4"><i class="fa fa-calendar-check fa-4x text-warning mb-3"></i><h5 class="text-white">Google Calendar</h5><p>Synchronisation Cloud active pour tous les événements.</p></div>`;
                 }
                 body.innerHTML = result;
                 label.innerText = "IA : Résultat de " + service;
