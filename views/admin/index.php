@@ -226,10 +226,6 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     </div>
                 </div>
             </div>
-                </div>
-            </div>
-
-
 
             <!-- Advanced Charts Row 2 -->
             <div class="container-fluid pt-4 px-4">
