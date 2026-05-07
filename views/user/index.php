@@ -45,7 +45,7 @@
                             <td><?= date('d M Y, H:i', strtotime($event['date'])) ?></td>
                             <td><i class="fa fa-map-marker-alt me-2" style="color: #ff6b6b;"></i><?= htmlspecialchars($event['location']) ?></td>
                             <td>
-                                <a href="https://checkout.stripe.com/pay/simulated" class="btn-action btn-pay" onclick="alert('Redirection vers Stripe Gateway...')">
+                                <a href="#" class="btn-action btn-pay" onclick="openPayment('<?= addslashes($event['title']) ?>')">
                                     <i class="fab fa-stripe me-1"></i> Payer
                                 </a>
                                 <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=<?= urlencode($event['title']) ?>" target="_blank" class="btn-action btn-cal">
@@ -83,11 +83,73 @@
         </div>
     </section>
 
-    <footer>
-        <div class="footer-content">
-            <p class="copyright">© 2026 EventResource Pro. Alimenté par Stripe, SendGrid & Google Cloud.</p>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Modal Paiement -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-primary shadow-lg">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title"><i class="fab fa-stripe me-2 text-primary"></i>Passerelle de Paiement Sécurisée</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="paymentForm">
+                        <div class="mb-3">
+                            <label class="small text-white-50">RIB / Numéro de Carte</label>
+                            <input type="text" id="pay-rib" class="form-control bg-secondary text-white border-0" placeholder="TN59 1234..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-white-50">Email de Facturation</label>
+                            <input type="email" id="pay-email" class="form-control bg-secondary text-white border-0" placeholder="ayoub@mail.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-white-50">Montant (TND)</label>
+                            <input type="number" id="pay-amount" class="form-control bg-secondary text-white border-0" value="150" required>
+                        </div>
+                        <div id="pay-success" class="alert alert-success d-none">
+                            <i class="fa fa-check-circle me-2"></i>Paiement validé avec succès !
+                        </div>
+                        <button type="submit" id="btn-submit-pay" class="btn btn-primary w-100">Confirmer le Paiement</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </footer>
-    <script src="../templatemo_602_graph_page/templatemo-graph-script.js"></script>
+    </div>
+
+    <script>
+    function openPayment(title) {
+        const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        modal.show();
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btn-submit-pay');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Validation...';
+
+        const fd = new FormData();
+        fd.append('rib', document.getElementById('pay-rib').value);
+        fd.append('email', document.getElementById('pay-email').value);
+        fd.append('amount', document.getElementById('pay-amount').value);
+
+        fetch('index.php?action=save_payment', {
+            method: 'POST',
+            body: fd
+        })
+        .then(res => res.text())
+        .then(data => {
+            if(data === 'success') {
+                document.getElementById('pay-success').classList.remove('d-none');
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            }
+        });
+    });
+    </script>
 </body>
 </html>
