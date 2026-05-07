@@ -3,7 +3,6 @@
 require_once __DIR__ . '/../models/Database.php';
 require_once __DIR__ . '/../models/Event.php';
 require_once __DIR__ . '/../models/Resource.php';
-require_once __DIR__ . '/../models/Payment.php';
 require_once __DIR__ . '/EventController.php';
 require_once __DIR__ . '/ResourceController.php';
 
