@@ -200,32 +200,13 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         </div>
                     </div>
                     <div class="col-sm-12 col-xl-4">
-                        <div class="bg-secondary text-center rounded p-4">
-                            <h6 class="mb-4">Services Connectés (APIs)</h6>
-                            <div class="d-grid gap-2">
-                                <a href="index.php?action=api_config&service=Stripe" class="btn btn-outline-primary mb-2"><i class="fab fa-stripe me-2"></i>Méthode de Paiement</a>
-                                <a href="index.php?action=api_config&service=SendGrid" class="btn btn-outline-info mb-2"><i class="fa fa-envelope me-2"></i>Emails Automatiques</a>
-                                <a href="index.php?action=api_config&service=Google Calendar" class="btn btn-outline-warning mb-2"><i class="fa fa-calendar-alt me-2"></i>G-Calendar : Sync</a>
-                            </div>
-                            <hr>
-                            <h6 class="mb-3 text-primary"><i class="fa fa-cloud-sun me-2"></i>Météo Locale</h6>
-                            <div class="bg-dark p-3 rounded mb-3">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div><h4 class="mb-0 text-white">24°C</h4><p class="small mb-0">Tunis, Tunisie</p></div>
-                                    <i class="fa fa-sun fa-3x text-warning"></i>
-                                </div>
-                            </div>
-                            <hr>
-                            <h6 class="mb-3 text-info"><i class="fa fa-brain me-2"></i>Intelligence Artificielle</h6>
-                            <div class="d-grid gap-2">
-                                <button class="btn btn-sm btn-outline-info" onclick="simulateApi('OCR')"><i class="fa fa-eye me-2"></i>OCR : Lecture Doc</button>
-                                <button class="btn btn-sm btn-outline-light" onclick="simulateApi('Prediction')"><i class="fa fa-magic me-2"></i>H.Face : Prédiction</button>
-                            </div>
-                            <hr>
-                            <h6 class="mb-3">Tendance Mensuelle</h6>
-                            <div class="chart-container" style="height: 150px;">
+                        <div class="bg-secondary text-center rounded p-4 h-100">
+                            <h6 class="mb-3 text-primary"><i class="fa fa-chart-line me-2"></i>Tendance Mensuelle</h6>
+                            <div class="chart-container" style="height: 250px;">
                                 <canvas id="line-chart"></canvas>
                             </div>
+                            <hr class="my-4">
+                            <p class="small text-white-50">Analyse automatique des flux d'événements.</p>
                         </div>
                     </div>
                 </div>
@@ -441,40 +422,7 @@ Statut: Payé
                 }
                 // 5. Planning/Calendar Logic
                 else if(t.includes('planning') || t.includes('calendrier') || t.includes('calendar')) {
-                    reply = "El Planning mte3ek fih kol chay (dates w evènements). Tnajem t'accedi l'FullCalendar men houni bech t-sync-i el wa9t! 🗓️";
-                }
-                // 6. Users Logic
-                else if(t.includes('user') || t.includes('utilisateur') || t.includes('nes') || t.includes('client')) {
-                    reply = "Les utilisateurs (clients) yesta3mlou el site mte3ek bech ychoufou el events w y-reserviw. Kol chay m-organisé houni!";
-                }
-                // 7. Greetings
-                else if(t.includes('aslama') || t.includes('3aslama') || t.includes('labes') || t.includes('bonjour') || t.includes('salut') || t.includes('hello')) {
-                    reply = "Aslama ya m3alem! 👋 Ena l'IA mte3ek. Teselny njewbek 3al site kollo (Stock, Planning, Maps, etc.)!";
-                }
-                // 6. Site Explanation / Métier (Simple & Avancé)
-                else if(t.includes('metier') || t.includes('métier') || t.includes('fika') || t.includes('service') || t.includes('kifech')) {
-                    reply = "Le site gère tout le 'Métier': \n- Simple: Tri, Recherche, Export (PDF/Excel), et Stats.\n- Avancé: Météo, IA Prédiction, OCR, et Chat interactif.";
-                }
-                else if(t.includes('ocr') || t.includes('lecture') || t.includes('document')) {
-                    reply = "L'OCR na9ra biha el wra9 (PDF/Images) bech n'extrayi el texte automatiquement. Démarré avec 98% de précision! 📄";
-                }
-                else if(t.includes('prediction') || t.includes('najeh') || t.includes('face')) {
-                    reply = "El IA (Hugging Face) ta3tik el 'Prédiction' mte3 el naje7 mte3 el event 7asb el data mte3ek. 🔮";
-                }
-                else if(t.includes('export') || t.includes('pdf') || t.includes('excel') || t.includes('imprimer')) {
-                    reply = "Tnajem t'exporti kol chay (PDF, Excel, CSV) mel boutons eli fou9 el tableau mte3 el events/ressources. 📥";
-                }
-                else if(t.includes('recherche') || t.includes('tri') || t.includes('pagination')) {
-                    reply = "El recherche wel tri automatiques houni (DataTables). Just ekteb esm el event fi 'Search' wela cliqui 3al colonnes! 🔍";
-                }
-                else if(t.includes('mail') || t.includes('email') || t.includes('envoyer')) {
-                    reply = "Système d'Emails Automatiques (SendGrid) prêt bech yab3ath les confirmations l'ay client automatiquement. ✉️";
-                }
-                else if(t.includes('paiement') || t.includes('argent') || t.includes('stripe') || t.includes('rib') || t.includes('carte') || t.includes('methode')) {
-                    reply = "Le module de Paiement Stripe est configuré. 💳 \nVous pouvez gérer le RIB, l'email et les montants dans 'Méthode de Paiement'.";
-                }
-                else if(t.includes('calendar') || t.includes('google') || t.includes('sync') || t.includes('calendrier')) {
-                    reply = "La synchronisation Google Calendar est active. 📅 \nTous vos événements sont planifiés automatiquement sur votre calendrier.";
+                    reply = "El Planning mte3ek fih kol chay (dates w evènements). 🗓️";
                 }
                 // 7. Global Site Search (Last resort before default)
                 else {

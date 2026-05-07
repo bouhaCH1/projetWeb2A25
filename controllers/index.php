@@ -26,11 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         else $resourceController->createResource($_POST);
         header("Location: index.php?action=admin"); exit;
     }
-    if ($action == 'save_payment') {
-        $payment = new Payment($db);
-        $payment->create($_POST);
-        echo "success"; exit;
-    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
