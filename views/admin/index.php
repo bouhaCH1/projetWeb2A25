@@ -200,14 +200,56 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         </div>
                     </div>
                     <div class="col-sm-12 col-xl-4">
-                        <div class="bg-secondary text-center rounded p-4 h-100">
+                        <div class="bg-secondary text-center rounded p-4 h-100 shadow-sm border-top border-info border-3">
+                            <h6 class="mb-3 text-info"><i class="fa fa-brain me-2"></i>Expert AI Systems</h6>
+                            <div class="d-grid gap-2 mb-3">
+                                <button class="btn btn-sm btn-outline-info" onclick="simulateApi('OCR')"><i class="fa fa-eye me-2"></i>OCR : Lecture Doc</button>
+                                <button class="btn btn-sm btn-outline-warning" onclick="simulateApi('Prediction')"><i class="fa fa-magic me-2"></i>H.Face : Prédiction</button>
+                            </div>
+                            <hr class="border-secondary">
                             <h6 class="mb-3 text-primary"><i class="fa fa-chart-line me-2"></i>Tendance Mensuelle</h6>
-                            <div class="chart-container" style="height: 250px;">
+                            <div class="chart-container" style="height: 150px;">
                                 <canvas id="line-chart"></canvas>
                             </div>
-                            <hr class="my-4">
-                            <p class="small text-white-50">Analyse automatique des flux d'événements.</p>
+                            <p class="small text-white-50 mt-2">Analyse IA des flux d'événements.</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paiements Récents -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary text-center rounded p-4 shadow-lg border-top border-primary border-3">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0 text-white"><i class="fa fa-credit-card me-2"></i>Historique des Paiements</h6>
+                        <span class="badge bg-success">Validé</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="text-white">
+                                    <th scope="col">Date</th>
+                                    <th scope="col">RIB / Card</th>
+                                    <th scope="col">Client</th>
+                                    <th scope="col">Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                require_once __DIR__ . '/../../models/Payment.php';
+                                $paymentModel = new Payment($db);
+                                $payments = $paymentModel->getAll();
+                                foreach($payments as $p): 
+                                ?>
+                                <tr>
+                                    <td><?= date('d/m/Y H:i', strtotime($p['created_at'])) ?></td>
+                                    <td><?= htmlspecialchars($p['rib']) ?></td>
+                                    <td><?= htmlspecialchars($p['email']) ?></td>
+                                    <td class="text-primary fw-bold"><?= number_format($p['amount'], 2) ?> TND</td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

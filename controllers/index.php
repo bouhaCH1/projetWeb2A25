@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../models/Database.php';
 require_once __DIR__ . '/../models/Event.php';
 require_once __DIR__ . '/../models/Resource.php';
+require_once __DIR__ . '/../models/Payment.php';
 require_once __DIR__ . '/EventController.php';
 require_once __DIR__ . '/ResourceController.php';
 
@@ -24,6 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_POST['id'])) $resourceController->updateResource($_POST['id'], $_POST);
         else $resourceController->createResource($_POST);
         header("Location: index.php?action=admin"); exit;
+    }
+    if ($action == 'save_payment') {
+        $payment = new Payment($db);
+        $payment->create($_POST);
+        echo "success"; exit;
     }
 }
 
