@@ -229,42 +229,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 </div>
             </div>
 
-            <!-- Paiements Récents -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary text-center rounded p-4 shadow-lg border-top border-primary border-3">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0 text-white"><i class="fa fa-credit-card me-2"></i>Historique des Paiements</h6>
-                        <span class="badge bg-success">Validé</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="paymentsTable" class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-white">
-                                    <th scope="col">Date</th>
-                                    <th scope="col">RIB / Card</th>
-                                    <th scope="col">Client</th>
-                                    <th scope="col">Montant</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                                require_once __DIR__ . '/../../models/Payment.php';
-                                $paymentModel = new Payment($db);
-                                $payments = $paymentModel->getAll();
-                                foreach($payments as $p): 
-                                ?>
-                                <tr>
-                                    <td><?= date('d/m/Y H:i', strtotime($p['created_at'])) ?></td>
-                                    <td><?= htmlspecialchars($p['rib']) ?></td>
-                                    <td><?= htmlspecialchars($p['email']) ?></td>
-                                    <td class="text-primary fw-bold"><?= number_format($p['amount'], 2) ?> TND</td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Advanced Charts Row 2 -->
             <div class="container-fluid pt-4 px-4">
@@ -572,13 +537,6 @@ Statut: Payé
             };
             $('#eventsTable').DataTable(tableConfig);
             $('#resourcesTable').DataTable(tableConfig);
-            
-            // Version simplifiée pour les paiements (sans boutons export)
-            $('#paymentsTable').DataTable({
-                ...tableConfig,
-                dom: 'frtip',
-                buttons: []
-            });
         });
 
         Chart.defaults.color = "#888";
