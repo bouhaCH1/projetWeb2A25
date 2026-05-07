@@ -427,75 +427,80 @@ Statut: Payé
             addMessage(text, 'user');
             input.value = '';
 
-            // AI Expert Logic (Context-Aware)
+            // AI Expert Logic (Context-Aware & Multilingual)
             setTimeout(() => {
                 const t = text.toLowerCase().trim();
-                let reply = "Sem7ni, ma fhimtech barch klemek, ama tnajem teselny 3al events, stock, wela el météo! 🤖";
+                let reply = "Sem7ni, ma fhimtech barch klemek, ama tnajem teselny 3al events, stock, payments, wela el météo! 🤖";
                 
                 const events = <?= json_encode($events) ?>;
                 const resources = <?= json_encode($resources) ?>;
 
-                // 1. Weather (Meteo / Ta9es / Weather)
-                if(t.includes('meteo') || t.includes('ta9es') || t.includes('temps') || t.includes('weather')) {
-                    reply = "El ta9es lyoum fi Tunis 24°C, chams mezyena! ☀️ C'est parfait pour vos activités.";
+                // 1. Weather & Greetings
+                if(t.includes('meteo') || t.includes('ta9es') || t.includes('weather')) {
+                    reply = "El ta9es lyoum fi Tunis 24°C, chams mezyena! ☀️ C'est parfait pour vos événements.";
+                } else if(t.includes('aslama') || t.includes('3aslama') || t.includes('salut') || t.includes('hello') || t.includes('hi') || t.includes('bonjour')) {
+                    reply = "Aslama! 👋 Ena l'IA mte3ek. Njewbek 3al events, stock, planning, wela el payments!";
                 }
-                // 2. Next Event Logic (Wakteh / Jey / Next / Prochain / Upcoming)
-                else if(t.includes('wakteh') || t.includes('jey') || t.includes('next') || t.includes('prochain') || t.includes('wa9t') || t.includes('upcoming')) {
-                    const now = new Date();
-                    let nextEvent = null;
-                    events.forEach(e => {
-                        const ed = new Date(e.date);
-                        if(ed > now && (!nextEvent || ed < new Date(nextEvent.date))) nextEvent = e;
-                    });
-                    if(nextEvent) reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + ". 📅";
-                    else reply = "Mafama hata événement jey (upcoming) fel wa9t el 7ather. 3andek " + events.length + " events lkol.";
+                
+                // 2. Events Logic
+                else if(t.includes('event') || t.includes('evenement') || t.includes('wa9t') || t.includes('date')) {
+                    if(t.includes('jey') || t.includes('next') || t.includes('prochain') || t.includes('upcoming')) {
+                        const now = new Date();
+                        let nextEvent = null;
+                        events.forEach(e => {
+                            const ed = new Date(e.date);
+                            if(ed > now && (!nextEvent || ed < new Date(nextEvent.date))) nextEvent = e;
+                        });
+                        if(nextEvent) reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + ". 📅";
+                        else reply = "Mafama hata événement jey. 3andek " + events.length + " events lkol.";
+                    } else {
+                        reply = "3andek " + events.length + " événements enregistrés. Tnajem tchoufhom fel tableau wela fel planning!";
+                    }
                 }
-                // 3. Location Logic (Win / Fin / Location / Blasa / Localisation / Carte / Map)
-                else if(t.includes('win') || t.includes('fin') || t.includes('location') || t.includes('blasa') || t.includes('blasat') || t.includes('localisation') || t.includes('carte') || t.includes('map')) {
-                    const counts = {};
-                    events.forEach(e => counts[e.location] = (counts[e.location] || 0) + 1);
-                    const top = Object.keys(counts).reduce((a, b) => (counts[a] || 0) > (counts[b] || 0) ? a : b, 'Tunis');
-                    reply = "Akther blasa fiha 7arka hiya " + top + ". Tnajem tchouf les localisations lkol fel carte (Map) houni! 🗺️";
-                }
-                // 4. Resources/Stock Logic (9adech / stock / ressource / fama / quantité / recourse)
-                else if(t.includes('9adech') || t.includes('stock') || t.includes('ressource') || t.includes('fama') || t.includes('quantité') || t.includes('recourse')) {
+
+                // 3. Resources & Stock Logic
+                else if(t.includes('resource') || t.includes('ressource') || t.includes('stock') || t.includes('quantité') || t.includes('qty')) {
                     const low = resources.filter(r => parseInt(r.quantity) < 3);
-                    reply = "El stock fih " + resources.length + " types. 📦 \n⚠️ Alerte: " + low.length + " ressources 9rib youfaw (e.g. " + (low[0]?.name || 'matériel') + ").";
+                    reply = "El stock fih " + resources.length + " ressources. 📦 \n⚠️ Alerte: " + low.length + " ressources à faible stock (e.g. " + (low[0]?.name || 'matériel') + ").";
                 }
-                // 5. Planning/Calendar Logic
-                else if(t.includes('planning') || t.includes('calendrier') || t.includes('calendar')) {
-                    reply = "El Planning mte3ek fih kol chay (dates w evènements). 🗓️";
+
+                // 4. Payments & RIB Logic
+                else if(t.includes('payment') || t.includes('paiement') || t.includes('argent') || t.includes('rib') || t.includes('flous')) {
+                    reply = "El module 'Payment' fih l'historique des transactions. Tnajem tchouf les RIB, emails et montants directement fel dashboard! 💳";
                 }
-                // 7. Global Site Search (Last resort before default)
+
+                // 5. AI, OCR & Predictions
+                else if(t.includes('ia') || t.includes('ai') || t.includes('ocr') || t.includes('prediction') || t.includes('bravo')) {
+                    reply = "Ena n'utilisi l'IA (Hugging Face) lel prédiction w l'OCR bech na9ra el wra9! 🧠 C'est de la haute technologie.";
+                }
+
+                // 6. Site Location / Maps
+                else if(t.includes('win') || t.includes('blasa') || t.includes('map') || t.includes('carte') || t.includes('location')) {
+                    reply = "Tnajem tchouf les localisations mte3 les events lkol houni fel carte (Map) interactive! 🗺️";
+                }
+
+                // 7. Site Search (Loop)
                 else {
                     let found = false;
-                    // Search in Events
                     events.forEach(e => {
-                        if(t.includes(e.title.toLowerCase()) || t.includes(e.location.toLowerCase())) {
+                        if(t.includes(e.title.toLowerCase())) {
                             reply = "J'ai trouvé l'événement: '" + e.title + "' le " + e.date + " à " + e.location + ". 📍";
                             found = true;
                         }
                     });
-                    // Search in Resources
                     if(!found) {
                         resources.forEach(r => {
                             if(t.includes(r.name.toLowerCase())) {
-                                reply = "La ressource '" + r.name + "' est disponible en stock (Quantité: " + r.quantity + "). 📦";
+                                reply = "La ressource '" + r.name + "' est en stock (Quantité: " + r.quantity + "). 📦";
                                 found = true;
                             }
                         });
                     }
-                    // Search in Menu / General Keywords
-                    if(!found) {
-                        if(t.includes('event')) reply = "Vous avez " + events.length + " événements. Cliquez sur 'Nouveau Event' à gauche pour en ajouter un.";
-                        else if(t.includes('ressource')) reply = "Il y a " + resources.length + " ressources. Gérez-les via le menu 'Nouvelle Ressource'.";
-                        else if(t.includes('dashboard') || t.includes('tableau')) reply = "C'est votre tableau de bord principal avec KPIs, Cartes et Graphiques.";
-                    }
                 }
-                
-                // 8. Appreciation
-                if(t.includes('m3alem') || t.includes('merci') || t.includes('bravo') || t.includes('ya3tik')) {
-                    reply = "Ya m3alem enta! Men wejbi. 🚀🔥";
+
+                // Final Polish
+                if(t.includes('merci') || t.includes('bravo') || t.includes('ya3tik')) {
+                    reply = "Men wejbi! 🚀🔥 Rani houni bech n'assistantik.";
                 }
                 
                 addMessage(reply, 'ai');
