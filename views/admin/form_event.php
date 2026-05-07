@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title><?= isset($eventData) ? 'Modifier' : 'Créer' ?> Événement</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link href="../darkpan/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../darkpan/css/style.css" rel="stylesheet">
+    <link href="../views/darkpan/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../views/darkpan/css/style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <style>
         .error-feedback { color: #eb1616; font-size: 12px; margin-top: 4px; display: none; font-weight: 500; }

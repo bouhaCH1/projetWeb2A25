@@ -26,8 +26,8 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="../darkpan/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../darkpan/css/style.css" rel="stylesheet">
+    <link href="../views/darkpan/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../views/darkpan/css/style.css" rel="stylesheet">
 
     <!-- Leaflet, FullCalendar & DataTables -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -321,7 +321,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../darkpan/js/main.js"></script>
+    <script src="../views/darkpan/js/main.js"></script>
 
     <!-- DataTables & Buttons -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
