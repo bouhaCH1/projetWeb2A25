@@ -35,7 +35,7 @@
                                         <?php 
                                         require_once __DIR__ . '/../../models/Database.php';
                                         require_once __DIR__ . '/../../models/Notification.php';
-                                        $db = (new Database())->connect();
+                                        $db = (new Database())->getConnection();
                                         $notifs = (new Notification($db))->getAll();
                                         foreach($notifs as $n): 
                                         ?>

@@ -31,12 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $payment->create($_POST);
         echo "success"; exit;
     }
-    if ($action == 'api_config' && isset($_GET['service'])) {
-        include __DIR__ . '/../views/admin/api_config.php'; exit;
-    }
-    if ($action == 'inbox') {
-        include __DIR__ . '/../views/admin/inbox.php'; exit;
-    }
+}
+
+if ($action == 'api_config' && isset($_GET['service'])) {
+    include __DIR__ . '/../views/admin/api_config.php'; exit;
+}
+if ($action == 'inbox') {
+    include __DIR__ . '/../views/admin/inbox.php'; exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action == 'send_email') {
         require_once __DIR__ . '/../models/ApiService.php';
         require_once __DIR__ . '/../models/Event.php';
