@@ -267,6 +267,104 @@ ob_start();
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
+
+    /* === Demand Forecast Widget === */
+    .forecast-card {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(5, 150, 105, 0.04));
+        border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .forecast-card .card-header-premium i {
+        background: linear-gradient(135deg, #10b981, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .forecast-number {
+        font-size: 3.5rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, #10b981, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+        display: block;
+        text-align: center;
+        margin: 10px 0 4px;
+        transition: all 0.4s ease;
+    }
+
+    .forecast-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #64748b;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .confidence-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .confidence-high   { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .confidence-medium { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .confidence-low    { background: rgba(239, 68, 68, 0.15);  color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+    .forecast-insight {
+        background: rgba(0,0,0,0.2);
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 0.78rem;
+        color: #94a3b8;
+        line-height: 1.5;
+        margin-top: 12px;
+        border-left: 3px solid #10b981;
+    }
+
+    .btn-forecast {
+        background: linear-gradient(135deg, #10b981, #0891b2);
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .btn-forecast:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        color: #fff;
+    }
+
+    .btn-forecast:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .forecast-placeholder {
+        text-align: center;
+        padding: 10px 0;
+        color: #475569;
+        font-size: 0.85rem;
+    }
 </style>
 
 <div class="creation-container animate-in">
@@ -452,6 +550,35 @@ ob_start();
                         <i class="fas fa-times me-2"></i> Annuler
                     </a>
                 </div>
+
+                <!-- Demand Forecast Widget -->
+                <div class="forge-card forecast-card mt-4" id="forecastCard">
+                    <div class="card-header-premium">
+                        <i class="fas fa-chart-line"></i>
+                        <h5 class="form-section-title">Demande Prévue</h5>
+                    </div>
+                    <div class="card-body p-4" id="forecastBody">
+                        <div class="forecast-placeholder" id="forecastPlaceholder">
+                            <i class="fas fa-magic mb-2" style="font-size:1.8rem;color:#10b981;opacity:0.5;"></i>
+                            <p class="mb-0">Remplissez la catégorie et le niveau, puis lancez la prédiction.</p>
+                        </div>
+                        <div id="forecastResult" style="display:none;">
+                            <div class="text-center">
+                                <span class="forecast-number" id="forecastCount">--</span>
+                                <span class="forecast-label">candidatures estimées</span>
+                            </div>
+                            <div class="d-flex justify-content-center mt-3">
+                                <span class="confidence-badge" id="forecastConfidence"></span>
+                            </div>
+                            <div class="forecast-insight" id="forecastInsight" style="display:none;"></div>
+                        </div>
+                        <button type="button" class="btn-forecast mt-3" id="forecastBtn">
+                            <div class="ai-loading-spinner" id="forecastSpinner"></div>
+                            <i class="fas fa-chart-bar" id="forecastIcon"></i>
+                            Prédire la demande
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -598,6 +725,94 @@ document.addEventListener('DOMContentLoaded', function() {
             aiIcon.style.display = 'block';
         }
     });
+
+    // ===== Demand Forecast Logic =====
+    const forecastBtn      = document.getElementById('forecastBtn');
+    const forecastSpinner  = document.getElementById('forecastSpinner');
+    const forecastIcon     = document.getElementById('forecastIcon');
+    const forecastResult   = document.getElementById('forecastResult');
+    const forecastPlaceholder = document.getElementById('forecastPlaceholder');
+    const forecastCount    = document.getElementById('forecastCount');
+    const forecastConfBadge = document.getElementById('forecastConfidence');
+    const forecastInsight  = document.getElementById('forecastInsight');
+
+    forecastBtn.addEventListener('click', async () => {
+        const categorie   = categorieSelect.value;
+        const niveau      = niveauSelect.value;
+        const budget      = document.getElementById('budget').value;
+        const competences = competencesInput.value;
+
+        if (!categorie) {
+            alert('Veuillez sélectionner une catégorie avant de lancer la prédiction.');
+            return;
+        }
+
+        // Loading state
+        forecastBtn.disabled = true;
+        forecastSpinner.style.display = 'block';
+        forecastIcon.style.display = 'none';
+
+        try {
+            const fd = new FormData();
+            fd.append('categorie',   categorie);
+            fd.append('niveau',      niveau);
+            fd.append('budget',      budget || '0');
+            fd.append('competences', competences);
+
+            const res    = await fetch('index.php?action=ai_forecast', { method: 'POST', body: fd });
+            const result = await res.json();
+
+            if (result.error) {
+                alert('Erreur prédiction : ' + result.error);
+                return;
+            }
+
+            // Animate number
+            animateCounter(forecastCount, 0, result.predicted_count, 700);
+
+            // Confidence badge
+            const confMap = {
+                high:   { cls: 'confidence-high',   icon: 'fa-circle-check',    label: 'Confiance élevée' },
+                medium: { cls: 'confidence-medium',  icon: 'fa-circle-half-stroke', label: 'Confiance moyenne' },
+                low:    { cls: 'confidence-low',     icon: 'fa-circle-exclamation', label: 'Confiance faible' }
+            };
+            const conf = confMap[result.confidence] || confMap.medium;
+            forecastConfBadge.className = `confidence-badge ${conf.cls}`;
+            forecastConfBadge.innerHTML = `<i class="fas ${conf.icon}"></i> ${conf.label}`;
+
+            // Insight
+            if (result.insight) {
+                forecastInsight.textContent = result.insight;
+                forecastInsight.style.display = 'block';
+            } else {
+                forecastInsight.style.display = 'none';
+            }
+
+            forecastPlaceholder.style.display = 'none';
+            forecastResult.style.display = 'block';
+            showStatus('Prédiction de demande calculée ! 📈');
+
+        } catch (err) {
+            console.error(err);
+            alert('Erreur lors de la prédiction.');
+        } finally {
+            forecastBtn.disabled = false;
+            forecastSpinner.style.display = 'none';
+            forecastIcon.style.display = 'block';
+        }
+    });
+
+    function animateCounter(el, from, to, duration) {
+        const start = performance.now();
+        function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            el.textContent = Math.round(from + (to - from) * eased);
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+    }
 });
 </script>
 

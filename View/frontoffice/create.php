@@ -125,6 +125,43 @@ ob_start();
                         </div>
                     </form>
                 </div>
+
+                <!-- ===== Demand Forecast Widget ===== -->
+                <div class="cyber-form-card" id="forecastWidget" style="margin-top: 24px; border: 1px solid rgba(0,255,204,0.2); background: linear-gradient(135deg, rgba(0,255,204,0.04), rgba(0,204,255,0.02));">
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
+                        <div style="width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#10b981,#06b6d4); display:flex; align-items:center; justify-content:center;">
+                            <i class="fas fa-chart-line" style="color:#fff; font-size:1rem;"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin:0; color:#fff; font-weight:800; font-size:1rem;">Prédiction de Demande IA</h5>
+                            <small style="color:rgba(255,255,255,0.4); font-size:0.75rem;">Estimez le nombre de candidatures attendues</small>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder before prediction -->
+                    <div id="fcPlaceholder" style="text-align:center; padding:16px 0; color:rgba(255,255,255,0.3);">
+                        <i class="fas fa-magic" style="font-size:2rem; color:#10b981; opacity:0.4; display:block; margin-bottom:8px;"></i>
+                        Sélectionnez une catégorie et un niveau, puis lancez la prédiction.
+                    </div>
+
+                    <!-- Result (hidden until predicted) -->
+                    <div id="fcResult" style="display:none; text-align:center; margin-bottom:16px;">
+                        <span id="fcNumber" style="font-size:4rem; font-weight:900; background:linear-gradient(135deg,#10b981,#06b6d4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; display:block;">--</span>
+                        <span style="font-size:0.7rem; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,0.4); font-weight:700;">candidatures estimées / 30 jours</span>
+                        <div style="margin-top:12px;">
+                            <span id="fcBadge" style="display:inline-flex; align-items:center; gap:5px; padding:4px 14px; border-radius:20px; font-size:0.72rem; font-weight:700; letter-spacing:1px;"></span>
+                        </div>
+                        <div id="fcInsight" style="display:none; margin-top:14px; background:rgba(0,0,0,0.25); border-left:3px solid #10b981; border-radius:10px; padding:10px 14px; font-size:0.78rem; color:rgba(255,255,255,0.55); line-height:1.5; text-align:left;"></div>
+                    </div>
+
+                    <!-- Predict button -->
+                    <button type="button" id="fcBtn" style="width:100%; background:linear-gradient(135deg,#10b981,#0891b2); border:none; color:#fff; padding:11px 20px; border-radius:12px; font-weight:700; font-size:0.9rem; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; transition:all 0.3s ease; box-shadow:0 4px 15px rgba(16,185,129,0.25);">
+                        <span id="fcSpinner" style="display:none; width:15px; height:15px; border:2px solid rgba(255,255,255,0.3); border-radius:50%; border-top-color:#fff; animation:spin 0.8s linear infinite;"></span>
+                        <i id="fcIcon" class="fas fa-chart-bar"></i>
+                        Prédire la demande
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -137,6 +174,10 @@ $content = ob_get_clean();
 <style>
 @keyframes spin { to { transform: rotate(360deg); } }
 #aiClassifyBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(168, 85, 247, 0.4); }
+#fcBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,0.4); }
+.fc-high   { background: rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.35); }
+.fc-medium { background: rgba(245,158,11,0.15);  color:#f59e0b; border:1px solid rgba(245,158,11,0.35); }
+.fc-low    { background: rgba(239,68,68,0.15);   color:#ef4444; border:1px solid rgba(239,68,68,0.35); }
 </style>
 
 <script>
@@ -195,6 +236,91 @@ document.addEventListener('DOMContentLoaded', function() {
             aiIcon.style.display = 'block';
         }
     });
+
+    // ===== Demand Forecast =====
+    const fcBtn       = document.getElementById('fcBtn');
+    const fcSpinner   = document.getElementById('fcSpinner');
+    const fcIcon      = document.getElementById('fcIcon');
+    const fcResult    = document.getElementById('fcResult');
+    const fcPlaceholder = document.getElementById('fcPlaceholder');
+    const fcNumber    = document.getElementById('fcNumber');
+    const fcBadge     = document.getElementById('fcBadge');
+    const fcInsight   = document.getElementById('fcInsight');
+
+    fcBtn.addEventListener('click', async () => {
+        const categorie   = categorieSelect.value;
+        const niveau      = niveauSelect.value;
+        const budget      = document.getElementById('budget').value;
+        const competences = competencesInput.value;
+
+        if (!categorie) {
+            alert('Veuillez sélectionner une catégorie avant de lancer la prédiction.');
+            return;
+        }
+
+        fcBtn.disabled = true;
+        fcSpinner.style.display = 'block';
+        fcIcon.style.display = 'none';
+
+        try {
+            const fd = new FormData();
+            fd.append('categorie',   categorie);
+            fd.append('niveau',      niveau);
+            fd.append('budget',      budget || '0');
+            fd.append('competences', competences);
+
+            const res    = await fetch('index.php?action=ai_forecast', { method: 'POST', body: fd });
+            const result = await res.json();
+
+            if (result.error) {
+                alert('Erreur prédiction : ' + result.error);
+                return;
+            }
+
+            // Animate counter
+            animateCounter(fcNumber, 0, result.predicted_count, 750);
+
+            // Confidence badge
+            const confMap = {
+                high:   { cls: 'fc-high',   icon: 'fa-circle-check',       label: 'Confiance élevée' },
+                medium: { cls: 'fc-medium', icon: 'fa-circle-half-stroke',  label: 'Confiance moyenne' },
+                low:    { cls: 'fc-low',    icon: 'fa-circle-exclamation',  label: 'Confiance faible' }
+            };
+            const conf = confMap[result.confidence] || confMap.medium;
+            fcBadge.className = conf.cls;
+            fcBadge.style.cssText = '';
+            fcBadge.innerHTML = `<i class="fas ${conf.icon}"></i> ${conf.label}`;
+
+            // Insight
+            if (result.insight) {
+                fcInsight.textContent = result.insight;
+                fcInsight.style.display = 'block';
+            } else {
+                fcInsight.style.display = 'none';
+            }
+
+            fcPlaceholder.style.display = 'none';
+            fcResult.style.display = 'block';
+
+        } catch (err) {
+            console.error(err);
+            alert('Erreur lors de la prédiction.');
+        } finally {
+            fcBtn.disabled = false;
+            fcSpinner.style.display = 'none';
+            fcIcon.style.display = 'block';
+        }
+    });
+
+    function animateCounter(el, from, to, duration) {
+        const start = performance.now();
+        (function update(now) {
+            const p = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(from + (to - from) * eased);
+            if (p < 1) requestAnimationFrame(update);
+        })(start);
+    }
 });
 </script>
 

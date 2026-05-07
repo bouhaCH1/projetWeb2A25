@@ -35,6 +35,7 @@ switch ($action) {
     case 'generate_email': $controller->generateEmail(); break;
     case 'ai_classify': $controller->aiClassify(); break;
     case 'ai_chat': $controller->aiChat(); break;
+    case 'ai_forecast': $controller->aiForecast(); break;
     
     // --- CHAT API ---
     case 'sendChatMessage': $controller->sendChatMessage(); break;

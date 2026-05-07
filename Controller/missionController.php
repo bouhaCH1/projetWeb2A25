@@ -468,6 +468,38 @@ class MissionController {
         exit;
     }
 
+    /**
+     * AI Demand Forecast endpoint.
+     * POST params: categorie, niveau, budget, competences
+     * Returns JSON: { predicted_count, confidence, insight, source }
+     */
+    public function aiForecast() {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+        header('Content-Type: application/json; charset=utf-8');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['error' => 'Requête invalide']);
+            exit;
+        }
+
+        $missionData = [
+            'categorie'   => isset($_POST['categorie'])   ? trim($_POST['categorie'])   : 'developpement',
+            'niveau'      => isset($_POST['niveau'])      ? trim($_POST['niveau'])      : 'intermediaire',
+            'budget'      => isset($_POST['budget'])      ? trim($_POST['budget'])      : '0',
+            'competences' => isset($_POST['competences']) ? trim($_POST['competences']) : '',
+        ];
+
+        try {
+            $result = AIService::forecastDemand($missionData, $this->db);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            echo json_encode(['error' => 'Erreur serveur: ' . $e->getMessage()]);
+        }
+        exit;
+    }
+
     // ============ CHAT API METHODS ============
     
     public function sendChatMessage() {

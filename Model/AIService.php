@@ -167,4 +167,188 @@ class AIService {
         // Default response
         return "Je comprends votre demande. Pour une aide plus personnalisée, n'hésitez pas à consulter notre centre d'aide ou contacter directement le support technique. Y a-t-il autre chose que je puisse faire pour vous ?";
     }
+
+    /**
+     * Predicts how many applications a new mission will receive,
+     * based on historical mission/candidature data from the database.
+     *
+     * @param array $missionData  Keys: categorie, niveau, competences, budget
+     * @param PDO   $db           Active database connection
+     * @return array              Keys: predicted_count (int), confidence (string), insight (string)
+     */
+    public static function forecastDemand(array $missionData, $db): array {
+        // --- 1. Fetch historical data ---
+        $historicalData = [];
+        try {
+            $stmt = $db->prepare("
+                SELECT
+                    m.categorie,
+                    m.niveau,
+                    m.budget,
+                    m.competences,
+                    COUNT(c.id) AS application_count
+                FROM mission m
+                LEFT JOIN candidature c ON c.mission_id = m.id
+                GROUP BY m.id
+                ORDER BY m.created_at DESC
+                LIMIT 15
+            ");
+            $stmt->execute();
+            $historicalData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            error_log("AIService::forecastDemand - DB Error: " . $e->getMessage());
+        }
+
+        // --- 2. Build historical summary string ---
+        $historySummary = '';
+        if (!empty($historicalData)) {
+            foreach ($historicalData as $row) {
+                $skillCount = $row['competences']
+                    ? count(array_filter(array_map('trim', explode(',', $row['competences']))))
+                    : 0;
+                $historySummary .= sprintf(
+                    "- Category: %s | Level: %s | Budget: %s EUR | Skills: %d | Applications: %d\n",
+                    $row['categorie'] ?? 'N/A',
+                    $row['niveau'] ?? 'N/A',
+                    $row['budget'] ?? '0',
+                    $skillCount,
+                    (int)$row['application_count']
+                );
+            }
+        } else {
+            $historySummary = "No historical data available yet.";
+        }
+
+        // --- 3. New mission attributes ---
+        $newCategorie  = $missionData['categorie']  ?? 'developpement';
+        $newNiveau     = $missionData['niveau']     ?? 'intermediaire';
+        $newBudget     = $missionData['budget']     ?? '0';
+        $newCompetences = $missionData['competences'] ?? '';
+        $newSkillCount = $newCompetences
+            ? count(array_filter(array_map('trim', explode(',', $newCompetences))))
+            : 0;
+
+        // --- 4. Build Gemini prompt ---
+        $prompt = "You are an expert HR market analyst for a freelance mission platform.
+Based on the following historical missions and their real application counts, predict how many applications the new mission described below will receive within 30 days.
+
+Historical Missions:
+$historySummary
+
+New Mission to Predict:
+- Category: $newCategorie
+- Level: $newNiveau
+- Budget: $newBudget EUR
+- Number of Required Skills: $newSkillCount
+
+Return ONLY a JSON object with three keys:
+- 'predicted_count': integer (your best estimate of applications)
+- 'confidence': string, one of 'low', 'medium', 'high'
+- 'insight': string (one short sentence explaining the key factor behind your prediction, in French)
+
+Example: {\"predicted_count\": 12, \"confidence\": \"high\", \"insight\": \"Les missions de développement web avec un budget supérieur à 1000 EUR attirent en moyenne 10-15 candidats.\"}";
+
+        // --- 5. Call Gemini API ---
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/" . self::$model . ":generateContent?key=" . GEMINI_API_KEY;
+        $requestData = [
+            'contents' => [
+                ['parts' => [['text' => $prompt]]]
+            ]
+        ];
+
+        $attempts  = 0;
+        $maxRetries = 3;
+        $httpCode  = 0;
+        $response  = null;
+
+        while ($attempts < $maxRetries) {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($curlError) {
+                error_log("AIService::forecastDemand curl error (attempt $attempts): $curlError");
+            }
+
+            if ($httpCode === 200) break;
+            if ($httpCode === 429 || $httpCode === 503) {
+                $attempts++;
+                if ($attempts < $maxRetries) sleep(1);
+                continue;
+            }
+            break;
+        }
+
+        // --- 6. Parse response ---
+        if ($httpCode === 200 && $response) {
+            $result = json_decode($response, true);
+            if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+                $jsonText = $result['candidates'][0]['content']['parts'][0]['text'];
+                $jsonText = preg_replace('/```json|```/', '', $jsonText);
+                $decoded  = json_decode(trim($jsonText), true);
+                if ($decoded && isset($decoded['predicted_count'])) {
+                    return [
+                        'predicted_count' => (int)$decoded['predicted_count'],
+                        'confidence'      => $decoded['confidence'] ?? 'medium',
+                        'insight'         => $decoded['insight'] ?? '',
+                        'source'          => 'ai'
+                    ];
+                }
+            }
+        }
+
+        // --- 7. Statistical fallback ---
+        error_log("AIService::forecastDemand - API failed (HTTP $httpCode), using statistical fallback.");
+        return self::getFallbackForecast($newCategorie, $newNiveau, $historicalData);
+    }
+
+    /**
+     * Statistical fallback: compute average applications per category/level
+     * from whatever historical data we have.
+     */
+    private static function getFallbackForecast(string $categorie, string $niveau, array $historicalData): array {
+        // Base averages per category (empirical defaults)
+        $categoryAvg = [
+            'developpement' => 12,
+            'data'          => 10,
+            'mobile'        => 9,
+            'design'        => 7,
+            'marketing'     => 6,
+        ];
+
+        $levelMultiplier = [
+            'debutant'      => 1.3,
+            'intermediaire' => 1.0,
+            'avance'        => 0.8,
+            'expert'        => 0.6,
+        ];
+
+        // Calculate real average from DB if we have enough records
+        $catMatches = array_filter($historicalData, fn($r) => $r['categorie'] === $categorie);
+        if (count($catMatches) >= 3) {
+            $avg = array_sum(array_column($catMatches, 'application_count')) / count($catMatches);
+        } else {
+            $avg = $categoryAvg[$categorie] ?? 8;
+        }
+
+        $mult  = $levelMultiplier[$niveau] ?? 1.0;
+        $count = (int)round($avg * $mult);
+        $count = max(1, $count); // at least 1
+
+        return [
+            'predicted_count' => $count,
+            'confidence'      => count($historicalData) >= 5 ? 'medium' : 'low',
+            'insight'         => "Estimation basée sur les moyennes historiques de la plateforme pour la catégorie « $categorie ».",
+            'source'          => 'fallback'
+        ];
+    }
 }
