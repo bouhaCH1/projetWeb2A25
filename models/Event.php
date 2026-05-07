@@ -22,22 +22,26 @@ class Event {
     }
 
     public function create($data) {
-        $query = "INSERT INTO " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location";
+        $query = "INSERT INTO " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location, price=:price, payment_status=:payment_status";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":title", $data['title']);
         $stmt->bindParam(":description", $data['description']);
         $stmt->bindParam(":date", $data['date']);
         $stmt->bindParam(":location", $data['location']);
+        $stmt->bindParam(":price", $data['price']);
+        $stmt->bindParam(":payment_status", $data['payment_status']);
         return $stmt->execute();
     }
 
     public function update($id, $data) {
-        $query = "UPDATE " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location WHERE id=:id";
+        $query = "UPDATE " . $this->table_name . " SET title=:title, description=:description, date=:date, location=:location, price=:price, payment_status=:payment_status WHERE id=:id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":title", $data['title']);
         $stmt->bindParam(":description", $data['description']);
         $stmt->bindParam(":date", $data['date']);
         $stmt->bindParam(":location", $data['location']);
+        $stmt->bindParam(":price", $data['price']);
+        $stmt->bindParam(":payment_status", $data['payment_status']);
         $stmt->bindParam(":id", $id);
         return $stmt->execute();
     }

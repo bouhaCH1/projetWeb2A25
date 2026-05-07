@@ -298,7 +298,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         <div class="tab-pane fade show active" id="nav-events" role="tabpanel">
                             <div class="table-responsive p-3">
                                 <table id="eventsTable" class="table table-hover w-100">
-                                    <thead><tr><th>ID</th><th>Titre</th><th>Date</th><th>Lieu</th><th>Statut</th><th>Actions</th></tr></thead>
+                                    <thead><tr><th>ID</th><th>Titre</th><th>Date</th><th>Lieu</th><th>Statut</th><th>Prix</th><th>Paiement</th><th>Actions</th></tr></thead>
                                     <tbody>
                                         <?php foreach($events as $e): $st=getStatus($e['date']); ?>
                                         <tr>
@@ -307,6 +307,14 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                             <td><?= $e['date'] ?></td>
                                             <td><?= htmlspecialchars($e['location']) ?></td>
                                             <td><span class="badge rounded-pill bg-<?= $st['c'] ?>"><?= $st['l'] ?></span></td>
+                                            <td class="text-info fw-bold"><?= number_format($e['price'], 2) ?> TND</td>
+                                            <td>
+                                                <?php 
+                                                $ps = $e['payment_status'] ?? 'En attente';
+                                                $pc = ($ps == 'Payé') ? 'success' : (($ps == 'Refusé') ? 'danger' : 'warning');
+                                                ?>
+                                                <span class="badge bg-<?= $pc ?>"><?= $ps ?></span>
+                                            </td>
                                             <td>
                                                 <a href="index.php?action=form_event&id=<?= $e['id'] ?>" class="btn btn-sm btn-info me-1"><i class="fa fa-edit"></i></a>
                                                 <a href="index.php?action=delete_event&id=<?= $e['id'] ?>" onclick="return confirm('Sûr?')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
@@ -451,10 +459,13 @@ Statut: Payé
                             const ed = new Date(e.date);
                             if(ed > now && (!nextEvent || ed < new Date(nextEvent.date))) nextEvent = e;
                         });
-                        if(nextEvent) reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + ". 📅";
-                        else reply = "Mafama hata événement jey. 3andek " + events.length + " events lkol.";
+                        if(nextEvent) {
+                            const priceMsg = nextEvent.price > 0 ? " avec un prix de " + nextEvent.price + " TND" : "";
+                            const statusMsg = " (Statut: " + nextEvent.payment_status + ")";
+                            reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + priceMsg + statusMsg + ". 📅";
+                        } else reply = "Mafama hata événement jey. 3andek " + events.length + " events lkol.";
                     } else {
-                        reply = "3andek " + events.length + " événements enregistrés. Tnajem tchoufhom fel tableau wela fel planning!";
+                        reply = "3andek " + events.length + " événements enregistrés. Tnajem tchoufhom fel tableau avec leurs prix et statuts de paiement!";
                     }
                 }
 
