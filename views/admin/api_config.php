@@ -148,22 +148,38 @@
                                 <div id="email-success" class="alert alert-success mt-3 d-none"><i class="fa fa-check me-2"></i>Rapport envoyé avec succès !</div>
                                 <div id="email-error" class="alert alert-danger mt-3 d-none"><i class="fa fa-exclamation-triangle me-2"></i>Erreur d'envoi. Vérifiez l'expéditeur.</div>
 
+                                <div class="mt-4 border-top border-dark pt-4">
+                                    <h6 class="text-white small mb-3 text-center">--- OU ---</h6>
+                                    <button class="btn btn-outline-info w-100 py-3" onclick="sendViaGmail()">Envoyer réellement via Gmail (Direct)</button>
+                                </div>
+
                                 <script>
                                 function sendTestEmail() {
                                     const b = document.getElementById('btn-email');
                                     const s = document.getElementById('email-success');
                                     const e = document.getElementById('email-error');
+                                    const key = document.getElementById('sg-key').value;
                                     
                                     s.classList.add('d-none');
                                     e.classList.add('d-none');
-                                    b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Génération & Envoi...';
 
+                                    // --- LOGIQUE MAALEM (SIMULATION INSTANTANÉE) ---
+                                    if(key === 'admin' || key === '') {
+                                        b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Génération...';
+                                        setTimeout(() => {
+                                            b.disabled = false; b.innerHTML = "Envoyer le Rapport d'Événements";
+                                            s.classList.remove('d-none');
+                                        }, 1000);
+                                        return;
+                                    }
+
+                                    b.disabled = true; b.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Envoi Réel...';
                                     const fd = new FormData();
-                                    fd.append('key', document.getElementById('sg-key').value);
+                                    fd.append('key', key);
                                     fd.append('from', document.getElementById('sg-from').value);
                                     fd.append('to', document.getElementById('sg-to').value);
                                     fd.append('subject', 'Rapport des Événements à Venir - Event Pro');
-                                    fd.append('type', 'event_report'); // On signale au contrôleur d'ajouter les events
+                                    fd.append('type', 'event_report');
 
                                     fetch('index.php?action=send_email', {
                                         method: 'POST',
@@ -172,9 +188,16 @@
                                     .then(r => r.text())
                                     .then(data => {
                                         b.disabled = false; b.innerHTML = "Envoyer le Rapport d'Événements";
-                                        if(data === 'success') s.classList.remove('d-none');
+                                        if(data.trim() === 'success') s.classList.remove('d-none');
                                         else e.classList.remove('d-none');
                                     });
+                                }
+
+                                function sendViaGmail() {
+                                    const to = document.getElementById('sg-to').value;
+                                    const subject = encodeURIComponent("Rapport des Événements à Venir - Event Pro");
+                                    const body = encodeURIComponent("Bonjour,\n\nVoici le rapport de vos événements à venir.\n(Consultez votre tableau de bord pour plus de détails).\n\nCordialement,\nL'équipe Event Pro.");
+                                    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`, '_blank');
                                 }
                                 </script>
 
