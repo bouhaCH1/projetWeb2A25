@@ -91,7 +91,6 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 </a>
                 <div class="navbar-nav w-100">
                     <a href="index.php?action=admin" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="index.php?action=inbox" class="nav-item nav-link"><i class="fa fa-envelope me-2"></i>Boîte d'Envoi</a>
                     <a href="index.php?action=form_event" class="nav-item nav-link"><i class="fa fa-calendar-plus me-2"></i>Nouveau Event</a>
                     <a href="index.php?action=form_resource" class="nav-item nav-link"><i class="fa fa-plus-square me-2"></i>Nouvelle Ressource</a>
                     <a href="index.php" class="nav-item nav-link"><i class="fa fa-home me-2"></i>Retour Site</a>

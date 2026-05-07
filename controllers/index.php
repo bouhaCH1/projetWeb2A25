@@ -33,48 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-if ($action == 'api_config' && isset($_GET['service'])) {
-    include __DIR__ . '/../views/admin/api_config.php'; exit;
-}
-if ($action == 'inbox') {
-    include __DIR__ . '/../views/admin/inbox.php'; exit;
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($action == 'send_email') {
-        require_once __DIR__ . '/../models/ApiService.php';
-        require_once __DIR__ . '/../models/Event.php';
-        require_once __DIR__ . '/../models/Notification.php';
-        require_once __DIR__ . '/../config_api.php';
-        $api = new ApiService();
-        $eventModel = new Event($db);
-        $notifModel = new Notification($db);
-        
-        $key = $_POST['key'];
-        if(empty($key) || $key === 'admin') $key = SENDGRID_API_KEY; 
-        
-        $message = $_POST['message'] ?? "";
-        
-        if(isset($_POST['type']) && $_POST['type'] == 'event_report') {
-            $events = $eventModel->getAll(); 
-            $list = "<h2>Rapport de vos événements :</h2><ul>";
-            foreach($events as $e) {
-                $list .= "<li><strong>" . htmlspecialchars($e['title']) . "</strong> - " . date('d/m/Y H:i', strtotime($e['date'])) . " (" . htmlspecialchars($e['location']) . ")</li>";
-            }
-            $list .= "</ul>";
-            $message = $list;
-        }
-
-        // Sauvegarde interne (Pour que l'utilisateur voit le mail dans son dashboard)
-        $notifModel->save($_POST['from'], $_POST['to'], $_POST['subject'], $message);
-
-        // --- LOGIQUE DE SIMULATION PROFESSIONNELLE ---
-        // On enregistre toujours dans la boîte d'envoi interne
-        $notifModel->save($_POST['from'], $_POST['to'], $_POST['subject'], $message);
-
-        // On renvoie un succès immédiat pour la démo
-        echo "success"; exit;
-    }
+    // Other POST actions removed
 }
 
 if ($action == 'delete_event' && isset($_GET['id'])) {
@@ -100,9 +60,6 @@ if ($action == 'admin') {
 } elseif ($action == 'form_resource') {
     $resourceData = isset($_GET['id']) ? $resourceController->getResource($_GET['id']) : null;
     require_once $viewsPath . 'admin/form_resource.php';
-} elseif ($action == 'api_config') {
-    $events = $eventController->getEvents();
-    require_once $viewsPath . 'admin/api_config.php';
 } else {
     $events    = $eventController->getEvents();
     $resources = $resourceController->getResources();
