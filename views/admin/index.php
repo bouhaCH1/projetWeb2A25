@@ -90,8 +90,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     <h3 class="text-primary"><i class="fa fa-chart-line me-2"></i>ER PRO</h3>
                 </a>
                 <div class="navbar-nav w-100">
-                    <a href="index.php?action=admin" class="nav-item nav-link <?= !isset($_GET['view']) ? 'active' : '' ?>"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="index.php?action=admin&view=payments" class="nav-item nav-link <?= (isset($_GET['view']) && $_GET['view'] == 'payments') ? 'active' : '' ?>"><i class="fa fa-receipt me-2"></i>Historique Pay.</a>
+                    <a href="index.php?action=admin" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="index.php?action=form_event" class="nav-item nav-link"><i class="fa fa-calendar-plus me-2"></i>Nouveau Event</a>
                     <a href="index.php?action=form_resource" class="nav-item nav-link"><i class="fa fa-plus-square me-2"></i>Nouvelle Ressource</a>
                     <a href="index.php" class="nav-item nav-link"><i class="fa fa-home me-2"></i>Retour Site</a>
@@ -102,7 +101,6 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
 
         <!-- Content Start -->
         <div class="content">
-            <?php if(!isset($_GET['view'])): ?>
             <!-- AI Result Modal -->
             <div class="modal fade" id="aiModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -218,13 +216,15 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     </div>
                 </div>
             </div>
-            <?php else: ?>
+                </div>
+            </div>
+
             <!-- Paiements Récents -->
-            <div class="container-fluid pt-4 px-4 pb-4">
+            <div class="container-fluid pt-4 px-4">
                 <div class="bg-secondary text-center rounded p-4 shadow-lg border-top border-primary border-3">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0 text-white"><i class="fa fa-receipt me-2"></i>Historique Complet des Paiements</h6>
-                        <span class="badge bg-success">Transactions Validées</span>
+                        <h6 class="mb-0 text-white"><i class="fa fa-credit-card me-2"></i>Historique des Paiements</h6>
+                        <span class="badge bg-success">Validé</span>
                     </div>
                     <div class="table-responsive">
                         <table id="paymentsTable" class="table text-start align-middle table-bordered table-hover mb-0">
@@ -232,9 +232,8 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                 <tr class="text-white">
                                     <th scope="col">Date</th>
                                     <th scope="col">RIB / Card</th>
-                                    <th scope="col">Client / Email</th>
+                                    <th scope="col">Client</th>
                                     <th scope="col">Montant</th>
-                                    <th scope="col">Statut</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -246,10 +245,9 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                 ?>
                                 <tr>
                                     <td><?= date('d/m/Y H:i', strtotime($p['created_at'])) ?></td>
-                                    <td><code class="text-info"><?= htmlspecialchars($p['rib']) ?></code></td>
+                                    <td><?= htmlspecialchars($p['rib']) ?></td>
                                     <td><?= htmlspecialchars($p['email']) ?></td>
                                     <td class="text-primary fw-bold"><?= number_format($p['amount'], 2) ?> TND</td>
-                                    <td><span class="badge bg-success">Validé</span></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -257,7 +255,6 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                     </div>
                 </div>
             </div>
-            <?php endif; ?>
 
             <!-- Advanced Charts Row 2 -->
             <div class="container-fluid pt-4 px-4">
@@ -303,7 +300,7 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         <div class="tab-pane fade show active" id="nav-events" role="tabpanel">
                             <div class="table-responsive p-3">
                                 <table id="eventsTable" class="table table-hover w-100">
-                                    <thead><tr><th>ID</th><th>Titre</th><th>Date</th><th>Lieu</th><th>Statut</th><th>Prix</th><th>Paiement</th><th>Actions</th></tr></thead>
+                                    <thead><tr><th>ID</th><th>Titre</th><th>Date</th><th>Lieu</th><th>Statut</th><th>Actions</th></tr></thead>
                                     <tbody>
                                         <?php foreach($events as $e): $st=getStatus($e['date']); ?>
                                         <tr>
@@ -312,14 +309,6 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                             <td><?= $e['date'] ?></td>
                                             <td><?= htmlspecialchars($e['location']) ?></td>
                                             <td><span class="badge rounded-pill bg-<?= $st['c'] ?>"><?= $st['l'] ?></span></td>
-                                            <td class="text-info fw-bold"><?= number_format($e['price'], 2) ?> TND</td>
-                                            <td>
-                                                <?php 
-                                                $ps = $e['payment_status'] ?? 'En attente';
-                                                $pc = ($ps == 'Payé') ? 'success' : (($ps == 'Refusé') ? 'danger' : 'warning');
-                                                ?>
-                                                <span class="badge bg-<?= $pc ?>"><?= $ps ?></span>
-                                            </td>
                                             <td>
                                                 <a href="index.php?action=form_event&id=<?= $e['id'] ?>" class="btn btn-sm btn-info me-1"><i class="fa fa-edit"></i></a>
                                                 <a href="index.php?action=delete_event&id=<?= $e['id'] ?>" onclick="return confirm('Sûr?')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
@@ -464,13 +453,10 @@ Statut: Payé
                             const ed = new Date(e.date);
                             if(ed > now && (!nextEvent || ed < new Date(nextEvent.date))) nextEvent = e;
                         });
-                        if(nextEvent) {
-                            const priceMsg = nextEvent.price > 0 ? " avec un prix de " + nextEvent.price + " TND" : "";
-                            const statusMsg = " (Statut: " + nextEvent.payment_status + ")";
-                            reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + priceMsg + statusMsg + ". 📅";
-                        } else reply = "Mafama hata événement jey. 3andek " + events.length + " events lkol.";
+                        if(nextEvent) reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + ". 📅";
+                        else reply = "Mafama hata événement jey. 3andek " + events.length + " events lkol.";
                     } else {
-                        reply = "3andek " + events.length + " événements enregistrés. Tnajem tchoufhom fel tableau avec leurs prix et statuts de paiement!";
+                        reply = "3andek " + events.length + " événements enregistrés. Tnajem tchoufhom fel tableau wela fel planning!";
                     }
                 }
 

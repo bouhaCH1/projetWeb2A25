@@ -51,20 +51,6 @@
                                     <div id="err-desc" class="error-feedback">La description doit faire au moins 10 caractères.</div>
                                 </div>
 
-                                <div class="form-floating mb-3">
-                                    <input type="number" step="0.01" class="form-control" id="price" name="price" placeholder="Prix" value="<?= isset($eventData) ? htmlspecialchars($eventData['price']) : '0.00' ?>">
-                                    <label for="price">Prix de l'événement (TND)</label>
-                                </div>
-
-                                <div class="form-floating mb-4">
-                                    <select class="form-select" id="payment_status" name="payment_status">
-                                        <option value="En attente" <?= (isset($eventData) && $eventData['payment_status'] == 'En attente') ? 'selected' : '' ?>>En attente</option>
-                                        <option value="Payé" <?= (isset($eventData) && $eventData['payment_status'] == 'Payé') ? 'selected' : '' ?>>Payé</option>
-                                        <option value="Refusé" <?= (isset($eventData) && $eventData['payment_status'] == 'Refusé') ? 'selected' : '' ?>>Refusé</option>
-                                    </select>
-                                    <label for="payment_status">Statut du Paiement</label>
-                                </div>
-
                                 <button type="submit" class="btn btn-primary py-3 w-100 mb-3 shadow">Enregistrer l'Événement</button>
                                 <a href="index.php?action=admin" class="btn btn-outline-light w-100">Annuler</a>
                             </form>
