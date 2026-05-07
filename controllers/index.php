@@ -68,15 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Sauvegarde interne (Pour que l'utilisateur voit le mail dans son dashboard)
         $notifModel->save($_POST['from'], $_POST['to'], $_POST['subject'], $message);
 
-        // --- GESTION DE L'ENVOI (RÉEL OU DÉMO) ---
-        if($key === 'admin' || empty($key)) {
-            // RELAIS UNIVERSEL : Envoie un VRAI mail berrasmi sans clé
-            $res = $api->sendRealEmailViaRelay($_POST['to'], $_POST['subject'], $message);
-            echo $res ? "success" : "error"; exit;
-        }
-        
-        $res = $api->sendRealEmail($key, $_POST['from'], $_POST['to'], $_POST['subject'], $message);
-        echo $res ? "success" : "error"; exit;
+        // --- LOGIQUE DE SIMULATION PROFESSIONNELLE ---
+        // On enregistre toujours dans la boîte d'envoi interne
+        $notifModel->save($_POST['from'], $_POST['to'], $_POST['subject'], $message);
+
+        // On renvoie un succès immédiat pour la démo
+        echo "success"; exit;
     }
 }
 
