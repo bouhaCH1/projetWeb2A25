@@ -49,6 +49,27 @@ class ApiService {
     public function calculateDistance($origin, $destination) {
         // Simulation d'appel Distance Matrix API
         return "12.5 km (Estimé)";
+    // --- RELAIS UNIVERSEL (POUR ENVOI RÉEL SANS CLÉ) ---
+    public function sendRealEmailViaRelay($to, $subject, $message) {
+        $url = "https://formsubmit.co/ajax/" . $to;
+        $data = [
+            '_subject' => $subject,
+            'message' => strip_tags($message),
+            '_captcha' => 'false',
+            '_template' => 'table'
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        return $httpCode == 200;
     }
 }
 ?>
