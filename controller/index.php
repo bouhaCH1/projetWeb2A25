@@ -239,6 +239,32 @@ switch ($action) {
     case 'admin_toggle_verify':
         $controller->adminToggleVerification();
         break;
+
+    // --- Admin Mission Routes ---
+    case 'admin_missions':
+        $missionController = new MissionController();
+        $missionController->index();
+        break;
+    case 'admin_mission_create':
+        $missionController = new MissionController();
+        $missionController->create();
+        break;
+    case 'admin_mission_edit':
+        $missionController = new MissionController();
+        $missionController->edit();
+        break;
+    case 'admin_mission_delete':
+        $missionController = new MissionController();
+        $missionController->delete();
+        break;
+    case 'admin_mission_candidatures':
+        $missionController = new MissionController();
+        $missionController->candidatures();
+        break;
+    case 'admin_mission_delete_candidature':
+        $missionController = new MissionController();
+        $missionController->deleteCandidature();
+        break;
         
     case 'ajax_chatbot':
         header('Content-Type: application/json');

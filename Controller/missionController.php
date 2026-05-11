@@ -292,7 +292,7 @@ class MissionController {
             if (empty($errors)) {
                 $this->hydrateMission($_POST);
                 if ($this->mission->create()) {
-                    header('Location: index.php?action=index&success=1');
+                    header('Location: index.php?action=admin_missions&success=1');
                     exit;
                 }
             }
@@ -307,7 +307,7 @@ class MissionController {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         $missionData = $this->mission->getById($id);
         if (!$missionData) {
-            header('Location: index.php?action=index');
+            header('Location: index.php?action=admin_missions');
             exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -316,7 +316,7 @@ class MissionController {
                 $this->mission->id = $id;
                 $this->hydrateMission($_POST);
                 if ($this->mission->update()) {
-                    header('Location: index.php?action=index&updated=1');
+                    header('Location: index.php?action=admin_missions&updated=1');
                     exit;
                 }
             }
@@ -327,7 +327,7 @@ class MissionController {
     public function delete() {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if ($this->mission->delete($id)) {
-            header('Location: index.php?action=index&deleted=1');
+            header('Location: index.php?action=admin_missions&deleted=1');
             exit;
         }
     }
@@ -380,7 +380,7 @@ class MissionController {
         if ($id > 0 && in_array($statut, ['en_attente', 'acceptee', 'refusee'], true)) {
             $this->candidature->updateStatut($id, $statut);
         }
-        header('Location: index.php?action=candidatures&updated_statut=1');
+        header('Location: index.php?action=admin_mission_candidatures&updated_statut=1');
         exit;
     }
 
@@ -434,7 +434,7 @@ class MissionController {
         if ($id > 0) {
             $this->candidature->delete($id);
         }
-        header('Location: index.php?action=candidatures&deleted_candidature=1');
+        header('Location: index.php?action=admin_mission_candidatures&deleted_candidature=1');
         exit;
     }
 
