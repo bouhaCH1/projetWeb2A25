@@ -3,6 +3,7 @@
 session_start();
 
 require_once __DIR__ . '/UserController.php';
+require_once __DIR__ . '/missionController.php';
 
 $action = $_GET['action'] ?? 'home';
 $controller = new UserController();
@@ -248,20 +249,47 @@ switch ($action) {
         }
 
         $msgLower = mb_strtolower($msg, 'UTF-8');
-        $reply = "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Je peux vous aider avec votre profil, la Double Authentification (2FA), l'Analyse IA, ou la vérification d'identité.";
+        $reply = "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Je peux vous aider avec votre **profil**, la **2FA**, les **Missions**, les **Candidatures**, l'**Analyse IA**, ou la **vérification d'identité**.";
 
-        if (preg_match('/\b(mot de passe|password|oublié)\b/i', $msgLower)) {
+        // ===== MISSIONS =====
+        if (preg_match('/\b(créer|creer|publier|nouvelle|ajouter|poster).*(mission)/i', $msgLower) ||
+            preg_match('/\b(mission).*(créer|creer|publier|nouvelle|ajouter|poster)/i', $msgLower)) {
+            $reply = "Pour **publier une mission** :\n1. Allez dans **'Missions'** dans le menu de gauche.\n2. Cliquez sur le bouton **'Publier'** (icône +).\n3. Remplissez le titre, la description, le budget, les dates et les compétences requises.\n4. Utilisez le bouton **'Analyser avec l'IA'** pour détecter automatiquement la catégorie, le niveau et les compétences ! 🤖\n5. Cliquez sur **'Enregistrer'** pour publier votre mission.";
+        } elseif (preg_match('/\b(postuler|candidater|appliquer|apply).*(mission)?/i', $msgLower) ||
+                  preg_match('/\b(comment).*(postuler)/i', $msgLower)) {
+            $reply = "Pour **postuler à une mission** :\n1. Allez dans **'Missions'** dans le menu.\n2. Parcourez les missions disponibles.\n3. Cliquez sur **'Postuler'** sur la mission qui vous intéresse.\n4. Remplissez le formulaire (nom, email, téléphone, motivation).\n5. Vous pouvez aussi joindre votre **CV** (PDF, DOC, max 5MB).\n6. Soumettez et attendez la réponse de l'employeur ! 📩";
+        } elseif (preg_match('/\b(mes missions|mes.mission|gérer.mission|gerer.mission|supprimer.mission|modifier.mission)/i', $msgLower)) {
+            $reply = "Pour **gérer vos missions publiées** :\n1. Allez dans **'Missions'** puis cliquez sur **'Mes Missions'**.\n2. Vous verrez toutes vos missions avec leur statut (Ouverte, En cours, Terminée).\n3. Cliquez sur **'Modifier'** ✏️ pour éditer une mission.\n4. Cliquez sur l'icône **Supprimer** 🗑️ pour effacer une mission.\n\n⚠️ La suppression d'une mission supprime aussi toutes ses candidatures !";
+        } elseif (preg_match('/\b(candidature|candidatures|mes candidatures|voir candidature)/i', $msgLower) &&
+                  !preg_match('/\b(postuler|appliquer)/i', $msgLower)) {
+            $reply = "Pour **voir vos candidatures** :\n1. Allez dans **'Missions'** dans le menu.\n2. Cliquez sur **'Candidatures'** dans la page.\n3. Vous pouvez filtrer par email pour retrouver vos candidatures.\n4. Les statuts possibles sont :\n   - 🟡 **En attente** : l'employeur n'a pas encore répondu.\n   - ✅ **Acceptée** : félicitations, vous avez été retenu !\n   - ❌ **Refusée** : votre candidature n'a pas été retenue.";
+        } elseif (preg_match('/\b(statut|status|ouverte|en cours|terminee|terminée)/i', $msgLower) &&
+                  preg_match('/\b(mission)/i', $msgLower)) {
+            $reply = "Les **statuts d'une mission** signifient :\n- 🟢 **Ouverte** : la mission est disponible, vous pouvez postuler.\n- 🔵 **En cours** : la mission est déjà en cours d'exécution.\n- ⚫ **Terminée** : la mission est clôturée.\n\nSeules les missions **Ouvertes** acceptent de nouvelles candidatures.";
+        } elseif (preg_match('/\b(ia|analyser|classifier|catégorie|categorie|niveau|compétence|competence).*(mission)/i', $msgLower) ||
+                  preg_match('/\b(mission).*(ia|analyser|classifier)/i', $msgLower)) {
+            $reply = "Le bouton **'Analyser avec l'IA'** 🤖 dans le formulaire de création de mission :\n1. Remplissez d'abord le **titre** et la **description** de la mission.\n2. Cliquez sur **'Analyser avec l'IA'**.\n3. L'IA va automatiquement détecter :\n   - 📂 La **catégorie** (Développement, Design, Marketing...)\n   - 📊 Le **niveau** requis (Débutant, Expert...)\n   - 🛠️ Les **compétences** clés nécessaires.\n4. Vous pouvez modifier ces suggestions avant d'enregistrer.";
+        } elseif (preg_match('/\b(prédiction|prediction|forecast|demande|candidature.attendue)/i', $msgLower)) {
+            $reply = "La **Prédiction de Demande IA** 📈 estime combien de candidatures votre mission recevra :\n1. Dans le formulaire de création, choisissez une **catégorie** et un **niveau**.\n2. Cliquez sur **'Prédire la demande'**.\n3. L'IA analyse vos données historiques et retourne :\n   - 🔢 Le **nombre estimé** de candidatures.\n   - 📊 Le **niveau de confiance** (élevé / moyen / faible).\n   - 💡 Une **explication** du résultat.";
+        } elseif (preg_match('/\b(budget|prix|tarif|combien|euro|paiement).*(mission)/i', $msgLower) ||
+                  preg_match('/\b(mission).*(budget|prix|tarif)/i', $msgLower)) {
+            $reply = "Le **budget d'une mission** représente la rémunération proposée en euros (€) pour le freelancer.\n- Il doit être un **nombre positif** (ex: 500, 1500).\n- Maximum autorisé : **1 000 000 €**.\n- Il est affiché sur la carte de la mission pour aider les candidats à évaluer l'offre. 💰";
+        } elseif (preg_match('/\b(mission|missions)\b/i', $msgLower)) {
+            $reply = "La section **Missions** vous permet de :\n- 📋 **Voir** toutes les missions disponibles.\n- ✍️ **Publier** une nouvelle mission (si vous êtes employeur).\n- 📨 **Postuler** à une mission qui vous intéresse.\n- 📁 **Gérer** vos missions publiées (Mes Missions).\n- 📊 **Suivre** vos candidatures envoyées.\n\nQue souhaitez-vous faire exactement ?";
+
+        // ===== PROFIL & COMPTE =====
+        } elseif (preg_match('/\b(mot de passe|password|oublié)\b/i', $msgLower)) {
             $reply = "Pour changer votre mot de passe, allez dans **'Sécurité & 2FA'** et descendez jusqu'à la section de changement de mot de passe. Si vous n'arrivez pas à vous connecter, utilisez le bouton 'Mot de passe oublié' sur la page de connexion.";
-        } elseif (preg_match('/\b(modifier|changer|editer|mettre à jour|nom|prénom|prenom|telephone|téléphone|photo|image|profil)\b/i', $msgLower) && !preg_match('/\b(ia|analyse|coach)\b/i', $msgLower)) {
+        } elseif (preg_match('/\b(modifier|changer|editer|mettre à jour|nom|prénom|prenom|telephone|téléphone|photo|image|profil)\b/i', $msgLower) && !preg_match('/\b(ia|analyse|coach|mission)\b/i', $msgLower)) {
             $reply = "Pour modifier vos informations (nom, prénom, téléphone, photo, etc.) :\n1. Allez dans l'onglet **'Mon Profil'** dans le menu.\n2. Modifiez les champs souhaités.\n3. Cliquez sur **'Enregistrer les modifications'** au bas de la page.";
         } elseif (preg_match('/\b(2fa|double authentification|sécurité|sms|code|auth)\b/i', $msgLower)) {
             $reply = "Pour activer la **Double Authentification (2FA)** :\n1. Allez dans l'onglet **'Sécurité & 2FA'** dans le menu de gauche.\n2. Cliquez sur le bouton 'Activer la double authentification'.\n3. Lors de votre prochaine connexion, un code à 6 chiffres sera envoyé à votre adresse email !";
-        } elseif (preg_match('/\b(ia|analyse|coach|améliorer|perfectionner)\b/i', $msgLower)) {
+        } elseif (preg_match('/\b(ia|analyse|coach|améliorer|perfectionner)\b/i', $msgLower) && !preg_match('/\b(mission|classifier|catégorie)\b/i', $msgLower)) {
             $reply = "L'**Analyse IA** vous aide à perfectionner votre profil professionnel.\n1. Allez dans **'Analyse IA'** dans le menu.\n2. Décrivez vos compétences et expériences.\n3. L'IA va corriger vos fautes, réécrire votre texte de manière professionnelle, et vous suggérer les métiers qui vous correspondent le mieux !";
         } elseif (preg_match('/\b(cin|identité|vérification|ocr|document)\b/i', $msgLower)) {
             $reply = "Pour avoir le **Badge Vérifié** :\n1. Allez dans **'Vérifier CIN'**.\n2. Uploadez une photo de votre pièce d'identité.\n3. Notre IA OCR extraira votre nom et validera instantanément votre compte si les noms correspondent.";
         } elseif (preg_match('/\b(bonjour|salut|hello|coucou)\b/i', $msgLower)) {
-            $reply = "Bonjour ! 👋 Je suis l'assistant WorkWave. Comment puis-je vous aider aujourd'hui ? (Essayez de me demander comment modifier votre profil ou activer la 2FA !)";
+            $reply = "Bonjour ! 👋 Je suis l'assistant WorkWave. Je peux vous aider avec :\n- 📋 Les **Missions** (créer, postuler, gérer)\n- 👤 Votre **Profil**\n- 🔒 La **Sécurité & 2FA**\n- 🤖 L'**Analyse IA**\n\nQue puis-je faire pour vous ?";
         } elseif (preg_match('/\b(merci|thanks)\b/i', $msgLower)) {
             $reply = "Avec plaisir ! N'hésitez pas si vous avez d'autres questions. 😊";
         }
@@ -271,6 +299,81 @@ switch ($action) {
 
         echo json_encode(['reply' => $reply]);
         exit;
+
+    case 'missions':
+        $missionController = new MissionController();
+        $missionController->frontIndex();
+        break;
+
+    // Mission AI & Chat routes
+    case 'ai_classify':
+        $missionController = new MissionController();
+        $missionController->aiClassify();
+        break;
+    case 'ai_forecast':
+        $missionController = new MissionController();
+        $missionController->aiForecast();
+        break;
+    case 'mission_ai_chat':
+        $missionController = new MissionController();
+        $missionController->aiChat();
+        break;
+    case 'send_chat_message':
+        $missionController = new MissionController();
+        $missionController->sendChatMessage();
+        break;
+    case 'get_chat_messages':
+        $missionController = new MissionController();
+        $missionController->getChatMessages();
+        break;
+    case 'get_unread_count':
+        $missionController = new MissionController();
+        $missionController->getUnreadCount();
+        break;
+    case 'update_candidature_statut':
+        $missionController = new MissionController();
+        $missionController->updateCandidatureStatut();
+        break;
+    case 'generate_email':
+        $missionController = new MissionController();
+        $missionController->generateEmail();
+        break;
+    case 'front_create':
+        $missionController = new MissionController();
+        $missionController->frontCreate();
+        break;
+    case 'front_edit':
+        $missionController = new MissionController();
+        $missionController->frontEdit();
+        break;
+    case 'front_delete':
+        $missionController = new MissionController();
+        $missionController->frontDelete();
+        break;
+    case 'front_apply':
+        $missionController = new MissionController();
+        $missionController->frontApply();
+        break;
+    case 'front_candidatures':
+        $missionController = new MissionController();
+        $missionController->frontCandidatures();
+        break;
+    case 'front_edit_candidature':
+        $missionController = new MissionController();
+        $missionController->frontEditCandidature();
+        break;
+    case 'front_delete_candidature':
+        $missionController = new MissionController();
+        $missionController->frontDeleteCandidature();
+        break;
+    case 'front_missions':
+        $missionController = new MissionController();
+        $missionController->frontMissions();
+        break;
+    case 'front_mes_resultats':
+        $missionController = new MissionController();
+        $missionController->frontMesResultats();
+        break;
 
     case 'home':
     default:

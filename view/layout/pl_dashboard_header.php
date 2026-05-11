@@ -15,7 +15,40 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
     <title><?= htmlspecialchars($pageTitle) ?> — WorkWave</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ===== Cyber classes for Mission views ===== */
+        .cyber-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; transition: all 0.3s ease; }
+        .cyber-card:hover { border-color: rgba(0,255,204,0.3); transform: translateY(-4px); }
+        .cyber-form-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 40px; }
+        .cyber-form-card label { color: #00ffcc; font-weight: 600; font-size: 14px; margin-bottom: 8px; display: block; }
+        .cyber-form-card input, .cyber-form-card textarea, .cyber-form-card select { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 15px; color: #ffffff; font-size: 14px; width: 100%; }
+        .cyber-form-card input:focus, .cyber-form-card textarea:focus, .cyber-form-card select:focus { outline: none; border-color: #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.2); }
+        .cyber-form-card select option { background: #1a1d2e; color: #fff; }
+        .cyber-search { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 25px; }
+        .cyber-search input, .cyber-search select { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 16px; color: #fff; font-size: 14px; width: 100%; }
+        .cyber-btn { background: linear-gradient(135deg,#00ffcc 0%,#00ccff 100%); color: #0a0e27; font-weight: 600; padding: 12px 25px; border: none; border-radius: 25px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: all 0.3s ease; }
+        .cyber-btn:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(0,255,204,0.4); color: #0a0e27; }
+        .cyber-alert { padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; }
+        .cyber-alert-success { background: rgba(0,255,204,0.1); border: 1px solid rgba(0,255,204,0.3); color: #00ffcc; }
+        .cyber-alert-warning { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: #ff6b6b; }
+        .cyber-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .cyber-badge-green { background: rgba(0,255,204,0.15); color: #00ffcc; }
+        .cyber-badge-blue  { background: rgba(0,204,255,0.15); color: #00ccff; }
+        .cyber-badge-purple{ background: rgba(147,51,234,0.15); color: #9333ea; }
+        .cyber-banner { background: linear-gradient(135deg,rgba(0,255,204,0.1) 0%,rgba(10,14,39,0.9) 50%,rgba(0,204,255,0.1) 100%); border-bottom: 1px solid rgba(0,255,204,0.15); padding: 80px 0 40px; }
+        .cyber-banner h6 { color: #00ffcc; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; }
+        .cyber-banner h2 { color: #fff; font-size: 36px; font-weight: 700; margin-bottom: 30px; }
+        .section-heading h2 { color: #fff; font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+        .section-heading h6 { color: #00ccff; font-size: 14px; font-weight: 500; }
+        .invalid-feedback { color: #ff6b6b; font-size: 13px; margin-top: 5px; }
+        .is-invalid { border-color: #ff6b6b !important; }
+        .hero { background: linear-gradient(135deg, rgba(0,255,204,0.05), rgba(10,14,39,1)); }
+        /* Override Bootstrap's white bg on ww-page */
+        .ww-page .container, .ww-page section { color: #d0d0d0; }
+    </style>
     <style>
         /* ===== RESET ===== */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -362,6 +395,9 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
         </a>
         <a href="/workwave/Controller/index.php?action=profile" class="<?= $action === 'profile' ? 'active' : '' ?>">
             <i class="fa fa-user"></i> Mon Profil
+        </a>
+        <a href="/workwave/Controller/index.php?action=missions" class="<?= $action === 'missions' ? 'active' : '' ?>">
+            <i class="fa fa-briefcase"></i> Missions
         </a>
 
         <div class="ww-sb-section" style="margin-top:10px;">Outils IA</div>
