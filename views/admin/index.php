@@ -189,6 +189,24 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                 </div>
             </div>
 
+            <!-- Weather Widget Row -->
+            <div class="container-fluid pt-2 px-4">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-3 shadow-sm border-start border-info border-4">
+                            <div class="d-flex align-items-center">
+                                <i id="weather-icon" class="fa fa-sun fa-2x text-warning me-3"></i>
+                                <div>
+                                    <p class="mb-0 small text-white-50">Météo actuelle — Tunis</p>
+                                    <h5 class="mb-0 text-white" id="weather-display">Chargement...</h5>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-info" onclick="simulateApi('Meteo')"><i class="fa fa-cloud-sun me-1"></i> Détails</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Advanced Charts Row 1 -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
@@ -203,7 +221,6 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                         <div class="bg-secondary text-center rounded p-4 h-100 shadow-sm border-top border-info border-3">
                             <h6 class="mb-3 text-info"><i class="fa fa-brain me-2"></i>Expert AI Systems</h6>
                             <div class="d-grid gap-2 mb-3">
-                                <button class="btn btn-sm btn-outline-info" onclick="simulateApi('OCR')"><i class="fa fa-eye me-2"></i>OCR : Lecture Doc</button>
                                 <button class="btn btn-sm btn-outline-warning" onclick="simulateApi('Prediction')"><i class="fa fa-magic me-2"></i>H.Face : Prédiction</button>
                             </div>
                             <hr class="border-secondary">
@@ -214,6 +231,9 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
                                 </button>
                                 <button class="btn btn-outline-warning btn-sm py-2" style="border-radius: 8px;" onclick="simulateApi('G-Calendar')">
                                     <i class="fa fa-calendar-alt me-2"></i> G-Calendar : Sync
+                                </button>
+                                <button class="btn btn-outline-info btn-sm py-2" style="border-radius: 8px;" onclick="simulateApi('Meteo')">
+                                    <i class="fa fa-cloud-sun me-2"></i> Météo API
                                 </button>
                             </div>
                             <hr class="border-secondary">
@@ -348,23 +368,9 @@ $rangeCounts = array_column($resStats['ranges'], 'count');
             `;
             modal.show();
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 let result = "";
-                if(service === 'OCR') {
-                    result = `
-                        <div class="text-start">
-                            <h6 class="text-info"><i class="fa fa-file-alt me-2"></i>Texte Extrait (OCR) :</h6>
-                            <pre class="bg-black p-3 rounded small text-light" style="white-space: pre-wrap;">
-Facture #4509
-Date: 06/05/2026
-Client: Ayoub Event Pro
-Total: 1,250.00 TND
-Statut: Payé
-                            </pre>
-                            <p class="small text-success"><i class="fa fa-check-circle me-1"></i>Analyse terminée avec 98.4% de confiance.</p>
-                        </div>
-                    `;
-                } else if(service === 'Prediction') {
+                if(service === 'Prediction') {
                     result = `
                         <div class="p-3">
                             <h6 class="text-warning mb-3"><i class="fa fa-magic me-2"></i>Prédiction de Succès (H.Face) :</h6>
@@ -375,13 +381,117 @@ Statut: Payé
                         </div>
                     `;
                 } else if(service === 'Stripe') {
-                    result = `<div class="p-4"><i class="fab fa-stripe fa-4x text-primary mb-3"></i><h5 class="text-white">Passerelle de Paiement</h5><p>Module Stripe prêt pour les transactions. (TND activé)</p></div>`;
+                    result = `
+                        <div class="text-start">
+                            <h6 class="text-danger mb-3"><i class="fa fa-credit-card me-2"></i>Nouveau Paiement</h6>
+                            <form id="paymentForm" class="mb-3">
+                                <div class="mb-2"><label class="form-label text-white small">RIB</label><input type="text" name="rib" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="12345678901234567890" required></div>
+                                <div class="mb-2"><label class="form-label text-white small">Email</label><input type="email" name="email" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="client@email.com" required></div>
+                                <div class="mb-3"><label class="form-label text-white small">Montant (TND)</label><input type="number" step="0.01" name="amount" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="0.00" required></div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100"><i class="fa fa-save me-2"></i>Valider le Paiement</button>
+                            </form>
+                            <div id="paymentMsg"></div>
+                            <h6 class="text-white mt-3 mb-2 small">Historique récent :</h6>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-sm table-bordered">
+                                    <thead><tr><th>RIB</th><th>Email</th><th>Montant</th><th>Statut</th></tr></thead>
+                                    <tbody>
+                                        <?php foreach(array_slice($payments, 0, 5) as $p): ?>
+                                        <tr><td class="small"><?= htmlspecialchars($p['rib']) ?></td><td class="small"><?= htmlspecialchars($p['email']) ?></td><td class="small"><?= $p['amount'] ?> TND</td><td><span class="badge bg-success small"><?= $p['status'] ?></span></td></tr>
+                                        <?php endforeach; ?>
+                                        <?php if(empty($payments)): ?><tr><td colspan="4" class="text-center text-muted small">Aucun paiement enregistré</td></tr><?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
                 } else if(service === 'G-Calendar') {
-                    result = `<div class="p-4"><i class="fa fa-calendar-check fa-4x text-warning mb-3"></i><h5 class="text-white">Google Calendar</h5><p>Synchronisation Cloud active pour tous les événements.</p></div>`;
+                    result = `
+                        <div class="text-start">
+                            <h6 class="text-warning mb-3"><i class="fa fa-calendar-alt me-2"></i>Événements à venir</h6>
+                            <div class="list-group list-group-flush bg-transparent">
+                                <?php
+                                $now = date('Y-m-d H:i:s');
+                                $upcoming = array_filter($events, fn($ev) => $ev['date'] >= $now);
+                                usort($upcoming, fn($a, $b) => strcmp($a['date'], $b['date']));
+                                $upcoming = array_slice($upcoming, 0, 6);
+                                foreach($upcoming as $ev):
+                                    $gStart = date('Ymd', strtotime($ev['date']));
+                                    $gEnd = date('Ymd', strtotime($ev['date'] . ' +1 day'));
+                                    $gLink = 'https://www.google.com/calendar/render?action=TEMPLATE&text=' . urlencode($ev['title']) . '&dates=' . $gStart . '/' . $gEnd . '&details=' . urlencode('Événement ER PRO') . '&location=' . urlencode($ev['location']);
+                                ?>
+                                <div class="list-group-item bg-transparent text-white border-secondary py-2 px-0 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold small"><?= htmlspecialchars($ev['title']) ?></div>
+                                        <div class="text-muted small"><?= date('d/m/Y H:i', strtotime($ev['date'])) ?> - <?= htmlspecialchars($ev['location']) ?></div>
+                                    </div>
+                                    <a href="<?= $gLink ?>" target="_blank" class="btn btn-sm btn-outline-warning"><i class="fa fa-google me-1"></i>+ Google</a>
+                                </div>
+                                <?php endforeach; ?>
+                                <?php if(empty($upcoming)): ?>
+                                <div class="text-muted text-center py-3">Aucun événement à venir</div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    `;
+                } else if(service === 'Meteo') {
+                    try {
+                        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8065&longitude=10.1815&current_weather=true');
+                        const data = await res.json();
+                        const cw = data.current_weather;
+                        const desc = getWeatherDesc(cw.weathercode);
+                        const icon = cw.is_day ? 'fa-sun' : 'fa-moon';
+                        const iconColor = cw.is_day ? 'text-warning' : 'text-info';
+                        result = `
+                            <div class="text-start">
+                                <h6 class="text-info mb-3"><i class="fa fa-cloud-sun me-2"></i>Météo actuelle — Tunis</h6>
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fa ${icon} fa-3x ${iconColor} me-3"></i>
+                                    <div>
+                                        <h3 class="mb-0 text-white">${cw.temperature}°C</h3>
+                                        <p class="mb-0 text-white-50">${desc}</p>
+                                    </div>
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <p class="mb-0 text-white-50 small">Vent</p>
+                                        <p class="mb-0 text-white">${cw.windspeed} km/h</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="mb-0 text-white-50 small">Direction</p>
+                                        <p class="mb-0 text-white">${cw.winddirection}°</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="mb-0 text-white-50 small">Heure</p>
+                                        <p class="mb-0 text-white">${cw.time.split('T')[1]}</p>
+                                    </div>
+                                </div>
+                                <p class="small text-muted mt-3">Données fournies par Open-Meteo API</p>
+                            </div>
+                        `;
+                    } catch(e) {
+                        result = `<div class="text-center text-danger"><i class="fa fa-exclamation-triangle me-2"></i>Erreur lors de la récupération des données météo.</div>`;
+                    }
                 }
                 body.innerHTML = result;
-                label.innerText = "IA : Résultat de " + service;
-            }, 2500);
+                label.innerText = "Résultat : " + service;
+
+                if(service === 'Stripe' && document.getElementById('paymentForm')) {
+                    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const formData = new FormData(this);
+                        fetch('index.php?action=save_payment', { method: 'POST', body: formData })
+                        .then(r => r.text())
+                        .then(() => {
+                            document.getElementById('paymentMsg').innerHTML = '<div class="alert alert-success alert-dismissible fade show mt-2 py-2 small" role="alert"><i class="fa fa-check-circle me-2"></i>Paiement enregistré avec succès !<button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+                            this.reset();
+                        })
+                        .catch(() => {
+                            document.getElementById('paymentMsg').innerHTML = '<div class="alert alert-danger mt-2 py-2 small"><i class="fa fa-exclamation-circle me-2"></i>Erreur lors de l\'enregistrement.</div>';
+                        });
+                    });
+                }
+            }, 800);
         }
 
         // Real-time Chat Logic
@@ -403,18 +513,26 @@ Statut: Payé
             input.value = '';
 
             // AI Expert Logic (Context-Aware & Multilingual)
-            setTimeout(() => {
+            setTimeout(async () => {
                 const t = text.toLowerCase().trim();
-                let reply = "Sem7ni, ma fhimtech barch klemek, ama tnajem teselny 3al events, stock, payments, wela el météo! 🤖";
+                let reply = "Désolé, je n'ai pas bien compris votre message. Vous pouvez me demander des informations sur les événements, le stock, les paiements ou la météo! 🤖";
                 
                 const events = <?= json_encode($events) ?>;
                 const resources = <?= json_encode($resources) ?>;
 
                 // 1. Weather & Greetings
                 if(t.includes('meteo') || t.includes('ta9es') || t.includes('weather')) {
-                    reply = "El ta9es lyoum fi Tunis 24°C, chams mezyena! ☀️ C'est parfait pour vos événements.";
+                    try {
+                        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8065&longitude=10.1815&current_weather=true');
+                        const data = await res.json();
+                        const cw = data.current_weather;
+                        const desc = getWeatherDesc(cw.weathercode);
+                        reply = "Le temps actuel à Tunis : " + cw.temperature + "°C, " + desc + ". Vent : " + cw.windspeed + " km/h. ☀️";
+                    } catch(e) {
+                        reply = "Le temps aujourd'hui à Tunis est d'environ 24°C avec un beau soleil! ☀️ (API temporairement indisponible)";
+                    }
                 } else if(t.includes('aslama') || t.includes('3aslama') || t.includes('salut') || t.includes('hello') || t.includes('hi') || t.includes('bonjour')) {
-                    reply = "Aslama! 👋 Ena l'IA mte3ek. Njewbek 3al events, stock, planning, wela el payments!";
+                    reply = "Bonjour! 👋 Je suis votre assistant IA. Je peux vous aider avec les événements, le stock, le planning ou les paiements!";
                 }
                 
                 // 2. Events Logic
@@ -426,32 +544,32 @@ Statut: Payé
                             const ed = new Date(e.date);
                             if(ed > now && (!nextEvent || ed < new Date(nextEvent.date))) nextEvent = e;
                         });
-                        if(nextEvent) reply = "L'événement el jey howa: '" + nextEvent.title + "' le " + nextEvent.date + " fi " + nextEvent.location + ". 📅";
-                        else reply = "Mafama hata événement jey. 3andek " + events.length + " events lkol.";
+                        if(nextEvent) reply = "Le prochain événement est : '" + nextEvent.title + "' le " + nextEvent.date + " à " + nextEvent.location + ". 📅";
+                        else reply = "Aucun événement à venir. Vous avez " + events.length + " événements au total.";
                     } else {
-                        reply = "3andek " + events.length + " événements enregistrés. Tnajem tchoufhom fel tableau wela fel planning!";
+                        reply = "Vous avez " + events.length + " événements enregistrés. Vous pouvez les consulter dans le tableau ou dans le planning!";
                     }
                 }
 
                 // 3. Resources & Stock Logic
                 else if(t.includes('resource') || t.includes('ressource') || t.includes('stock') || t.includes('quantité') || t.includes('qty')) {
                     const low = resources.filter(r => parseInt(r.quantity) < 3);
-                    reply = "El stock fih " + resources.length + " ressources. 📦 \n⚠️ Alerte: " + low.length + " ressources à faible stock (e.g. " + (low[0]?.name || 'matériel') + ").";
+                    reply = "Le stock contient " + resources.length + " ressources. 📦 \n⚠️ Alerte: " + low.length + " ressources en stock faible (ex. " + (low[0]?.name || 'matériel') + ").";
                 }
 
                 // 4. Payments & RIB Logic
                 else if(t.includes('payment') || t.includes('paiement') || t.includes('argent') || t.includes('rib') || t.includes('flous')) {
-                    reply = "El module 'Payment' fih l'historique des transactions. Tnajem tchouf les RIB, emails et montants directement fel dashboard! 💳";
+                    reply = "Le module 'Payment' contient l'historique des transactions. Vous pouvez consulter les RIB, emails et montants directement sur le tableau de bord! 💳";
                 }
 
                 // 5. AI, OCR & Predictions
                 else if(t.includes('ia') || t.includes('ai') || t.includes('ocr') || t.includes('prediction') || t.includes('bravo')) {
-                    reply = "Ena n'utilisi l'IA (Hugging Face) lel prédiction w l'OCR bech na9ra el wra9! 🧠 C'est de la haute technologie.";
+                    reply = "J'utilise l'IA (Hugging Face) pour les prédictions et l'OCR pour la lecture des documents! 🧠 C'est de la haute technologie.";
                 }
 
                 // 6. Site Location / Maps
                 else if(t.includes('win') || t.includes('blasa') || t.includes('map') || t.includes('carte') || t.includes('location')) {
-                    reply = "Tnajem tchouf les localisations mte3 les events lkol houni fel carte (Map) interactive! 🗺️";
+                    reply = "Vous pouvez consulter les localisations de tous les événements ici sur la carte interactive! 🗺️";
                 }
 
                 // 7. Site Search (Loop)
@@ -475,7 +593,7 @@ Statut: Payé
 
                 // Final Polish
                 if(t.includes('merci') || t.includes('bravo') || t.includes('ya3tik')) {
-                    reply = "Men wejbi! 🚀🔥 Rani houni bech n'assistantik.";
+                    reply = "C'est un plaisir! 🚀🔥 Je suis là pour vous assister.";
                 }
                 
                 addMessage(reply, 'ai');
@@ -490,6 +608,36 @@ Statut: Payé
             area.appendChild(div);
             area.scrollTop = area.scrollHeight;
         }
+
+        // Weather Helper
+        function getWeatherDesc(code) {
+            const codes = {
+                0: "ciel dégagé", 1: "principalement dégagé", 2: "partiellement nuageux", 3: "couvert",
+                45: "brouillard", 48: "brouillard givrant",
+                51: "bruine légère", 53: "bruine modérée", 55: "bruine dense",
+                61: "pluie légère", 63: "pluie modérée", 65: "pluie forte",
+                71: "neige légère", 73: "neige modérée", 75: "neige forte",
+                95: "orage", 96: "orage avec grêle légère", 99: "orage avec grêle forte"
+            };
+            return codes[code] || "conditions variables";
+        }
+
+        async function loadWeather() {
+            try {
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8065&longitude=10.1815&current_weather=true');
+                const data = await res.json();
+                const cw = data.current_weather;
+                const desc = getWeatherDesc(cw.weathercode);
+                document.getElementById('weather-display').innerText = cw.temperature + "°C — " + desc;
+                const iconEl = document.getElementById('weather-icon');
+                if(iconEl) {
+                    iconEl.className = 'fa fa-2x me-3 ' + (cw.is_day ? 'fa-sun text-warning' : 'fa-moon text-info');
+                }
+            } catch(e) {
+                document.getElementById('weather-display').innerText = "24°C — beau soleil";
+            }
+        }
+        loadWeather();
 
         // Leaflet Map Initialization
         const map = L.map('map').setView([36.8065, 10.1815], 11);

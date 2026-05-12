@@ -53,6 +53,8 @@ if ($action == 'admin') {
     $resources  = $resourceController->getResources();
     $eventStats = $eventController->getStats();
     $resStats   = $resourceController->getStats();
+    $paymentModel = new Payment($db);
+    $payments   = $paymentModel->getAll();
     require_once $viewsPath . 'admin/index.php';
 } elseif ($action == 'form_event') {
     $eventData = isset($_GET['id']) ? $eventController->getEvent($_GET['id']) : null;
