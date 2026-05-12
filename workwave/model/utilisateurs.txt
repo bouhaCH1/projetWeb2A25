@@ -1,0 +1,30 @@
+=== LISTE DES UTILISATEURS DU PROJET WORKWAVE ===
+
+ID : 1
+Nom complet : Administrateur
+Rôle : ADMIN
+Email : admin@workwave.com
+Nom d'utilisateur : admin
+Mot de passe : password
+--------------------------------------------------
+ID : 2
+Nom complet : Jean Candidat
+Rôle : CANDIDAT
+Email : candidat@workwave.com
+Nom d'utilisateur : candidat1
+Mot de passe : password
+--------------------------------------------------
+ID : 3
+Nom complet : Marie Entreprise
+Rôle : ENTREPRISE
+Email : entreprise@workwave.com
+Nom d'utilisateur : entreprise1
+Mot de passe : password
+--------------------------------------------------
+ID : 4
+Nom complet : ahmed messoussi
+Rôle : CANDIDAT
+Email : manitou2004ahmed@gmail.com
+Nom d'utilisateur : bouhmid
+Mot de passe : [Le mot de passe a été personnalisé et est crypté]
+--------------------------------------------------
