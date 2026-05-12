@@ -857,3 +857,5 @@ require_once __DIR__ . '/../layout/dashboard_header.php';
     }
 </script>
 
+
+<?php require_once __DIR__ . '/../layout/dashboard_footer.php'; ?>

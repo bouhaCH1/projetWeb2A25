@@ -5,6 +5,7 @@ class Candidature {
 
     public $id;
     public $mission_id;
+    public $id_job_seeker; // FK → users.id
     public $nom;
     public $prenom;
     public $email;
@@ -18,10 +19,11 @@ class Candidature {
 
     public function create() {
         $query = "INSERT INTO " . $this->table . "
-                  (mission_id, nom, prenom, email, telephone, motivation)
-                  VALUES (:mission_id, :nom, :prenom, :email, :telephone, :motivation)";
+                  (mission_id, user_id, nom, prenom, email, telephone, motivation)
+                  VALUES (:mission_id, :user_id, :nom, :prenom, :email, :telephone, :motivation)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':mission_id', $this->mission_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $this->id_job_seeker, PDO::PARAM_INT);
         $stmt->bindParam(':nom', $this->nom);
         $stmt->bindParam(':prenom', $this->prenom);
         $stmt->bindParam(':email', $this->email);
@@ -102,6 +104,44 @@ class Candidature {
         $stmt->bindParam(':motivation', $this->motivation);
         $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
         return $stmt->execute();
+    }
+
+    /**
+     * Fetch all candidatures belonging to a specific logged-in user.
+     */
+    public function getByUserId(int $userId, string $sort = 'date_desc'): array {
+        $query = "SELECT c.*, m.titre AS mission_titre,
+                         m.competences AS mission_competences,
+                         m.categorie   AS mission_categorie,
+                         m.description AS mission_description
+                  FROM " . $this->table . " c
+                  INNER JOIN mission m ON m.id = c.mission_id
+                  WHERE c.user_id = :user_id";
+
+        switch ($sort) {
+            case 'name_asc':  $query .= " ORDER BY c.prenom ASC, c.nom ASC"; break;
+            case 'name_desc': $query .= " ORDER BY c.prenom DESC, c.nom DESC"; break;
+            case 'date_desc':
+            default:          $query .= " ORDER BY c.created_at DESC"; break;
+        }
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Check if a user has already applied to a given mission.
+     */
+    public function hasUserApplied(int $userId, int $missionId): bool {
+        $query = "SELECT COUNT(*) FROM " . $this->table . "
+                  WHERE user_id = :user_id AND mission_id = :mission_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':mission_id', $missionId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int)$stmt->fetchColumn() > 0;
     }
 
     public function delete($id) {

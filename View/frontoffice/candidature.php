@@ -1,6 +1,13 @@
 <?php
 $pageTitle = 'candidature';
 require_once __DIR__ . '/../layout/pl_dashboard_header.php';
+
+// Pre-fill from session if logged in
+$prefillNom       = isset($_POST['nom'])       ? $_POST['nom']       : ($_SESSION['last_name']  ?? '');
+$prefillPrenom    = isset($_POST['prenom'])    ? $_POST['prenom']    : ($_SESSION['first_name'] ?? '');
+$prefillEmail     = isset($_POST['email'])     ? $_POST['email']     : ($_SESSION['email']       ?? '');
+$prefillTelephone = isset($_POST['telephone']) ? $_POST['telephone'] : ($_SESSION['phone']       ?? '');
+$isLoggedIn       = !empty($_SESSION['user_id']);
 ?>
 
 <!-- Hero Section -->
@@ -35,18 +42,24 @@ require_once __DIR__ . '/../layout/pl_dashboard_header.php';
                     <?php endif; ?>
 
                     <form method="POST" action="/workwave/Controller/index.php?action=front_apply&id=<?= (int)$missionData['id'] ?>" novalidate enctype="multipart/form-data">
+                        <?php if ($isLoggedIn): ?>
+                        <div style="background: rgba(0,255,204,0.07); border: 1px solid rgba(0,255,204,0.25); border-left: 4px solid #00ffcc; border-radius: 10px; padding: 12px 18px; margin-bottom: 20px; font-size: 13px; color: rgba(255,255,255,0.7);">
+                            <i class="fa fa-user-check" style="color: #00ffcc;"></i>
+                            Informations pr&eacute;-remplies depuis votre compte. Vous pouvez les modifier si n&eacute;cessaire.
+                        </div>
+                        <?php endif; ?>
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <label>Nom <span style="color: #ff6b6b;">*</span></label>
                                 <input type="text" name="nom" class="<?= isset($errors['nom']) ? 'is-invalid' : '' ?>"
-                                    value="<?= isset($_POST['nom']) ? htmlspecialchars($_POST['nom']) : '' ?>"
+                                    value="<?= htmlspecialchars($prefillNom) ?>"
                                     onkeypress="return /^[a-zA-Z\séèêëàâäùûüôöîïç]+$/.test(String.fromCharCode(event.which))">
                                 <div class="invalid-feedback"><?= isset($errors['nom']) ? htmlspecialchars($errors['nom']) : '' ?></div>
                             </div>
                             <div class="col-md-6">
                                 <label>Prénom <span style="color: #ff6b6b;">*</span></label>
                                 <input type="text" name="prenom" class="<?= isset($errors['prenom']) ? 'is-invalid' : '' ?>"
-                                    value="<?= isset($_POST['prenom']) ? htmlspecialchars($_POST['prenom']) : '' ?>"
+                                    value="<?= htmlspecialchars($prefillPrenom) ?>"
                                     onkeypress="return /^[a-zA-Z\séèêëàâäùûüôöîïç]+$/.test(String.fromCharCode(event.which))">
                                 <div class="invalid-feedback"><?= isset($errors['prenom']) ? htmlspecialchars($errors['prenom']) : '' ?></div>
                             </div>
@@ -56,13 +69,13 @@ require_once __DIR__ . '/../layout/pl_dashboard_header.php';
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <label>Email <span style="color: #ff6b6b;">*</span></label>
                                 <input type="email" name="email" class="<?= isset($errors['email']) ? 'is-invalid' : '' ?>"
-                                    value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
+                                    value="<?= htmlspecialchars($prefillEmail) ?>">
                                 <div class="invalid-feedback"><?= isset($errors['email']) ? htmlspecialchars($errors['email']) : '' ?></div>
                             </div>
                             <div class="col-md-6">
                                 <label>Téléphone <span style="color: #ff6b6b;">*</span></label>
                                 <input type="text" name="telephone" class="<?= isset($errors['telephone']) ? 'is-invalid' : '' ?>"
-                                    value="<?= isset($_POST['telephone']) ? htmlspecialchars($_POST['telephone']) : '' ?>"
+                                    value="<?= htmlspecialchars($prefillTelephone) ?>"
                                     onkeypress="return /[0-9]/.test(String.fromCharCode(event.which))"
                                     pattern="[0-9]*"
                                     inputmode="numeric">

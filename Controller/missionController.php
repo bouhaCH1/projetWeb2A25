@@ -101,16 +101,30 @@ class MissionController {
             exit;
         }
 
+        // Require login to apply
+        if (empty($_SESSION['user_id'])) {
+            header('Location: index.php?action=login&redirect=front_apply&id=' . $id);
+            exit;
+        }
+        $loggedUserId = (int)$_SESSION['user_id'];
+
+        // Prevent duplicate application
+        if ($this->candidature->hasUserApplied($loggedUserId, $id)) {
+            header('Location: index.php?action=missions&already_applied=1');
+            exit;
+        }
+
         $errors = [];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors = $this->validateCandidature($_POST);
             if (empty($errors)) {
-                $this->candidature->mission_id = $id;
-                $this->candidature->nom = trim($_POST['nom']);
-                $this->candidature->prenom = trim($_POST['prenom']);
-                $this->candidature->email = trim($_POST['email']);
-                $this->candidature->telephone = trim($_POST['telephone']);
-                $this->candidature->motivation = trim($_POST['motivation']);
+                $this->candidature->mission_id    = $id;
+                $this->candidature->id_job_seeker = $loggedUserId;
+                $this->candidature->nom           = trim($_POST['nom']);
+                $this->candidature->prenom        = trim($_POST['prenom']);
+                $this->candidature->email         = trim($_POST['email']);
+                $this->candidature->telephone     = trim($_POST['telephone']);
+                $this->candidature->motivation    = trim($_POST['motivation']);
 
                 // Handle CV upload
                 $cvPath = '';
@@ -118,7 +132,7 @@ class MissionController {
                     $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
                     $fileType = $_FILES['cv']['type'];
                     $fileSize = $_FILES['cv']['size'];
-                    $maxSize = 5 * 1024 * 1024; // 5MB
+                    $maxSize  = 5 * 1024 * 1024; // 5 MB
 
                     if (!in_array($fileType, $allowedTypes)) {
                         $errors['cv'] = "Format de fichier non autorisé. Utilisez PDF, DOC ou DOCX.";
@@ -126,11 +140,9 @@ class MissionController {
                         $errors['cv'] = "Le fichier ne doit pas dépasser 5MB.";
                     } else {
                         $uploadDir = __DIR__ . '/../uploads/';
-                        if (!is_dir($uploadDir)) {
-                            mkdir($uploadDir, 0777, true);
-                        }
+                        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
                         $fileName = uniqid('cv_') . '_' . basename($_FILES['cv']['name']);
-                        $cvPath = $fileName;
+                        $cvPath   = $fileName;
                         if (!move_uploaded_file($_FILES['cv']['tmp_name'], $uploadDir . $cvPath)) {
                             $errors['cv'] = "Erreur lors du téléchargement du fichier.";
                             $cvPath = '';
@@ -153,27 +165,25 @@ class MissionController {
     }
 
     public function frontCandidatures() {
-        $email = isset($_GET['email']) ? trim($_GET['email']) : '';
-        $searchMode = !empty($email);
-
-        if ($searchMode) {
-            $candidatures = $this->candidature->getByEmail($email);
+        // If the user is logged in, show their own candidatures directly
+        if (!empty($_SESSION['user_id'])) {
+            $candidatures = $this->candidature->getByUserId((int)$_SESSION['user_id']);
+            $searchMode   = false;
+            $email        = '';
         } else {
-            $candidatures = $this->candidature->getAll();
+            // Fallback: email-based search for guests
+            $email      = isset($_GET['email']) ? trim($_GET['email']) : '';
+            $searchMode = !empty($email);
+            $candidatures = $searchMode
+                ? $this->candidature->getByEmail($email)
+                : [];
         }
 
         // Calculate matching scores for each candidature
         foreach ($candidatures as &$c) {
-            $missionData = $this->mission->getById($c['mission_id']);
+            $missionData  = $this->mission->getById($c['mission_id']);
             $previousApps = $this->candidature->countByEmailAndCategory($c['email'], $missionData['categorie'] ?? '');
             $c['matching_score'] = MatchingScoreService::calculate($c, $missionData, $previousApps);
-
-            // Demo override: fix scores for specific candidates
-            if ((int)$c['id'] === 1)  $c['matching_score'] = 80;
-            if ((int)$c['id'] === 15) $c['matching_score'] = 90;
-            if ((int)$c['id'] === 5)  $c['matching_score'] = 40;
-            if ((int)$c['id'] === 11) $c['matching_score'] = 60;
-            if ((int)$c['id'] === 13) $c['matching_score'] = 50;
         }
         unset($c);
 
@@ -253,29 +263,29 @@ class MissionController {
     }
 
     public function frontMesResultats() {
-        $email = isset($_GET['email']) ? trim($_GET['email']) : '';
-        $candidatures = [];
+        $candidatures    = [];
         $searchPerformed = false;
 
-        if (!empty($email)) {
+        if (!empty($_SESSION['user_id'])) {
+            // Logged-in user: load their candidatures directly by user ID
             $searchPerformed = true;
-            $candidatures = $this->candidature->getByEmail($email);
-
-            // Calculate matching scores for each candidature
-            foreach ($candidatures as &$c) {
-                $missionData = $this->mission->getById($c['mission_id']);
-                $previousApps = $this->candidature->countByEmailAndCategory($c['email'], $missionData['categorie'] ?? '');
-                $c['matching_score'] = MatchingScoreService::calculate($c, $missionData, $previousApps);
-
-                // Demo override: fix scores for specific candidates
-                if ((int)$c['id'] === 1)  $c['matching_score'] = 80;
-                if ((int)$c['id'] === 15) $c['matching_score'] = 90;
-                if ((int)$c['id'] === 5)  $c['matching_score'] = 40;
-                if ((int)$c['id'] === 11) $c['matching_score'] = 60;
-                if ((int)$c['id'] === 13) $c['matching_score'] = 50;
+            $candidatures = $this->candidature->getByUserId((int)$_SESSION['user_id']);
+        } else {
+            // Guest fallback: email search
+            $email = isset($_GET['email']) ? trim($_GET['email']) : '';
+            if (!empty($email)) {
+                $searchPerformed = true;
+                $candidatures = $this->candidature->getByEmail($email);
             }
-            unset($c);
         }
+
+        // Calculate matching scores for each candidature
+        foreach ($candidatures as &$c) {
+            $missionData  = $this->mission->getById($c['mission_id']);
+            $previousApps = $this->candidature->countByEmailAndCategory($c['email'], $missionData['categorie'] ?? '');
+            $c['matching_score'] = MatchingScoreService::calculate($c, $missionData, $previousApps);
+        }
+        unset($c);
 
         require_once __DIR__ . '/../View/frontoffice/mes_resultats.php';
     }

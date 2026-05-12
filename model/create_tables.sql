@@ -50,12 +50,17 @@ CREATE TABLE IF NOT EXISTS mission (
 CREATE TABLE IF NOT EXISTS candidature (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mission_id INT NOT NULL,
-    user_id INT NOT NULL,
+    user_id INT NULL,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    telephone VARCHAR(20) NOT NULL,
     motivation TEXT NOT NULL,
+    cv VARCHAR(255) DEFAULT NULL,
     statut ENUM('en_attente', 'acceptee', 'refusee') NOT NULL DEFAULT 'en_attente',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_candidature_mission FOREIGN KEY (mission_id) REFERENCES mission(id) ON DELETE CASCADE,
-    CONSTRAINT fk_candidature_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    CONSTRAINT fk_candidature_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS password_resets (
