@@ -16,6 +16,24 @@ require_once __DIR__ . '/../layout/pl_dashboard_header.php';
         <div class="dashboard-container">
             <h2 class="section-title text-white mb-4">Découvrez nos Événements & Services</h2>
 
+            <!-- Flash Message -->
+            <?php if (!empty($_SESSION['flash'])): $f = $_SESSION['flash']; unset($_SESSION['flash']); ?>
+            <div class="alert alert-<?= $f['type'] ?> alert-dismissible fade show mb-4" role="alert">
+                <i class="fa fa-check-circle me-2"></i><?= htmlspecialchars($f['msg']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <?php endif; ?>
+
+            <?php if (($_SESSION['user_role'] ?? '') === 'employer'): ?>
+            <div class="d-flex gap-2 mb-4">
+                <a href="/workwave/Controller/index.php?action=form_event" class="btn btn-sm" style="background:#eb1616;color:#fff;border:none;">
+                    <i class="fa fa-calendar-plus me-1"></i> + Nouvel Événement
+                </a>
+                <a href="/workwave/Controller/index.php?action=form_resource" class="btn btn-sm" style="background:#00ffcc;color:#191c24;font-weight:bold;border:none;">
+                    <i class="fa fa-plus-square me-1"></i> + Nouvelle Ressource
+                </a>
+            </div>
+            <?php endif; ?>
             <h3 style="color: #fff; margin-bottom: 20px;"><i class="fa fa-calendar-alt me-2" style="color: #00ffcc;"></i>Prochains Événements</h3>
             <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 25px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                 <table class="table-custom">
@@ -35,6 +53,14 @@ require_once __DIR__ . '/../layout/pl_dashboard_header.php';
                                 <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=<?= urlencode($event['title']) ?>" target="_blank" class="btn-action btn-cal">
                                     <i class="fab fa-google me-1"></i> + Cal
                                 </a>
+                                <?php if (($_SESSION['user_role'] ?? '') === 'employer'): ?>
+                                <a href="/workwave/Controller/index.php?action=form_event&id=<?= $event['id'] ?>" class="btn-action" style="background:#00b3ff;color:#fff;text-decoration:none;">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="/workwave/Controller/index.php?action=delete_event&id=<?= $event['id'] ?>" onclick="return confirm('Supprimer cet événement ?')" class="btn-action" style="background:#eb1616;color:#fff;text-decoration:none;">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -61,6 +87,14 @@ require_once __DIR__ . '/../layout/pl_dashboard_header.php';
                                 <button class="btn-action" style="background: rgba(255,255,255,0.1); color: #fff; border: none; cursor: pointer;" onclick="alert('Notification envoyée au responsable via SendGrid !')">
                                     <i class="fa fa-envelope me-1"></i> Info
                                 </button>
+                                <?php if (($_SESSION['user_role'] ?? '') === 'employer'): ?>
+                                <a href="/workwave/Controller/index.php?action=form_resource&id=<?= $res['id'] ?>" class="btn-action" style="background:#00b3ff;color:#fff;text-decoration:none;">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="/workwave/Controller/index.php?action=delete_resource&id=<?= $res['id'] ?>" onclick="return confirm('Supprimer cette ressource ?')" class="btn-action" style="background:#eb1616;color:#fff;text-decoration:none;">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>

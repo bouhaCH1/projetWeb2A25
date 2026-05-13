@@ -319,7 +319,7 @@ switch ($action) {
         }
 
         $msgLower = mb_strtolower($msg, 'UTF-8');
-        $reply = "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Je peux vous aider avec votre **profil**, la **2FA**, les **Missions**, les **Candidatures**, l'**Analyse IA**, ou la **vérification d'identité**.";
+        $reply = "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Je peux vous aider avec votre **profil**, la **2FA**, les **Missions**, les **Candidatures**, les **Événements**, le **Matériel**, ou l'**Analyse IA**.";
 
         // ===== MISSIONS =====
         if (preg_match('/\b(créer|creer|publier|nouvelle|ajouter|poster).*(mission)/i', $msgLower) ||
@@ -362,6 +362,16 @@ switch ($action) {
             $reply = "Bonjour ! 👋 Je suis l'assistant WorkWave. Je peux vous aider avec :\n- 📋 Les **Missions** (créer, postuler, gérer)\n- 👤 Votre **Profil**\n- 🔒 La **Sécurité & 2FA**\n- 🤖 L'**Analyse IA**\n\nQue puis-je faire pour vous ?";
         } elseif (preg_match('/\b(merci|thanks)\b/i', $msgLower)) {
             $reply = "Avec plaisir ! N'hésitez pas si vous avez d'autres questions. 😊";
+        
+        // ===== EVENTS & RESOURCES =====
+        } elseif (preg_match('/\b(événement|evenement|event|events|conférence|conference|atelier)\b/i', $msgLower)) {
+            $reply = "La section **Événements & Services** vous permet de voir les prochains événements (ex: Tech Summit, Ateliers).\n- Si vous êtes un **Employeur** ou **Admin**, vous pouvez **Ajouter (+)**, **Modifier (✏️)** et **Supprimer (🗑️)** des événements.\n- Vous pouvez aussi générer un lien **+ Cal** pour les ajouter à votre Google Agenda ou utiliser le bouton **Payer** pour acheter un billet d'entrée.";
+        } elseif (preg_match('/\b(ressource|ressources|matériel|materiel|fourniture|stock)\b/i', $msgLower)) {
+            $reply = "Dans la page **Événements & Services**, vous trouverez la liste des **Ressources Disponibles** (matériel, fournitures, salle, etc.).\n- Si vous êtes **Employeur** ou **Admin**, vous avez accès aux boutons pour **Ajouter**, **Modifier** et **Supprimer** les stocks de matériel.\n- Les candidats peuvent s'informer en cliquant sur le bouton **Info**.";
+        } elseif (preg_match('/\b(payer|paiement|billet|ticket|stripe)\b/i', $msgLower)) {
+            $reply = "Le bouton **Payer** à côté des événements simule une passerelle de paiement sécurisée (type Stripe).\n1. Cliquez sur **Payer** sur un événement.\n2. Une popup s'affiche.\n3. Entrez un faux numéro de carte/RIB et validez.\n4. Vous verrez une belle animation de validation ! 💳✨";
+        } elseif (preg_match('/\b(calendrier|agenda|google|gcal|cal)\b/i', $msgLower)) {
+            $reply = "Le bouton **+ Cal** à côté des événements vous redirige vers Google Agenda avec un événement pré-rempli portant le titre de l'événement. Vous n'avez plus qu'à l'enregistrer ! 📅";
         }
 
         // Simulate a small typing delay to feel like a real bot

@@ -15,6 +15,24 @@ class EventController {
         }
     }
 
+    private function requireAdminOrEmployer(): void {
+        if (empty($_SESSION['user_id'])) {
+            header('Location: /workwave/Controller/index.php?action=login');
+            exit;
+        }
+        $role = $_SESSION['user_role'] ?? '';
+        if ($role !== 'admin' && $role !== 'employer') {
+            header('Location: /workwave/Controller/index.php');
+            exit;
+        }
+    }
+
+    private function getReturnUrl(): string {
+        return (($_SESSION['user_role'] ?? '') === 'admin') 
+            ? '/workwave/Controller/index.php?action=admin_events' 
+            : '/workwave/Controller/index.php?action=user_events';
+    }
+
     // ─── ADMIN DASHBOARD ───────────────────────────────────────────────────────
     public function adminEvents(): void {
         $this->requireAdmin();
@@ -57,16 +75,17 @@ class EventController {
 
     // ─── EVENT CRUD ────────────────────────────────────────────────────────────
     public function formEvent(): void {
-        $this->requireAdmin();
+        $this->requireAdminOrEmployer();
 
         $eventData = null;
         $flash     = null;
+        $returnUrl = $this->getReturnUrl();
 
         if (isset($_GET['id'])) {
             $eventModel = new Event();
             $eventData  = $eventModel->readOne((int)$_GET['id']);
             if (!$eventData) {
-                header('Location: /workwave/Controller/index.php?action=admin_events');
+                header('Location: ' . $returnUrl);
                 exit;
             }
         }
@@ -75,7 +94,7 @@ class EventController {
     }
 
     public function saveEvent(): void {
-        $this->requireAdmin();
+        $this->requireAdminOrEmployer();
 
         $data = [
             'title'       => trim($_POST['title'] ?? ''),
@@ -95,34 +114,35 @@ class EventController {
         }
 
         $_SESSION['flash'] = ['type' => 'success', 'msg' => $msg];
-        header('Location: /workwave/Controller/index.php?action=admin_events');
+        header('Location: ' . $this->getReturnUrl());
         exit;
     }
 
     public function deleteEvent(): void {
-        $this->requireAdmin();
+        $this->requireAdminOrEmployer();
 
         if (!empty($_GET['id'])) {
             (new Event())->delete((int)$_GET['id']);
             $_SESSION['flash'] = ['type' => 'warning', 'msg' => 'Événement supprimé.'];
         }
 
-        header('Location: /workwave/Controller/index.php?action=admin_events');
+        header('Location: ' . $this->getReturnUrl());
         exit;
     }
 
     // ─── RESOURCE CRUD ─────────────────────────────────────────────────────────
     public function formResource(): void {
-        $this->requireAdmin();
+        $this->requireAdminOrEmployer();
 
         $resourceData = null;
         $flash        = null;
+        $returnUrl    = $this->getReturnUrl();
 
         if (isset($_GET['id'])) {
             $resourceModel = new Resource();
             $resourceData  = $resourceModel->readOne((int)$_GET['id']);
             if (!$resourceData) {
-                header('Location: /workwave/Controller/index.php?action=admin_events');
+                header('Location: ' . $returnUrl);
                 exit;
             }
         }
@@ -131,7 +151,7 @@ class EventController {
     }
 
     public function saveResource(): void {
-        $this->requireAdmin();
+        $this->requireAdminOrEmployer();
 
         $data = [
             'name'     => trim($_POST['name'] ?? ''),
@@ -150,19 +170,19 @@ class EventController {
         }
 
         $_SESSION['flash'] = ['type' => 'success', 'msg' => $msg];
-        header('Location: /workwave/Controller/index.php?action=admin_events');
+        header('Location: ' . $this->getReturnUrl());
         exit;
     }
 
     public function deleteResource(): void {
-        $this->requireAdmin();
+        $this->requireAdminOrEmployer();
 
         if (!empty($_GET['id'])) {
             (new Resource())->delete((int)$_GET['id']);
             $_SESSION['flash'] = ['type' => 'warning', 'msg' => 'Ressource supprimée.'];
         }
 
-        header('Location: /workwave/Controller/index.php?action=admin_events');
+        header('Location: ' . $this->getReturnUrl());
         exit;
     }
 

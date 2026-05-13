@@ -759,9 +759,9 @@ class UserController {
 
     public function adminDashboard(): void {
         $this->requireAdmin();
-        $userModel = new User();
-        $stats     = $userModel->getStats();
-        $pageTitle = 'Admin Dashboard';
+        require_once __DIR__ . '/../Model/AdminStats.php';
+        $kpi       = (new AdminStats())->getAll();
+        $pageTitle = 'Tableau de bord Admin';
         require_once __DIR__ . '/../View/admin/dashboard.php';
     }
 
@@ -1105,8 +1105,8 @@ class UserController {
             $weekly = $stmt->fetch(PDO::FETCH_ASSOC);
             $stats['profile_views'] = $weekly['weekly_views'] ?? 0;
             
-            // Simulated search count (would need search tracking table)
-            $stats['searches'] = rand(5, 25);
+            // No search tracking table yet — set to 0
+            $stats['searches'] = 0;
         }
         
         return $stats;
