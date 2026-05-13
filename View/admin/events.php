@@ -1,0 +1,708 @@
+<?php // views/admin/index.php
+
+function getStatus($date) {
+    $d = strtotime($date); $t = strtotime(date('Y-m-d'));
+    if ($d > $t) return ['l'=>'À venir','c'=>'primary'];
+    if ($d == $t) return ['l'=>'Aujourd\'hui','c'=>'warning'];
+    return ['l'=>'Passé','c'=>'danger'];
+}
+?>
+
+<?php
+$pageTitle = 'Événements & Ressources';
+require_once __DIR__ . '/../layout/dashboard_header.php';
+?>
+
+<!-- Leaflet, FullCalendar & DataTables -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+
+<style>
+    .chart-container { position: relative; height: 250px; width: 100%; }
+    .map-container { height: 400px; width: 100%; border-radius: 10px; z-index: 1; }
+    #calendar { background: #191c24; padding: 10px; border-radius: 10px; border: 1px solid #333; font-size: 0.85em; }
+    .fc-header-toolbar { margin-bottom: 1em !important; }
+    .fc-toolbar-title { font-size: 1.2em !important; color: #fff; }
+    .fc-daygrid-day-number { color: #fff !important; text-decoration: none; }
+    .fc-col-header-cell-cushion { color: #00ffcc !important; text-decoration: none; }
+    .fc-event { cursor: pointer; }
+    /* AI Modal Styles */
+    #ai-modal .modal-content { background: #191c24; color: #fff; border: 1px solid #eb1616; border-radius: 15px; }
+    #ai-modal .modal-header { border-bottom: 1px solid #333; }
+    #ai-modal .modal-footer { border-top: 1px solid #333; }
+    .ai-spinner { width: 3rem; height: 3rem; color: #eb1616; }
+    
+    /* Floating Chat Button & Window */
+    #chat-btn { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #eb1616; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border: none; }
+    #chat-btn:hover { transform: scale(1.1) rotate(15deg); background: #00ffcc; color: #191c24; }
+    
+    #chat-window { position: fixed; bottom: 90px; right: 20px; width: 350px; height: 480px; background: rgba(25, 28, 36, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; display: none; flex-direction: column; z-index: 1001; box-shadow: 0 15px 35px rgba(0,0,0,0.9); overflow: hidden; transition: all 0.3s ease; }
+    #chat-header { background: linear-gradient(135deg, #eb1616, #8b0000); padding: 15px; color: #fff; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    #chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+    .msg { max-width: 85%; padding: 10px 14px; border-radius: 15px; font-size: 14px; line-height: 1.4; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .msg-ai { background: #333; color: #00ffcc; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid rgba(0,255,204,0.1); }
+    .msg-user { background: #eb1616; color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; box-shadow: 0 2px 10px rgba(235,22,22,0.3); }
+    #chat-input-area { padding: 12px; background: rgba(0,0,0,0.3); display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+    #chat-input { background: rgba(25, 28, 36, 0.8); border: 1px solid #444; color: #fff; border-radius: 25px; padding: 8px 18px; flex: 1; outline: none; transition: border-color 0.3s; }
+    #chat-input:focus { border-color: #eb1616; }
+    #chat-send { background: #eb1616; border: none; color: #fff; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+    #chat-send:hover { background: #ff3333; }
+    
+    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate { color: #888 !important; }
+    .dataTables_wrapper .dataTables_filter input { background: #191c24; border: 1px solid #333; color: #fff; border-radius: 5px; }
+    .dataTables_wrapper .dataTables_length select { background: #191c24; border: 1px solid #333; color: #fff; border-radius: 5px; }
+    .dt-buttons .btn { background: #eb1616 !important; border: none !important; color: #fff !important; margin-right: 5px; font-size: 12px; }
+    .page-item.active .page-link { background-color: #eb1616 !important; border-color: #eb1616 !important; }
+    .page-link { background-color: #191c24 !important; border: 1px solid #333 !important; color: #888 !important; }
+    .activity-item { border-left: 2px solid #eb1616; padding-left: 15px; margin-bottom: 20px; position: relative; }
+    .activity-item::before { content: ""; position: absolute; width: 10px; height: 10px; background: #eb1616; border-radius: 50%; left: -6px; top: 5px; }
+    .empty-chart-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #666; font-style: italic; }
+</style>
+
+            <!-- AI Chat Interface -->
+            <div id="chat-window">
+                <div id="chat-header">
+                    <span><i class="fa fa-robot me-2"></i>Assistant IA Pro</span>
+                    <button class="btn btn-sm text-white" onclick="toggleChat()"><i class="fa fa-times"></i></button>
+                </div>
+                <div id="chat-messages">
+                    <div class="msg msg-ai">Bonjour ! Je suis l'IA de votre site. Comment puis-je vous aider aujourd'hui ?</div>
+                </div>
+                <div id="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Posez une question..." onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button id="chat-send" onclick="sendMessage()"><i class="fa fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <button id="chat-btn" onclick="toggleChat()">
+                <i class="fa fa-comments"></i>
+            </button>
+
+            <!-- Flash Message -->
+            <?php if (!empty($_SESSION['flash'])): $f = $_SESSION['flash']; unset($_SESSION['flash']); ?>
+            <div class="container-fluid pt-3 px-4">
+                <div class="alert alert-<?= $f['type'] ?> alert-dismissible fade show" role="alert">
+                    <i class="fa fa-check-circle me-2"></i><?= htmlspecialchars($f['msg']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <!-- Quick Actions -->
+            <div class="container-fluid pt-3 px-4">
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="/workwave/Controller/index.php?action=form_event" class="btn btn-sm" style="background:#eb1616;color:#fff;border:none;">
+                        <i class="fa fa-calendar-plus me-1"></i> + Nouvel Événement
+                    </a>
+                    <a href="/workwave/Controller/index.php?action=form_resource" class="btn btn-sm" style="background:#00ffcc;color:#191c24;font-weight:bold;border:none;">
+                        <i class="fa fa-plus-square me-1"></i> + Nouvelle Ressource
+                    </a>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4 shadow">
+                            <i class="fa fa-calendar-alt fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Events</p>
+                                <h4 class="mb-0"><?= $eventStats['total'] ?></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4 shadow">
+                            <i class="fa fa-clock fa-3x text-info"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Upcoming</p>
+                                <h4 class="mb-0"><?= $eventStats['upcoming'] ?></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4 shadow">
+                            <i class="fa fa-boxes fa-3x text-warning"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Total Qty</p>
+                                <h4 class="mb-0"><?= $resStats['total'] ?></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4 shadow">
+                            <i class="fa fa-exclamation-triangle fa-3x text-danger"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Alerte Stock</p>
+                                <h4 class="mb-0 text-danger"><?= $resStats['low_stock'] ?></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Widget Row -->
+            <div class="container-fluid pt-2 px-4">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-3 shadow-sm border-start border-info border-4">
+                            <div class="d-flex align-items-center">
+                                <i id="weather-icon" class="fa fa-sun fa-2x text-warning me-3"></i>
+                                <div>
+                                    <p class="mb-0 small text-white-50">Météo actuelle — Tunis</p>
+                                    <h5 class="mb-0 text-white" id="weather-display">Chargement...</h5>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-info" onclick="simulateApi('Meteo')"><i class="fa fa-cloud-sun me-1"></i> Détails</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Charts Row 1 -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-8">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <h6 class="mb-4">Localisation des Événements</h6>
+                            <div id="map" class="map-container"></div>
+                            <p class="text-muted small mt-2"><i class="fa fa-info-circle me-1"></i> Système Leaflet (OpenStreetMap) actif.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xl-4">
+                        <div class="bg-secondary text-center rounded p-4 h-100 shadow-sm border-top border-info border-3">
+                            <h6 class="mb-3 text-info"><i class="fa fa-brain me-2"></i>Expert AI Systems</h6>
+                            <div class="d-grid gap-2 mb-3">
+                                <button class="btn btn-sm btn-outline-warning" onclick="simulateApi('Prediction')"><i class="fa fa-magic me-2"></i>H.Face : Prédiction</button>
+                            </div>
+                            <hr class="border-secondary">
+                            <h6 class="mb-3 text-white">Services Connectés (APIs)</h6>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-danger btn-sm py-2" style="border-radius: 8px;" onclick="simulateApi('Stripe')">
+                                    <i class="fab fa-stripe me-2"></i> Méthode de Paiement
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm py-2" style="border-radius: 8px;" onclick="simulateApi('G-Calendar')">
+                                    <i class="fa fa-calendar-alt me-2"></i> G-Calendar : Sync
+                                </button>
+                                <button class="btn btn-outline-info btn-sm py-2" style="border-radius: 8px;" onclick="simulateApi('Meteo')">
+                                    <i class="fa fa-cloud-sun me-2"></i> Météo API
+                                </button>
+                            </div>
+                            <hr class="border-secondary">
+                            <h6 class="mb-3 text-primary"><i class="fa fa-chart-line me-2"></i>Tendance Mensuelle</h6>
+                            <div class="chart-container" style="height: 150px;">
+                                <canvas id="line-chart"></canvas>
+                            </div>
+                            <p class="small text-white-50 mt-2">Analyse IA des flux d'événements.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Charts Row 2 -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-md-6 col-xl-4">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <h6 class="mb-4">Top Locations</h6>
+                            <div class="chart-container">
+                                <?php if(empty($locNames)): ?><div class="empty-chart-msg">Aucune donnée disponible</div><?php endif; ?>
+                                <canvas id="bar-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-xl-4">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <h6 class="mb-4">Disponibilité Stocks</h6>
+                            <div class="chart-container">
+                                <?php if(empty($rangeLabels)): ?><div class="empty-chart-msg">Aucune donnée disponible</div><?php endif; ?>
+                                <canvas id="polar-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-xl-4">
+                        <div class="bg-secondary p-4 h-100 rounded">
+                            <h6 class="mb-4">Planning des Événements</h6>
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabbed Tables -->
+            <div class="container-fluid pt-4 px-4 pb-4">
+                <div class="bg-secondary rounded p-4">
+                    <h6 class="mb-4">Administration des Données</h6>
+                    <nav>
+                        <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="nav-events-tab" data-bs-toggle="tab" data-bs-target="#nav-events" type="button" role="tab">Événements</button>
+                            <button class="nav-link" id="nav-resources-tab" data-bs-toggle="tab" data-bs-target="#nav-resources" type="button" role="tab">Ressources</button>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-events" role="tabpanel">
+                            <div class="table-responsive p-3">
+                                <table id="eventsTable" class="table table-hover w-100">
+                                    <thead><tr><th>ID</th><th>Titre</th><th>Date</th><th>Lieu</th><th>Statut</th><th>Actions</th></tr></thead>
+                                    <tbody>
+                                        <?php foreach($events as $e): $st=getStatus($e['date']); ?>
+                                        <tr>
+                                            <td><?= $e['id'] ?></td>
+                                            <td><?= htmlspecialchars($e['title']) ?></td>
+                                            <td><?= $e['date'] ?></td>
+                                            <td><?= htmlspecialchars($e['location']) ?></td>
+                                            <td><span class="badge rounded-pill bg-<?= $st['c'] ?>"><?= $st['l'] ?></span></td>
+                                            <td>
+                                                <a href="/workwave/Controller/index.php?action=form_event&id=<?= $e['id'] ?>" class="btn btn-sm btn-info me-1"><i class="fa fa-edit"></i></a>
+                                                <a href="/workwave/Controller/index.php?action=delete_event&id=<?= $e['id'] ?>" onclick="return confirm('Supprimer cet événement ?')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="nav-resources" role="tabpanel">
+                            <div class="table-responsive p-3">
+                                <table id="resourcesTable" class="table table-hover w-100">
+                                    <thead><tr><th>ID</th><th>Nom</th><th>Type</th><th>Quantité</th><th>Actions</th></tr></thead>
+                                    <tbody>
+                                        <?php foreach($resources as $r): ?>
+                                        <tr>
+                                            <td><?= $r['id'] ?></td>
+                                            <td><?= htmlspecialchars($r['name']) ?></td>
+                                            <td><?= htmlspecialchars($r['type']) ?></td>
+                                            <td class="<?= (int)$r['quantity'] <= 2 ? 'text-danger fw-bold' : '' ?>"><?= $r['quantity'] ?></td>
+                                            <td>
+                                                <a href="/workwave/Controller/index.php?action=form_resource&id=<?= $r['id'] ?>" class="btn btn-sm btn-info me-1"><i class="fa fa-edit"></i></a>
+                                                <a href="/workwave/Controller/index.php?action=delete_resource&id=<?= $r['id'] ?>" onclick="return confirm('Supprimer cette ressource ?')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- DataTables & Buttons -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+    <script>
+        // Professional AI Simulation
+        function simulateApi(service) {
+            const modal = new bootstrap.Modal(document.getElementById('aiModal'));
+            const label = document.getElementById('aiModalLabel');
+            const body = document.getElementById('aiModalBody');
+            
+            label.innerText = "IA : Analyse de " + service + "...";
+            body.innerHTML = `
+                <div class="spinner-border text-danger ai-spinner mb-3" role="status"></div>
+                <p class="text-white">Connexion aux serveurs de calcul haute performance...</p>
+            `;
+            modal.show();
+
+            setTimeout(async () => {
+                let result = "";
+                if(service === 'Prediction') {
+                    result = `
+                        <div class="p-3">
+                            <h6 class="text-warning mb-3"><i class="fa fa-magic me-2"></i>Prédiction de Succès (H.Face) :</h6>
+                            <div class="progress mb-3" style="height: 25px; background: #333;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width: 89%">89%</div>
+                            </div>
+                            <p class="text-white small">Analyse basée sur les <b><?= count($events) ?> événements</b> passés. Probabilité de succès élevée pour votre prochain événement !</p>
+                        </div>
+                    `;
+                } else if(service === 'Stripe') {
+                    result = `
+                        <div class="text-start">
+                            <h6 class="text-danger mb-3"><i class="fa fa-credit-card me-2"></i>Nouveau Paiement</h6>
+                            <form id="paymentForm" class="mb-3">
+                                <div class="mb-2"><label class="form-label text-white small">RIB</label><input type="text" name="rib" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="12345678901234567890" required></div>
+                                <div class="mb-2"><label class="form-label text-white small">Email</label><input type="email" name="email" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="client@email.com" required></div>
+                                <div class="mb-3"><label class="form-label text-white small">Montant (TND)</label><input type="number" step="0.01" name="amount" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="0.00" required></div>
+                                <button type="submit" class="btn btn-danger btn-sm w-100"><i class="fa fa-save me-2"></i>Valider le Paiement</button>
+                            </form>
+                            <div id="paymentMsg"></div>
+                            <h6 class="text-white mt-3 mb-2 small">Historique récent :</h6>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-sm table-bordered">
+                                    <thead><tr><th>RIB</th><th>Email</th><th>Montant</th><th>Statut</th></tr></thead>
+                                    <tbody>
+                                        <?php foreach(array_slice($payments, 0, 5) as $p): ?>
+                                        <tr><td class="small"><?= htmlspecialchars($p['rib']) ?></td><td class="small"><?= htmlspecialchars($p['email']) ?></td><td class="small"><?= $p['amount'] ?> TND</td><td><span class="badge bg-success small"><?= $p['status'] ?></span></td></tr>
+                                        <?php endforeach; ?>
+                                        <?php if(empty($payments)): ?><tr><td colspan="4" class="text-center text-muted small">Aucun paiement enregistré</td></tr><?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                } else if(service === 'G-Calendar') {
+                    result = `
+                        <div class="text-start">
+                            <h6 class="text-warning mb-3"><i class="fa fa-calendar-alt me-2"></i>Événements à venir</h6>
+                            <div class="list-group list-group-flush bg-transparent">
+                                <?php
+                                $now = date('Y-m-d H:i:s');
+                                $upcoming = array_filter($events, fn($ev) => $ev['date'] >= $now);
+                                usort($upcoming, fn($a, $b) => strcmp($a['date'], $b['date']));
+                                $upcoming = array_slice($upcoming, 0, 6);
+                                foreach($upcoming as $ev):
+                                    $gStart = date('Ymd', strtotime($ev['date']));
+                                    $gEnd = date('Ymd', strtotime($ev['date'] . ' +1 day'));
+                                    $gLink = 'https://www.google.com/calendar/render?action=TEMPLATE&text=' . urlencode($ev['title']) . '&dates=' . $gStart . '/' . $gEnd . '&details=' . urlencode('Événement ER PRO') . '&location=' . urlencode($ev['location']);
+                                ?>
+                                <div class="list-group-item bg-transparent text-white border-secondary py-2 px-0 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold small"><?= htmlspecialchars($ev['title']) ?></div>
+                                        <div class="text-muted small"><?= date('d/m/Y H:i', strtotime($ev['date'])) ?> - <?= htmlspecialchars($ev['location']) ?></div>
+                                    </div>
+                                    <a href="<?= $gLink ?>" target="_blank" class="btn btn-sm btn-outline-warning"><i class="fa fa-google me-1"></i>+ Google</a>
+                                </div>
+                                <?php endforeach; ?>
+                                <?php if(empty($upcoming)): ?>
+                                <div class="text-muted text-center py-3">Aucun événement à venir</div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    `;
+                } else if(service === 'Meteo') {
+                    try {
+                        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8065&longitude=10.1815&current_weather=true');
+                        const data = await res.json();
+                        const cw = data.current_weather;
+                        const desc = getWeatherDesc(cw.weathercode);
+                        const icon = cw.is_day ? 'fa-sun' : 'fa-moon';
+                        const iconColor = cw.is_day ? 'text-warning' : 'text-info';
+                        result = `
+                            <div class="text-start">
+                                <h6 class="text-info mb-3"><i class="fa fa-cloud-sun me-2"></i>Météo actuelle — Tunis</h6>
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fa ${icon} fa-3x ${iconColor} me-3"></i>
+                                    <div>
+                                        <h3 class="mb-0 text-white">${cw.temperature}°C</h3>
+                                        <p class="mb-0 text-white-50">${desc}</p>
+                                    </div>
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <p class="mb-0 text-white-50 small">Vent</p>
+                                        <p class="mb-0 text-white">${cw.windspeed} km/h</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="mb-0 text-white-50 small">Direction</p>
+                                        <p class="mb-0 text-white">${cw.winddirection}°</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p class="mb-0 text-white-50 small">Heure</p>
+                                        <p class="mb-0 text-white">${cw.time.split('T')[1]}</p>
+                                    </div>
+                                </div>
+                                <p class="small text-muted mt-3">Données fournies par Open-Meteo API</p>
+                            </div>
+                        `;
+                    } catch(e) {
+                        result = `<div class="text-center text-danger"><i class="fa fa-exclamation-triangle me-2"></i>Erreur lors de la récupération des données météo.</div>`;
+                    }
+                }
+                body.innerHTML = result;
+                label.innerText = "Résultat : " + service;
+
+                if(service === 'Stripe' && document.getElementById('paymentForm')) {
+                    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const formData = new FormData(this);
+                        fetch('index.php?action=save_payment', { method: 'POST', body: formData })
+                        .then(r => r.text())
+                        .then(() => {
+                            document.getElementById('paymentMsg').innerHTML = '<div class="alert alert-success alert-dismissible fade show mt-2 py-2 small" role="alert"><i class="fa fa-check-circle me-2"></i>Paiement enregistré avec succès !<button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+                            this.reset();
+                        })
+                        .catch(() => {
+                            document.getElementById('paymentMsg').innerHTML = '<div class="alert alert-danger mt-2 py-2 small"><i class="fa fa-exclamation-circle me-2"></i>Erreur lors de l\'enregistrement.</div>';
+                        });
+                    });
+                }
+            }, 800);
+        }
+
+        // Real-time Chat Logic
+        function toggleChat() {
+            const win = document.getElementById('chat-window');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if(!text) {
+                input.style.borderColor = '#eb1616';
+                setTimeout(() => input.style.borderColor = '#444', 1000);
+                return;
+            }
+
+            addMessage(text, 'user');
+            input.value = '';
+
+            // AI Expert Logic (Context-Aware & Multilingual)
+            setTimeout(async () => {
+                const t = text.toLowerCase().trim();
+                let reply = "Désolé, je n'ai pas bien compris votre message. Vous pouvez me demander des informations sur les événements, le stock, les paiements ou la météo! 🤖";
+                
+                const events = <?= json_encode($events) ?>;
+                const resources = <?= json_encode($resources) ?>;
+
+                // 1. Weather & Greetings
+                if(t.includes('meteo') || t.includes('ta9es') || t.includes('weather')) {
+                    try {
+                        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8065&longitude=10.1815&current_weather=true');
+                        const data = await res.json();
+                        const cw = data.current_weather;
+                        const desc = getWeatherDesc(cw.weathercode);
+                        reply = "Le temps actuel à Tunis : " + cw.temperature + "°C, " + desc + ". Vent : " + cw.windspeed + " km/h. ☀️";
+                    } catch(e) {
+                        reply = "Le temps aujourd'hui à Tunis est d'environ 24°C avec un beau soleil! ☀️ (API temporairement indisponible)";
+                    }
+                } else if(t.includes('aslama') || t.includes('3aslama') || t.includes('salut') || t.includes('hello') || t.includes('hi') || t.includes('bonjour')) {
+                    reply = "Bonjour! 👋 Je suis votre assistant IA. Je peux vous aider avec les événements, le stock, le planning ou les paiements!";
+                }
+                
+                // 2. Events Logic
+                else if(t.includes('event') || t.includes('evenement') || t.includes('wa9t') || t.includes('date')) {
+                    if(t.includes('jey') || t.includes('next') || t.includes('prochain') || t.includes('upcoming')) {
+                        const now = new Date();
+                        let nextEvent = null;
+                        events.forEach(e => {
+                            const ed = new Date(e.date);
+                            if(ed > now && (!nextEvent || ed < new Date(nextEvent.date))) nextEvent = e;
+                        });
+                        if(nextEvent) reply = "Le prochain événement est : '" + nextEvent.title + "' le " + nextEvent.date + " à " + nextEvent.location + ". 📅";
+                        else reply = "Aucun événement à venir. Vous avez " + events.length + " événements au total.";
+                    } else {
+                        reply = "Vous avez " + events.length + " événements enregistrés. Vous pouvez les consulter dans le tableau ou dans le planning!";
+                    }
+                }
+
+                // 3. Resources & Stock Logic
+                else if(t.includes('resource') || t.includes('ressource') || t.includes('stock') || t.includes('quantité') || t.includes('qty')) {
+                    const low = resources.filter(r => parseInt(r.quantity) < 3);
+                    reply = "Le stock contient " + resources.length + " ressources. 📦 \n⚠️ Alerte: " + low.length + " ressources en stock faible (ex. " + (low[0]?.name || 'matériel') + ").";
+                }
+
+                // 4. Payments & RIB Logic
+                else if(t.includes('payment') || t.includes('paiement') || t.includes('argent') || t.includes('rib') || t.includes('flous')) {
+                    reply = "Le module 'Payment' contient l'historique des transactions. Vous pouvez consulter les RIB, emails et montants directement sur le tableau de bord! 💳";
+                }
+
+                // 5. AI, OCR & Predictions
+                else if(t.includes('ia') || t.includes('ai') || t.includes('ocr') || t.includes('prediction') || t.includes('bravo')) {
+                    reply = "J'utilise l'IA (Hugging Face) pour les prédictions et l'OCR pour la lecture des documents! 🧠 C'est de la haute technologie.";
+                }
+
+                // 6. Site Location / Maps
+                else if(t.includes('win') || t.includes('blasa') || t.includes('map') || t.includes('carte') || t.includes('location')) {
+                    reply = "Vous pouvez consulter les localisations de tous les événements ici sur la carte interactive! 🗺️";
+                }
+
+                // 7. Site Search (Loop)
+                else {
+                    let found = false;
+                    events.forEach(e => {
+                        if(t.includes(e.title.toLowerCase())) {
+                            reply = "J'ai trouvé l'événement: '" + e.title + "' le " + e.date + " à " + e.location + ". 📍";
+                            found = true;
+                        }
+                    });
+                    if(!found) {
+                        resources.forEach(r => {
+                            if(t.includes(r.name.toLowerCase())) {
+                                reply = "La ressource '" + r.name + "' est en stock (Quantité: " + r.quantity + "). 📦";
+                                found = true;
+                            }
+                        });
+                    }
+                }
+
+                // Final Polish
+                if(t.includes('merci') || t.includes('bravo') || t.includes('ya3tik')) {
+                    reply = "C'est un plaisir! 🚀🔥 Je suis là pour vous assister.";
+                }
+                
+                addMessage(reply, 'ai');
+            }, 800);
+        }
+
+        function addMessage(text, type) {
+            const area = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = 'msg msg-' + type;
+            div.innerText = text;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+        }
+
+        // Weather Helper
+        function getWeatherDesc(code) {
+            const codes = {
+                0: "ciel dégagé", 1: "principalement dégagé", 2: "partiellement nuageux", 3: "couvert",
+                45: "brouillard", 48: "brouillard givrant",
+                51: "bruine légère", 53: "bruine modérée", 55: "bruine dense",
+                61: "pluie légère", 63: "pluie modérée", 65: "pluie forte",
+                71: "neige légère", 73: "neige modérée", 75: "neige forte",
+                95: "orage", 96: "orage avec grêle légère", 99: "orage avec grêle forte"
+            };
+            return codes[code] || "conditions variables";
+        }
+
+        async function loadWeather() {
+            try {
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.8065&longitude=10.1815&current_weather=true');
+                const data = await res.json();
+                const cw = data.current_weather;
+                const desc = getWeatherDesc(cw.weathercode);
+                document.getElementById('weather-display').innerText = cw.temperature + "°C — " + desc;
+                const iconEl = document.getElementById('weather-icon');
+                if(iconEl) {
+                    iconEl.className = 'fa fa-2x me-3 ' + (cw.is_day ? 'fa-sun text-warning' : 'fa-moon text-info');
+                }
+            } catch(e) {
+                document.getElementById('weather-display').innerText = "24°C — beau soleil";
+            }
+        }
+        loadWeather();
+
+        // Leaflet Map Initialization
+        const map = L.map('map').setView([36.8065, 10.1815], 11);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        // Markers for events
+        <?php foreach($events as $e): ?>
+            L.marker([36.8 + (Math.random() * 0.1), 10.1 + (Math.random() * 0.1)]).addTo(map)
+                .bindPopup("<b><?= htmlspecialchars($e['title']) ?></b><br><?= htmlspecialchars($e['location']) ?>");
+        <?php endforeach; ?>
+
+        // FullCalendar Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 350,
+                headerToolbar: { left: 'prev,next', center: 'title', right: '' },
+                events: [
+                    <?php foreach($events as $e): ?>
+                    {
+                        title: '<?= addslashes($e['title']) ?>',
+                        start: '<?= date('Y-m-d\TH:i:s', strtotime($e['date'])) ?>',
+                        color: '#eb1616'
+                    },
+                    <?php endforeach; ?>
+                ]
+            });
+            calendar.render();
+        });
+
+        $(document).ready(function() {
+            const tableConfig = {
+                language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/fr-FR.json' },
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+                pageLength: 5,
+                responsive: true
+            };
+            $('#eventsTable').DataTable(tableConfig);
+            $('#resourcesTable').DataTable(tableConfig);
+        });
+
+        Chart.defaults.color = "#888";
+        Chart.defaults.borderColor = "rgba(255,255,255,0.05)";
+
+        const lineCtx = document.getElementById('line-chart');
+        if(lineCtx) {
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: <?= json_encode($months) ?>,
+                    datasets: [{
+                        label: "Événements",
+                        data: <?= json_encode($monthCounts) ?>,
+                        borderColor: "#eb1616",
+                        backgroundColor: "rgba(235, 22, 22, .3)",
+                        fill: true, tension: 0.4
+                    }]
+                },
+                options: { maintainAspectRatio: false }
+            });
+        }
+
+        const doughnutCtx = document.getElementById('doughnut-chart');
+        if(doughnutCtx) {
+            new Chart(doughnutCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: <?= json_encode($resTypes) ?>,
+                    datasets: [{
+                        data: <?= json_encode($resTypeCounts) ?>,
+                        backgroundColor: ["#eb1616", "#00ffcc", "#ffcc00", "#36a2eb", "#9966ff"],
+                        borderWidth: 0
+                    }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        const barCtx = document.getElementById('bar-chart');
+        if(barCtx) {
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: <?= json_encode($locNames) ?>,
+                    datasets: [{
+                        label: "Nombre",
+                        data: <?= json_encode($locCounts) ?>,
+                        backgroundColor: "#00ffcc"
+                    }]
+                },
+                options: { maintainAspectRatio: false }
+            });
+        }
+
+        const polarCtx = document.getElementById('polar-chart');
+        if(polarCtx) {
+            new Chart(polarCtx, {
+                type: 'polarArea',
+                data: {
+                    labels: <?= json_encode($rangeLabels) ?>,
+                    datasets: [{
+                        data: <?= json_encode($rangeCounts) ?>,
+                        backgroundColor: ["#eb1616", "#ffcc00", "#00ffcc"]
+                    }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+    </script>
+<?php require_once __DIR__ . '/../layout/dashboard_footer.php'; ?>

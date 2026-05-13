@@ -399,6 +399,14 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
         <a href="/workwave/Controller/index.php?action=missions" class="<?= $action === 'missions' ? 'active' : '' ?>">
             <i class="fa fa-briefcase"></i> Missions
         </a>
+        <?php if ($role !== 'employer'): ?>
+        <a href="/workwave/Controller/index.php?action=front_candidatures" class="<?= $action === 'front_candidatures' ? 'active' : '' ?>">
+            <i class="fa fa-user-check"></i> Mes Candidatures
+        </a>
+        <?php endif; ?>
+        <a href="/workwave/Controller/index.php?action=user_events" class="<?= $action === 'user_events' ? 'active' : '' ?>" style="color:#ffcc00;">
+            <i class="fa fa-calendar-alt"></i> Events & Booking
+        </a>
 
         <div class="ww-sb-section" style="margin-top:10px;">Outils IA</div>
         <a href="/workwave/Controller/index.php?action=ai_analyze" class="<?= $action === 'ai_analyze' ? 'active' : '' ?>" style="<?= $action !== 'ai_analyze' ? 'color:#00b3ff;' : '' ?>">

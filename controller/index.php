@@ -265,7 +265,51 @@ switch ($action) {
         $missionController = new MissionController();
         $missionController->deleteCandidature();
         break;
-        
+
+    // --- Ayoub's API Integrations (Events, Resources, Payments) ---
+    case 'admin_events':
+        require_once __DIR__ . '/EventController.php';
+        $eventCtrl = new EventController();
+        $eventCtrl->adminEvents();
+        break;
+    case 'user_events':
+        require_once __DIR__ . '/EventController.php';
+        $eventCtrl = new EventController();
+        $eventCtrl->showUserEvents();
+        break;
+    case 'save_payment':
+        require_once __DIR__ . '/EventController.php';
+        $eventCtrl = new EventController();
+        $eventCtrl->savePayment();
+        break;
+
+    // --- Event CRUD ---
+    case 'form_event':
+        require_once __DIR__ . '/EventController.php';
+        (new EventController())->formEvent();
+        break;
+    case 'save_event':
+        require_once __DIR__ . '/EventController.php';
+        (new EventController())->saveEvent();
+        break;
+    case 'delete_event':
+        require_once __DIR__ . '/EventController.php';
+        (new EventController())->deleteEvent();
+        break;
+
+    // --- Resource CRUD ---
+    case 'form_resource':
+        require_once __DIR__ . '/EventController.php';
+        (new EventController())->formResource();
+        break;
+    case 'save_resource':
+        require_once __DIR__ . '/EventController.php';
+        (new EventController())->saveResource();
+        break;
+    case 'delete_resource':
+        require_once __DIR__ . '/EventController.php';
+        (new EventController())->deleteResource();
+        break;
     case 'ajax_chatbot':
         header('Content-Type: application/json');
         $msg = trim($_POST['message'] ?? '');
