@@ -24,12 +24,13 @@ class Resource {
     }
 
     public function create($data) {
-        $query = "INSERT INTO " . $this->table_name . " (name, type, quantity) VALUES (:name, :type, :quantity)";
+        $query = "INSERT INTO " . $this->table_name . " (name, type, quantity, employer_id) VALUES (:name, :type, :quantity, :employer_id)";
         $stmt = $this->conn->prepare($query);
         return $stmt->execute([
             ':name' => $data['name'],
             ':type' => $data['type'],
-            ':quantity' => $data['quantity']
+            ':quantity' => $data['quantity'],
+            ':employer_id' => $data['employer_id'] ?? null
         ]);
     }
 

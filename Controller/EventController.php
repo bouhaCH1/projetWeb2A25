@@ -88,6 +88,11 @@ class EventController {
                 header('Location: ' . $returnUrl);
                 exit;
             }
+            if (($_SESSION['user_role'] ?? '') !== 'admin' && $eventData['employer_id'] != $_SESSION['user_id']) {
+                $_SESSION['flash'] = ['type' => 'danger', 'msg' => 'Accès refusé. Vous n\'êtes pas le propriétaire de cet événement.'];
+                header('Location: ' . $returnUrl);
+                exit;
+            }
         }
 
         require_once __DIR__ . '/../View/admin/form_event.php';
@@ -100,14 +105,22 @@ class EventController {
             'title'       => trim($_POST['title'] ?? ''),
             'date'        => trim($_POST['date'] ?? ''),
             'location'    => trim($_POST['location'] ?? ''),
-            'description' => trim($_POST['description'] ?? '')
+            'description' => trim($_POST['description'] ?? ''),
+            'employer_id' => $_SESSION['user_id']
         ];
 
         $eventModel = new Event();
 
         if (!empty($_POST['id'])) {
-            $eventModel->update((int)$_POST['id'], $data);
-            $msg = 'Événement mis à jour avec succès.';
+            $eventData = $eventModel->readOne((int)$_POST['id']);
+            if ($eventData && (($_SESSION['user_role'] ?? '') === 'admin' || $eventData['employer_id'] == $_SESSION['user_id'])) {
+                $eventModel->update((int)$_POST['id'], $data);
+                $msg = 'Événement mis à jour avec succès.';
+            } else {
+                $_SESSION['flash'] = ['type' => 'danger', 'msg' => 'Accès refusé.'];
+                header('Location: ' . $this->getReturnUrl());
+                exit;
+            }
         } else {
             $eventModel->create($data);
             $msg = 'Événement créé avec succès.';
@@ -122,8 +135,14 @@ class EventController {
         $this->requireAdminOrEmployer();
 
         if (!empty($_GET['id'])) {
-            (new Event())->delete((int)$_GET['id']);
-            $_SESSION['flash'] = ['type' => 'warning', 'msg' => 'Événement supprimé.'];
+            $eventModel = new Event();
+            $eventData = $eventModel->readOne((int)$_GET['id']);
+            if ($eventData && (($_SESSION['user_role'] ?? '') === 'admin' || $eventData['employer_id'] == $_SESSION['user_id'])) {
+                $eventModel->delete((int)$_GET['id']);
+                $_SESSION['flash'] = ['type' => 'warning', 'msg' => 'Événement supprimé.'];
+            } else {
+                $_SESSION['flash'] = ['type' => 'danger', 'msg' => 'Accès refusé.'];
+            }
         }
 
         header('Location: ' . $this->getReturnUrl());
@@ -145,6 +164,11 @@ class EventController {
                 header('Location: ' . $returnUrl);
                 exit;
             }
+            if (($_SESSION['user_role'] ?? '') !== 'admin' && $resourceData['employer_id'] != $_SESSION['user_id']) {
+                $_SESSION['flash'] = ['type' => 'danger', 'msg' => 'Accès refusé.'];
+                header('Location: ' . $returnUrl);
+                exit;
+            }
         }
 
         require_once __DIR__ . '/../View/admin/form_resource.php';
@@ -156,14 +180,22 @@ class EventController {
         $data = [
             'name'     => trim($_POST['name'] ?? ''),
             'type'     => trim($_POST['type'] ?? ''),
-            'quantity' => (int)($_POST['quantity'] ?? 0)
+            'quantity' => (int)($_POST['quantity'] ?? 0),
+            'employer_id' => $_SESSION['user_id']
         ];
 
         $resourceModel = new Resource();
 
         if (!empty($_POST['id'])) {
-            $resourceModel->update((int)$_POST['id'], $data);
-            $msg = 'Ressource mise à jour avec succès.';
+            $resourceData = $resourceModel->readOne((int)$_POST['id']);
+            if ($resourceData && (($_SESSION['user_role'] ?? '') === 'admin' || $resourceData['employer_id'] == $_SESSION['user_id'])) {
+                $resourceModel->update((int)$_POST['id'], $data);
+                $msg = 'Ressource mise à jour avec succès.';
+            } else {
+                $_SESSION['flash'] = ['type' => 'danger', 'msg' => 'Accès refusé.'];
+                header('Location: ' . $this->getReturnUrl());
+                exit;
+            }
         } else {
             $resourceModel->create($data);
             $msg = 'Ressource créée avec succès.';
@@ -178,8 +210,14 @@ class EventController {
         $this->requireAdminOrEmployer();
 
         if (!empty($_GET['id'])) {
-            (new Resource())->delete((int)$_GET['id']);
-            $_SESSION['flash'] = ['type' => 'warning', 'msg' => 'Ressource supprimée.'];
+            $resourceModel = new Resource();
+            $resourceData = $resourceModel->readOne((int)$_GET['id']);
+            if ($resourceData && (($_SESSION['user_role'] ?? '') === 'admin' || $resourceData['employer_id'] == $_SESSION['user_id'])) {
+                $resourceModel->delete((int)$_GET['id']);
+                $_SESSION['flash'] = ['type' => 'warning', 'msg' => 'Ressource supprimée.'];
+            } else {
+                $_SESSION['flash'] = ['type' => 'danger', 'msg' => 'Accès refusé.'];
+            }
         }
 
         header('Location: ' . $this->getReturnUrl());

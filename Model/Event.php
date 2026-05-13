@@ -24,13 +24,14 @@ class Event {
     }
 
     public function create($data) {
-        $query = "INSERT INTO " . $this->table_name . " (title, description, date, location) VALUES (:title, :description, :date, :location)";
+        $query = "INSERT INTO " . $this->table_name . " (title, description, date, location, employer_id) VALUES (:title, :description, :date, :location, :employer_id)";
         $stmt = $this->conn->prepare($query);
         return $stmt->execute([
             ':title' => $data['title'],
             ':description' => $data['description'],
             ':date' => $data['date'],
-            ':location' => $data['location']
+            ':location' => $data['location'],
+            ':employer_id' => $data['employer_id'] ?? null
         ]);
     }
 
