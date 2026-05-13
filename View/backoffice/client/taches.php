@@ -2,7 +2,7 @@
 
 <?php if ($formation): ?>
 <div class="app-breadcrumb">
-  <a href="index.php?role=client&action=formations"><i class="fa fa-book"></i> Formations</a>
+  <a href="Controller/index.php?role=client&action=formations"><i class="fa fa-book"></i> Formations</a>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
   <span><?= htmlspecialchars($formation['titre']) ?></span>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
@@ -15,7 +15,7 @@
     <?= $formation ? 'Taches : '.htmlspecialchars($formation['titre']) : 'Toutes mes taches' ?>
   </h2>
   <?php if (!$formation): ?>
-  <a href="index.php?role=client&action=formations" class="btn-app btn-app-outline btn-app-sm">
+  <a href="Controller/index.php?role=client&action=formations" class="btn-app btn-app-outline btn-app-sm">
     <i class="fa fa-book"></i> Mes formations
   </a>
   <?php endif; ?>

@@ -1,7 +1,7 @@
 <?php $pageTitle = 'Participants — ' . ($formation['titre'] ?? ''); $view = 'manager/participants'; require __DIR__ . '/../layout/header.php'; ?>
 
 <div class="app-breadcrumb">
-  <a href="index.php?role=manager&action=formations"><i class="fa fa-book"></i> Formations</a>
+  <a href="Controller/index.php?role=manager&action=formations"><i class="fa fa-book"></i> Formations</a>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
   <span><?= htmlspecialchars($formation['titre'] ?? '') ?></span>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
@@ -32,7 +32,7 @@
             <td><?= htmlspecialchars($p['email'] ?? '') ?></td>
             <td><?= date('d/m/Y', strtotime($p['date_inscription'])) ?></td>
             <td>
-              <a href="index.php?role=manager&action=participant_remove&id=<?= $p['id'] ?>&formation_id=<?= $formationId ?>"
+              <a href="Controller/index.php?role=manager&action=participant_remove&id=<?= $p['id'] ?>&formation_id=<?= $formationId ?>"
                  class="btn-app btn-app-danger btn-app-sm" onclick="return confirm('Retirer ce participant ?')">
                 <i class="fa fa-user-times"></i> Retirer
               </a>
@@ -49,7 +49,7 @@
   <div>
     <div class="form-card" style="max-width:100%">
       <h3><i class="fa fa-user-plus" style="margin-right:8px"></i>Ajouter un participant</h3>
-      <form method="POST" action="index.php?role=manager&action=participant_add&formation_id=<?= $formationId ?>">
+      <form method="POST" action="Controller/index.php?role=manager&action=participant_add&formation_id=<?= $formationId ?>">
         <div class="role-toggle" style="margin-bottom:16px">
           <input type="radio" name="type" id="type_id" value="id" checked>
           <label for="type_id">Client existant</label>

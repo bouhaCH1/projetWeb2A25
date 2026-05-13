@@ -14,17 +14,17 @@
         <div style="display:flex;gap:30px;margin-top:10px">
           <ul>
             <?php if ($role === 'manager'): ?>
-            <li><a href="index.php?role=manager&action=dashboard">Dashboard</a></li>
-            <li><a href="index.php?role=manager&action=formations">Formations</a></li>
-            <li><a href="index.php?role=manager&action=formation_add">Nouvelle formation</a></li>
+            <li><a href="Controller/index.php?role=manager&action=dashboard">Dashboard</a></li>
+            <li><a href="Controller/index.php?role=manager&action=formations">Formations</a></li>
+            <li><a href="Controller/index.php?role=manager&action=formation_add">Nouvelle formation</a></li>
             <?php else: ?>
-            <li><a href="index.php?role=client&action=dashboard">Dashboard</a></li>
-            <li><a href="index.php?role=client&action=formations">Formations</a></li>
-            <li><a href="index.php?role=client&action=taches">Mes taches</a></li>
+            <li><a href="Controller/index.php?role=client&action=dashboard">Dashboard</a></li>
+            <li><a href="Controller/index.php?role=client&action=formations">Formations</a></li>
+            <li><a href="Controller/index.php?role=client&action=taches">Mes taches</a></li>
             <?php endif; ?>
           </ul>
           <ul>
-            <li><a href="index.php?logout=1">Deconnexion</a></li>
+            <li><a href="Controller/index.php?action=logout">Deconnexion</a></li>
           </ul>
         </div>
       </div>
@@ -40,11 +40,11 @@
   </div>
 </footer>
 
-<script src="<?= $base ?>vues/public/vendor/jquery/jquery.min.js"></script>
-<script src="<?= $base ?>vues/public/js/owl-carousel.js"></script>
-<script src="<?= $base ?>vues/public/js/animation.js"></script>
-<script src="<?= $base ?>vues/public/js/imagesloaded.js"></script>
-<script src="<?= $base ?>vues/public/js/custom.js"></script>
+<script src="<?= $base ?>View/public/vendor/jquery/jquery.min.js"></script>
+<script src="<?= $base ?>View/public/js/owl-carousel.js"></script>
+<script src="<?= $base ?>View/public/js/animation.js"></script>
+<script src="<?= $base ?>View/public/js/imagesloaded.js"></script>
+<script src="<?= $base ?>View/public/js/custom.js"></script>
 
 <script>
 function doTranslate(text, targetLang, resultId) {
@@ -54,7 +54,7 @@ function doTranslate(text, targetLang, resultId) {
   el.style.display = 'block';
   el.dir = 'ltr';
   $.post(
-    'index.php?role=<?= $role ?>&action=translate',
+    'Controller/index.php?role=<?= $role ?>&action=translate',
     { text: text, target_lang: targetLang },
     function(data) {
       el.textContent = data.translated || data.error || 'Traduction indisponible';

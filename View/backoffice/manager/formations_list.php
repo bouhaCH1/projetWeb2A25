@@ -6,7 +6,7 @@
       <span style="font-size:13px;color:var(--muted);font-weight:500;margin-left:8px">(<?= $paginator->getTotal() ?> au total)</span>
     <?php endif; ?>
   </h2>
-  <a href="index.php?role=manager&action=formation_add" class="btn-app btn-app-primary">
+  <a href="Controller/index.php?role=manager&action=formation_add" class="btn-app btn-app-primary">
     <i class="fa fa-plus"></i> Nouvelle formation
   </a>
 </div>
@@ -37,7 +37,7 @@
     </div>
     <div class="form-field" style="display:flex;align-items:flex-end;gap:10px">
       <button class="btn-app btn-app-primary" type="submit"><i class="fa fa-search"></i> Rechercher</button>
-      <a class="btn-app btn-app-gray" href="index.php?role=manager&action=formations"><i class="fa fa-refresh"></i> Reinitialiser</a>
+      <a class="btn-app btn-app-gray" href="Controller/index.php?role=manager&action=formations"><i class="fa fa-refresh"></i> Reinitialiser</a>
     </div>
   </div>
 </form>
@@ -74,10 +74,10 @@
       <span class="listing-stat"><i class="fa fa-check-square"></i> <?= $f['nb_taches'] ?> taches</span>
     </div>
     <div class="actions">
-      <a href="index.php?role=manager&action=taches&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-gray btn-app-sm"><i class="fa fa-check-square"></i> Taches</a>
-      <a href="index.php?role=manager&action=participants&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-success btn-app-sm btn-app-icon"><i class="fa fa-users"></i></a>
-      <a href="index.php?role=manager&action=formation_edit&id=<?= $f['id'] ?>" class="btn-app btn-app-warning btn-app-sm btn-app-icon"><i class="fa fa-pencil"></i></a>
-      <a href="index.php?role=manager&action=formation_delete&id=<?= $f['id'] ?>" class="btn-app btn-app-danger btn-app-sm btn-app-icon" onclick="return confirm('Supprimer ?')"><i class="fa fa-trash"></i></a>
+      <a href="Controller/index.php?role=manager&action=taches&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-gray btn-app-sm"><i class="fa fa-check-square"></i> Taches</a>
+      <a href="Controller/index.php?role=manager&action=participants&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-success btn-app-sm btn-app-icon"><i class="fa fa-users"></i></a>
+      <a href="Controller/index.php?role=manager&action=formation_edit&id=<?= $f['id'] ?>" class="btn-app btn-app-warning btn-app-sm btn-app-icon"><i class="fa fa-pencil"></i></a>
+      <a href="Controller/index.php?role=manager&action=formation_delete&id=<?= $f['id'] ?>" class="btn-app btn-app-danger btn-app-sm btn-app-icon" onclick="return confirm('Supprimer ?')"><i class="fa fa-trash"></i></a>
     </div>
   </div>
 </div>

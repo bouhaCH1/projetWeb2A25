@@ -31,7 +31,7 @@
     </div>
     <div class="form-field" style="display:flex;align-items:flex-end;gap:10px">
       <button class="btn-app btn-app-primary" type="submit"><i class="fa fa-search"></i> Rechercher</button>
-      <a class="btn-app btn-app-gray" href="index.php?role=client&action=formations"><i class="fa fa-refresh"></i> Reinitialiser</a>
+      <a class="btn-app btn-app-gray" href="Controller/index.php?role=client&action=formations"><i class="fa fa-refresh"></i> Reinitialiser</a>
     </div>
   </div>
 </form>
@@ -48,7 +48,7 @@
 <div class="listing-item">
   <div class="left-image">
     <?php if ($f['image_path']): ?>
-      <img src="<?= $base ?>vues/public/<?= htmlspecialchars($f['image_path']) ?>" alt="">
+      <img src="<?= $base ?>View/public/<?= htmlspecialchars($f['image_path']) ?>" alt="">
     <?php else: ?>
       <i class="fa fa-book placeholder-icon"></i>
     <?php endif; ?>
@@ -70,7 +70,7 @@
       <span class="meta-item"><i class="fa fa-calendar"></i><?= $f['date_debut'] ?> &rarr; <?= $f['date_fin'] ?></span>
     </div>
     <?php if ($f['video_url']): ?>
-    <div class="video-embed"><video src="<?= $base ?>vues/public/<?= htmlspecialchars($f['video_url']) ?>" controls style="max-width:100%;border-radius:7px"></video></div>
+    <div class="video-embed"><video src="<?= $base ?>View/public/<?= htmlspecialchars($f['video_url']) ?>" controls style="max-width:100%;border-radius:7px"></video></div>
     <?php endif; ?>
     <div class="listing-stats">
       <span class="listing-stat"><i class="fa fa-users"></i> <?= $f['nb_participants'] ?></span>
@@ -78,15 +78,15 @@
     </div>
     <div class="actions">
       <?php if ($inscrit): ?>
-      <a href="index.php?role=client&action=taches&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-primary btn-app-sm">
+      <a href="Controller/index.php?role=client&action=taches&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-primary btn-app-sm">
         <i class="fa fa-check-square"></i> Mes taches
       </a>
-      <a href="index.php?role=client&action=quitter&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-danger btn-app-sm btn-app-icon"
+      <a href="Controller/index.php?role=client&action=quitter&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-danger btn-app-sm btn-app-icon"
          onclick="return confirm('Quitter cette formation ?')" title="Quitter">
         <i class="fa fa-sign-out"></i>
       </a>
       <?php else: ?>
-      <a href="index.php?role=client&action=participer&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-success btn-app-sm">
+      <a href="Controller/index.php?role=client&action=participer&formation_id=<?= $f['id'] ?>" class="btn-app btn-app-success btn-app-sm">
         <i class="fa fa-user-plus"></i> S'inscrire
       </a>
       <?php endif; ?>

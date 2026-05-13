@@ -1,7 +1,7 @@
 <?php $pageTitle = 'Taches — ' . ($formation['titre'] ?? ''); $view = 'manager/taches_list'; require __DIR__ . '/../layout/header.php'; ?>
 
 <div class="app-breadcrumb">
-  <a href="index.php?role=manager&action=formations"><i class="fa fa-book"></i> Formations</a>
+  <a href="Controller/index.php?role=manager&action=formations"><i class="fa fa-book"></i> Formations</a>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
   <span><?= htmlspecialchars($formation['titre'] ?? '') ?></span>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
@@ -10,7 +10,7 @@
 
 <div class="app-section-heading">
   <h2><i class="fa fa-check-square" style="margin-right:8px"></i>Taches de la formation</h2>
-  <a href="index.php?role=manager&action=tache_add&formation_id=<?= $formationId ?>" class="btn-app btn-app-primary">
+  <a href="Controller/index.php?role=manager&action=tache_add&formation_id=<?= $formationId ?>" class="btn-app btn-app-primary">
     <i class="fa fa-plus"></i> Ajouter une tache
   </a>
 </div>

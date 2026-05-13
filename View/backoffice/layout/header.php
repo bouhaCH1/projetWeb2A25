@@ -1,6 +1,6 @@
 <?php
 // Base URL always relative to index.php in project root
-$base = '';
+$base = '../';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -10,10 +10,10 @@ $base = '';
   <title><?= htmlspecialchars($pageTitle ?? 'FormationPHP') ?></title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= $base ?>vues/public/css/fontawesome.css">
-  <link rel="stylesheet" href="<?= $base ?>vues/public/css/templatemo-plot-listing.css">
-  <link rel="stylesheet" href="<?= $base ?>vues/public/css/app.css">
-  <link rel="stylesheet" href="<?= $base ?>vues/public/css/theme-graph.css">
+  <link rel="stylesheet" href="<?= $base ?>View/public/css/fontawesome.css">
+  <link rel="stylesheet" href="<?= $base ?>View/public/css/templatemo-plot-listing.css">
+  <link rel="stylesheet" href="<?= $base ?>View/public/css/app.css">
+  <link rel="stylesheet" href="<?= $base ?>View/public/css/theme-graph.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -30,22 +30,22 @@ $base = '';
 <header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
   <div class="container">
     <nav class="main-nav" style="display:flex;align-items:center;justify-content:space-between;min-height:80px">
-      <a href="<?= $base ?>index.php?role=<?= $role ?>&action=dashboard" style="font-size:22px;font-weight:800;color:#fff;letter-spacing:1px">
+      <a href="<?= $base ?>Controller/index.php?role=<?= $role ?>&action=dashboard" style="font-size:22px;font-weight:800;color:#fff;letter-spacing:1px">
         <i class="fa fa-graduation-cap" style="margin-right:8px;color:#8d99af"></i>FormationPHP
       </a>
       <ul class="nav" style="margin-top:0;align-items:center;display:flex">
         <?php if ($role === 'manager'): ?>
-        <li><a href="<?= $base ?>index.php?role=manager&action=dashboard" <?= ($action??'')==='dashboard'?'class="active"':'' ?>>Dashboard</a></li>
-        <li><a href="<?= $base ?>index.php?role=manager&action=formations" <?= ($action??'')==='formations'?'class="active"':'' ?>>Formations</a></li>
+        <li><a href="<?= $base ?>Controller/index.php?role=manager&action=dashboard" <?= ($action??'')==='dashboard'?'class="active"':'' ?>>Dashboard</a></li>
+        <li><a href="<?= $base ?>Controller/index.php?role=manager&action=formations" <?= ($action??'')==='formations'?'class="active"':'' ?>>Formations</a></li>
         <li>
           <div class="main-white-button">
-            <a href="<?= $base ?>index.php?role=manager&action=formation_add"><i class="fa fa-plus"></i> Nouvelle</a>
+            <a href="<?= $base ?>Controller/index.php?role=manager&action=formation_add"><i class="fa fa-plus"></i> Nouvelle</a>
           </div>
         </li>
         <?php else: ?>
-        <li><a href="<?= $base ?>index.php?role=client&action=dashboard" <?= ($action??'')==='dashboard'?'class="active"':'' ?>>Dashboard</a></li>
-        <li><a href="<?= $base ?>index.php?role=client&action=formations" <?= ($action??'')==='formations'?'class="active"':'' ?>>Formations</a></li>
-        <li><a href="<?= $base ?>index.php?role=client&action=taches" <?= ($action??'')==='taches'?'class="active"':'' ?>>Mes Taches</a></li>
+        <li><a href="<?= $base ?>Controller/index.php?role=client&action=dashboard" <?= ($action??'')==='dashboard'?'class="active"':'' ?>>Dashboard</a></li>
+        <li><a href="<?= $base ?>Controller/index.php?role=client&action=formations" <?= ($action??'')==='formations'?'class="active"':'' ?>>Formations</a></li>
+        <li><a href="<?= $base ?>Controller/index.php?role=client&action=taches" <?= ($action??'')==='taches'?'class="active"':'' ?>>Mes Taches</a></li>
         <?php endif; ?>
         <li style="padding-left:20px">
           <span style="color:rgba(255,255,255,.6);font-size:13px">
@@ -55,7 +55,7 @@ $base = '';
           </span>
         </li>
         <li>
-          <a href="<?= $base ?>index.php?logout=1" style="color:rgba(255,255,255,.5);font-size:13px">
+          <a href="<?= $base ?>Controller/index.php?action=logout" style="color:rgba(255,255,255,.5);font-size:13px">
             <i class="fa fa-sign-out"></i> Quitter
           </a>
         </li>

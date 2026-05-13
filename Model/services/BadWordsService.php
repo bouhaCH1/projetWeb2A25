@@ -3,7 +3,7 @@ class BadWordsService {
     private array $cfg;
 
     public function __construct() {
-        $this->cfg = require __DIR__ . '/../../config/api.php';
+        $this->cfg = require __DIR__ . '/../../Model/config/api.php';
     }
 
     // Retourne le texte avec les mots inappropries remplaces par ***

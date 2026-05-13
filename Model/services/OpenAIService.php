@@ -6,7 +6,7 @@ class OpenAIService {
     private string $endpoint = 'https://api.openai.com/v1/chat/completions';
 
     public function __construct(?string $apiKey = null, string $model = 'gpt-4o-mini') {
-        $cfg          = is_file(__DIR__ . '/../../config/api.php') ? require __DIR__ . '/../../config/api.php' : [];
+        $cfg          = is_file(__DIR__ . '/../../Model/config/api.php') ? require __DIR__ . '/../../Model/config/api.php' : [];
         $this->apiKey = $apiKey ?? ($cfg['openai']['key'] ?? (getenv('OPENAI_API_KEY') ?: ''));
         $this->model  = $model;
     }

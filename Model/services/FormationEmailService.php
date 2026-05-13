@@ -1,9 +1,9 @@
 <?php
-class EmailService {
+class FormationEmailService {
     private array $cfg;
 
     public function __construct() {
-        $this->cfg = require __DIR__ . '/../../config/email.php';
+        $this->cfg = require __DIR__ . '/../../Model/config/email.php';
     }
 
     public function sendFormationCreee(array $formation, string $toEmail, string $toName): bool {

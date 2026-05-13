@@ -1,25 +1,38 @@
 <?php
 $pageTitle = isset($eventData) ? 'Modifier Événement' : 'Nouvel Événement';
-require_once __DIR__ . '/../layout/dashboard_header.php';
+$isEmployer = ($_SESSION['user_role'] ?? '') === 'employer';
+if ($isEmployer) {
+    require_once __DIR__ . '/../layout/pl_dashboard_header.php';
+} else {
+    require_once __DIR__ . '/../layout/dashboard_header.php';
+}
+
+$themeColor  = $isEmployer ? '#00ffcc' : '#eb1616';
+$btnText     = $isEmployer ? '#191c24' : '#fff';
+$boxStyle    = $isEmployer ? 'background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);' : 'background: #191c24;';
+$inputBg     = $isEmployer ? 'rgba(0,0,0,0.2)' : '#191c24';
+$focusShadow = $isEmployer ? 'rgba(0,255,204,.15)' : 'rgba(235,22,22,.15)';
 ?>
 
 <style>
-    .error-feedback { color: #eb1616; font-size: 12px; margin-top: 4px; display: none; font-weight: 500; }
-    .form-floating label { color: #aaa; }
-    .form-floating .form-control { background: #191c24; border: 1px solid #333; color: #fff; }
-    .form-floating .form-control:focus { background: #191c24; border-color: #eb1616; color: #fff; box-shadow: 0 0 0 0.2rem rgba(235,22,22,.15); }
+    .error-feedback { color: <?= $themeColor ?>; font-size: 12px; margin-top: 4px; display: none; font-weight: 500; }
+    .form-floating label { color: #ccc; }
+    .form-floating > label::after { background-color: transparent !important; }
+    .form-floating .form-control { background: <?= $inputBg ?>; border: 1px solid rgba(255,255,255,0.1); color: #fff; }
+    .form-floating .form-control:focus { background: <?= $inputBg ?>; border-color: <?= $themeColor ?>; color: #fff; box-shadow: 0 0 0 0.2rem <?= $focusShadow ?>; }
+    option { background-color: #191c24; color: #fff; }
 </style>
 
 <div class="container-fluid pt-4 px-4">
     <div class="row justify-content-center">
         <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
-            <div class="bg-secondary rounded p-4 p-sm-5 my-4 shadow-lg">
+            <div class="<?= $isEmployer ? 'p-4 p-sm-5 my-4' : 'bg-secondary rounded p-4 p-sm-5 my-4 shadow-lg' ?>" style="<?= $isEmployer ? $boxStyle : '' ?>">
                 <!-- Header -->
                 <div class="d-flex align-items-center mb-4">
-                    <a href="/workwave/Controller/index.php?action=admin_events" class="btn btn-sm btn-outline-light me-3">
+                    <a href="<?= htmlspecialchars($returnUrl ?? '/workwave/Controller/index.php?action=user_events') ?>" class="btn btn-sm btn-outline-light me-3">
                         <i class="fa fa-arrow-left"></i>
                     </a>
-                    <h3 class="mb-0 text-primary">
+                    <h3 class="mb-0" style="color: <?= $themeColor ?>;">
                         <i class="fa fa-calendar-alt me-2"></i>
                         <?= isset($eventData) ? 'Modifier' : 'Nouvel' ?> Événement
                     </h3>
@@ -66,10 +79,10 @@ require_once __DIR__ . '/../layout/dashboard_header.php';
                         <div id="err-desc" class="error-feedback">La description doit faire au moins 10 caractères.</div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary py-3 w-100 mb-3 shadow" style="background:#eb1616;border:none;">
+                    <button type="submit" class="btn py-3 w-100 mb-3 shadow" style="background:<?= $themeColor ?>;color:<?= $btnText ?>;border:none;font-weight:bold;">
                         <i class="fa fa-save me-2"></i>Enregistrer l'Événement
                     </button>
-                    <a href="/workwave/Controller/index.php?action=admin_events" class="btn btn-outline-light w-100">
+                    <a href="<?= htmlspecialchars($returnUrl ?? '/workwave/Controller/index.php?action=user_events') ?>" class="btn btn-outline-light w-100">
                         <i class="fa fa-times me-2"></i>Annuler
                     </a>
                 </form>
@@ -107,4 +120,10 @@ document.getElementById('eventForm').addEventListener('submit', function(e) {
 });
 </script>
 
-<?php require_once __DIR__ . '/../layout/dashboard_footer.php'; ?>
+<?php 
+if (($_SESSION['user_role'] ?? '') === 'employer') {
+    require_once __DIR__ . '/../layout/pl_dashboard_footer.php';
+} else {
+    require_once __DIR__ . '/../layout/dashboard_footer.php';
+}
+?>

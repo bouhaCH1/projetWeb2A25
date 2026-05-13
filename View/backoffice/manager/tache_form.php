@@ -5,9 +5,9 @@ require __DIR__ . '/../layout/header.php';
 ?>
 
 <div class="app-breadcrumb">
-  <a href="index.php?role=manager&action=formations"><i class="fa fa-book"></i> Formations</a>
+  <a href="Controller/index.php?role=manager&action=formations"><i class="fa fa-book"></i> Formations</a>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
-  <a href="index.php?role=manager&action=taches&formation_id=<?= $formationId ?>"><?= htmlspecialchars($formation['titre'] ?? '') ?></a>
+  <a href="Controller/index.php?role=manager&action=taches&formation_id=<?= $formationId ?>"><?= htmlspecialchars($formation['titre'] ?? '') ?></a>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
   <span><?= ($edit ?? false) ? 'Modifier la tache' : 'Nouvelle tache' ?></span>
 </div>
@@ -18,7 +18,7 @@ require __DIR__ . '/../layout/header.php';
   </h3>
 
   <form method="POST" enctype="multipart/form-data"
-        action="index.php?role=manager&action=<?= ($edit??false) ? 'tache_edit&id='.($tache_id??0) : 'tache_add&formation_id='.$formationId ?>">
+        action="Controller/index.php?role=manager&action=<?= ($edit??false) ? 'tache_edit&id='.($tache_id??0) : 'tache_add&formation_id='.$formationId ?>">
     <div class="form-row-2">
       <div class="form-field">
         <label>Titre *</label>
@@ -81,7 +81,7 @@ require __DIR__ . '/../layout/header.php';
         <i class="fa fa-<?= ($edit??false)?'save':'plus' ?>"></i>
         <?= ($edit ?? false) ? 'Enregistrer' : 'Creer la tache' ?>
       </button>
-      <a href="index.php?role=manager&action=taches&formation_id=<?= $formationId ?>" class="btn-app btn-app-gray">
+      <a href="Controller/index.php?role=manager&action=taches&formation_id=<?= $formationId ?>" class="btn-app btn-app-gray">
         <i class="fa fa-times"></i> Annuler
       </a>
     </div>

@@ -3,7 +3,7 @@ require_once __DIR__ . '/../Model/repositories/FormationRepository.php';
 require_once __DIR__ . '/../Model/repositories/TacheRepository.php';
 require_once __DIR__ . '/../Model/repositories/ParticipantRepository.php';
 require_once __DIR__ . '/../Model/repositories/CommentaireRepository.php';
-require_once __DIR__ . '/../Model/services/EmailService.php';
+require_once __DIR__ . '/../Model/services/FormationEmailService.php';
 require_once __DIR__ . '/../Model/services/TranslationService.php';
 require_once __DIR__ . '/../Model/services/WeatherService.php';
 require_once __DIR__ . '/../Model/services/Paginator.php';
@@ -16,7 +16,7 @@ class ManagerController {
     private TacheRepository $tm;
     private ParticipantRepository $pm;
     private CommentaireRepository $cm;
-    private EmailService $mailer;
+    private FormationEmailService $mailer;
     private TranslationService $translator;
     private int $uid;
 
@@ -25,7 +25,7 @@ class ManagerController {
         $this->tm         = new TacheRepository();
         $this->pm         = new ParticipantRepository();
         $this->cm         = new CommentaireRepository();
-        $this->mailer     = new EmailService();
+        $this->mailer     = new FormationEmailService();
         $this->translator = new TranslationService();
         $this->uid        = (int)$_SESSION['user_id'];
     }
@@ -88,7 +88,7 @@ class ManagerController {
             $lieu   = trim($_POST['lieu']   ?? '');
             if (!$titre) { echo json_encode(['error'=>'Titre requis']); exit; }
 
-            $cfg      = is_file(__DIR__ . '/../config/api.php') ? require __DIR__ . '/../config/api.php' : [];
+            $cfg      = is_file(__DIR__ . '/../Model/config/api.php') ? require __DIR__ . '/../Model/config/api.php' : [];
             $pref     = $cfg['ai']['provider'] ?? 'auto';
             $gemini   = new GeminiService();
             $openai   = new OpenAIService();

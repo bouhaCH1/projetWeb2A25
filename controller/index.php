@@ -4,6 +4,10 @@ session_start();
 
 require_once __DIR__ . '/UserController.php';
 require_once __DIR__ . '/missionController.php';
+require_once __DIR__ . '/ManagerController.php';
+if (file_exists(__DIR__ . '/ClientController.php')) {
+    require_once __DIR__ . '/ClientController.php';
+}
 
 $action = $_GET['action'] ?? 'home';
 $controller = new UserController();
@@ -453,6 +457,57 @@ switch ($action) {
     case 'front_mes_resultats':
         $missionController = new MissionController();
         $missionController->frontMesResultats();
+        break;
+
+    // --- Formations Module Routes ---
+    case 'formation':
+    case 'formations':
+    case 'dashboard':
+    case 'formation_add':
+    case 'formation_edit':
+    case 'formation_delete':
+    case 'participants':
+    case 'participant_add':
+    case 'participant_remove':
+    case 'taches':
+    case 'tache_add':
+    case 'tache_edit':
+    case 'tache_delete':
+    case 'comment_add':
+    case 'comment_delete':
+    case 'translate':
+    case 'ai_describe':
+    case 'quitter':
+    case 'participer':
+    case 'tache_statut':
+        // Bridge WorkWave session to Formation session
+        if (isset($_SESSION['user_role']) && !empty($_SESSION['user_id'])) {
+            $r = ($_SESSION['user_role'] === 'employer' || $_SESSION['user_role'] === 'admin') ? 'manager' : 'client';
+            $_SESSION['role'] = $r;
+            
+            // Sync user to formation database to prevent foreign key errors
+            try {
+                require_once __DIR__ . '/../Model/config/database.php';
+                $pdo = getDB();
+                $table = ($r === 'manager') ? 'managers' : 'clients';
+                $uid = (int)$_SESSION['user_id'];
+                $stmt = $pdo->prepare("SELECT id FROM {$table} WHERE id = ?");
+                $stmt->execute([$uid]);
+                if (!$stmt->fetch()) {
+                    $nom = $_SESSION['user_last_name'] ?? 'User';
+                    $prenom = $_SESSION['user_first_name'] ?? 'Test';
+                    $email = $_SESSION['user_email'] ?? ($uid . '@workwave.test');
+                    $insert = $pdo->prepare("INSERT INTO {$table} (id, nom, prenom, email, password) VALUES (?, ?, ?, ?, 'sync')");
+                    $insert->execute([$uid, $nom, $prenom, $email]);
+                }
+            } catch (Exception $e) {}
+            
+            if ($r === 'manager') {
+                (new ManagerController())->handle($action);
+            } else if (class_exists('ClientController')) {
+                (new ClientController())->handle($action);
+            }
+        }
         break;
 
     case 'home':

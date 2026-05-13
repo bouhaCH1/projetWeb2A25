@@ -9,7 +9,7 @@ class GeminiService {
     private bool $skipSslVerify;
 
     public function __construct(?string $apiKey = null, ?string $model = null) {
-        $cfg = is_file(__DIR__ . '/../../config/api.php') ? require __DIR__ . '/../../config/api.php' : [];
+        $cfg = is_file(__DIR__ . '/../../Model/config/api.php') ? require __DIR__ . '/../../Model/config/api.php' : [];
         if ($apiKey !== null && $apiKey !== '') {
             $this->apiKey = $apiKey;
         } else {

@@ -5,7 +5,7 @@ require __DIR__ . '/../layout/header.php';
 ?>
 
 <div class="app-breadcrumb">
-  <a href="index.php?role=manager&action=formations"><i class="fa fa-book"></i> Formations</a>
+  <a href="Controller/index.php?role=manager&action=formations"><i class="fa fa-book"></i> Formations</a>
   <span class="sep"><i class="fa fa-angle-right"></i></span>
   <span><?= ($edit ?? false) ? 'Modifier' : 'Nouvelle formation' ?></span>
 </div>
@@ -16,7 +16,7 @@ require __DIR__ . '/../layout/header.php';
   </h3>
 
   <form method="POST" enctype="multipart/form-data"
-        action="index.php?role=manager&action=<?= ($edit??false) ? 'formation_edit&id='.($formation_id??0) : 'formation_add' ?>">
+        action="Controller/index.php?role=manager&action=<?= ($edit??false) ? 'formation_edit&id='.($formation_id??0) : 'formation_add' ?>">
 
     <div class="form-row-2">
       <div class="form-field">
@@ -41,7 +41,7 @@ require __DIR__ . '/../layout/header.php';
 
     <script>
     (function () {
-      var aiUrl = <?= json_encode(($base ?? '') . 'index.php?role=manager&action=ai_describe', JSON_UNESCAPED_UNICODE) ?>;
+      var aiUrl = <?= json_encode(($base ?? '') . 'Controller/index.php?role=manager&action=ai_describe', JSON_UNESCAPED_UNICODE) ?>;
       document.getElementById('aiBtn').addEventListener('click', function () {
         var titre  = document.querySelector('input[name="titre"]').value.trim();
         var niveau = document.querySelector('select[name="niveau"]').value;
@@ -143,7 +143,7 @@ require __DIR__ . '/../layout/header.php';
         <i class="fa fa-<?= ($edit??false)?'save':'plus' ?>"></i>
         <?= ($edit ?? false) ? 'Enregistrer' : 'Creer la formation' ?>
       </button>
-      <a href="index.php?role=manager&action=formations" class="btn-app btn-app-gray">
+      <a href="Controller/index.php?role=manager&action=formations" class="btn-app btn-app-gray">
         <i class="fa fa-times"></i> Annuler
       </a>
     </div>
