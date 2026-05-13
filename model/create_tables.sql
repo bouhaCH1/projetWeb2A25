@@ -97,3 +97,5 @@ CREATE TABLE IF NOT EXISTS resource (
     type VARCHAR(100) NOT NULL,
     quantity INT NOT NULL DEFAULT 0
 );
+
+
