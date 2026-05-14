@@ -1,0 +1,1481 @@
+=== LISTE DES UTILISATEURS DU PROJET WORKWAVE ===
+
+ID : 1
+Nom complet : Administrateur
+Role : ADMIN
+Email : admin
+Nom d'utilisateur : admin
+Mot de passe : Admin@2026!
+--------------------------------------------------
+ID : 2
+Nom complet : Medina FinTech Studio
+Role : ENTREPRISE
+Email : company001@workwave.local
+Nom d'utilisateur : company001@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 3
+Nom complet : Carthage HealthTech Studio
+Role : ENTREPRISE
+Email : company002@workwave.local
+Nom d'utilisateur : company002@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 4
+Nom complet : Byte E-commerce Studio
+Role : ENTREPRISE
+Email : company003@workwave.local
+Nom d'utilisateur : company003@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 5
+Nom complet : Olive Education Studio
+Role : ENTREPRISE
+Email : company004@workwave.local
+Nom d'utilisateur : company004@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 6
+Nom complet : Atlas Marketing Studio
+Role : ENTREPRISE
+Email : company005@workwave.local
+Nom d'utilisateur : company005@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 7
+Nom complet : Blue Cybersecurity Studio
+Role : ENTREPRISE
+Email : company006@workwave.local
+Nom d'utilisateur : company006@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 8
+Nom complet : Spark Design Studio
+Role : ENTREPRISE
+Email : company007@workwave.local
+Nom d'utilisateur : company007@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 9
+Nom complet : Nova Software Studio
+Role : ENTREPRISE
+Email : company008@workwave.local
+Nom d'utilisateur : company008@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 10
+Nom complet : Dar FinTech Studio
+Role : ENTREPRISE
+Email : company009@workwave.local
+Nom d'utilisateur : company009@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 11
+Nom complet : Vertex HealthTech Studio
+Role : ENTREPRISE
+Email : company010@workwave.local
+Nom d'utilisateur : company010@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 12
+Nom complet : Wave E-commerce Studio
+Role : ENTREPRISE
+Email : company011@workwave.local
+Nom d'utilisateur : company011@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 13
+Nom complet : Smart Education Studio
+Role : ENTREPRISE
+Email : company012@workwave.local
+Nom d'utilisateur : company012@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 14
+Nom complet : Cloud Marketing Studio
+Role : ENTREPRISE
+Email : company013@workwave.local
+Nom d'utilisateur : company013@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 15
+Nom complet : Pixel Cybersecurity Studio
+Role : ENTREPRISE
+Email : company014@workwave.local
+Nom d'utilisateur : company014@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 16
+Nom complet : Trust Design Studio
+Role : ENTREPRISE
+Email : company015@workwave.local
+Nom d'utilisateur : company015@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 17
+Nom complet : Nexa Software Studio
+Role : ENTREPRISE
+Email : company016@workwave.local
+Nom d'utilisateur : company016@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 18
+Nom complet : Medina FinTech Studio
+Role : ENTREPRISE
+Email : company017@workwave.local
+Nom d'utilisateur : company017@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 19
+Nom complet : Carthage HealthTech Studio
+Role : ENTREPRISE
+Email : company018@workwave.local
+Nom d'utilisateur : company018@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 20
+Nom complet : Byte E-commerce Studio
+Role : ENTREPRISE
+Email : company019@workwave.local
+Nom d'utilisateur : company019@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 21
+Nom complet : Olive Education Studio
+Role : ENTREPRISE
+Email : company020@workwave.local
+Nom d'utilisateur : company020@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 22
+Nom complet : Atlas Marketing Studio
+Role : ENTREPRISE
+Email : company021@workwave.local
+Nom d'utilisateur : company021@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 23
+Nom complet : Blue Cybersecurity Studio
+Role : ENTREPRISE
+Email : company022@workwave.local
+Nom d'utilisateur : company022@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 24
+Nom complet : Spark Design Studio
+Role : ENTREPRISE
+Email : company023@workwave.local
+Nom d'utilisateur : company023@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 25
+Nom complet : Nova Software Studio
+Role : ENTREPRISE
+Email : company024@workwave.local
+Nom d'utilisateur : company024@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 26
+Nom complet : Dar FinTech Studio
+Role : ENTREPRISE
+Email : company025@workwave.local
+Nom d'utilisateur : company025@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 27
+Nom complet : Vertex HealthTech Studio
+Role : ENTREPRISE
+Email : company026@workwave.local
+Nom d'utilisateur : company026@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 28
+Nom complet : Wave E-commerce Studio
+Role : ENTREPRISE
+Email : company027@workwave.local
+Nom d'utilisateur : company027@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 29
+Nom complet : Smart Education Studio
+Role : ENTREPRISE
+Email : company028@workwave.local
+Nom d'utilisateur : company028@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 30
+Nom complet : Cloud Marketing Studio
+Role : ENTREPRISE
+Email : company029@workwave.local
+Nom d'utilisateur : company029@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 31
+Nom complet : Pixel Cybersecurity Studio
+Role : ENTREPRISE
+Email : company030@workwave.local
+Nom d'utilisateur : company030@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 32
+Nom complet : Trust Design Studio
+Role : ENTREPRISE
+Email : company031@workwave.local
+Nom d'utilisateur : company031@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 33
+Nom complet : Nexa Software Studio
+Role : ENTREPRISE
+Email : company032@workwave.local
+Nom d'utilisateur : company032@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 34
+Nom complet : Medina FinTech Studio
+Role : ENTREPRISE
+Email : company033@workwave.local
+Nom d'utilisateur : company033@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 35
+Nom complet : Carthage HealthTech Studio
+Role : ENTREPRISE
+Email : company034@workwave.local
+Nom d'utilisateur : company034@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 36
+Nom complet : Byte E-commerce Studio
+Role : ENTREPRISE
+Email : company035@workwave.local
+Nom d'utilisateur : company035@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 37
+Nom complet : Olive Education Studio
+Role : ENTREPRISE
+Email : company036@workwave.local
+Nom d'utilisateur : company036@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 38
+Nom complet : Atlas Marketing Studio
+Role : ENTREPRISE
+Email : company037@workwave.local
+Nom d'utilisateur : company037@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 39
+Nom complet : Blue Cybersecurity Studio
+Role : ENTREPRISE
+Email : company038@workwave.local
+Nom d'utilisateur : company038@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 40
+Nom complet : Spark Design Studio
+Role : ENTREPRISE
+Email : company039@workwave.local
+Nom d'utilisateur : company039@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 41
+Nom complet : Nova Software Studio
+Role : ENTREPRISE
+Email : company040@workwave.local
+Nom d'utilisateur : company040@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 42
+Nom complet : Dar FinTech Studio
+Role : ENTREPRISE
+Email : company041@workwave.local
+Nom d'utilisateur : company041@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 43
+Nom complet : Vertex HealthTech Studio
+Role : ENTREPRISE
+Email : company042@workwave.local
+Nom d'utilisateur : company042@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 44
+Nom complet : Wave E-commerce Studio
+Role : ENTREPRISE
+Email : company043@workwave.local
+Nom d'utilisateur : company043@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 45
+Nom complet : Smart Education Studio
+Role : ENTREPRISE
+Email : company044@workwave.local
+Nom d'utilisateur : company044@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 46
+Nom complet : Cloud Marketing Studio
+Role : ENTREPRISE
+Email : company045@workwave.local
+Nom d'utilisateur : company045@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 47
+Nom complet : Pixel Cybersecurity Studio
+Role : ENTREPRISE
+Email : company046@workwave.local
+Nom d'utilisateur : company046@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 48
+Nom complet : Trust Design Studio
+Role : ENTREPRISE
+Email : company047@workwave.local
+Nom d'utilisateur : company047@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 49
+Nom complet : Nexa Software Studio
+Role : ENTREPRISE
+Email : company048@workwave.local
+Nom d'utilisateur : company048@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 50
+Nom complet : Medina FinTech Studio
+Role : ENTREPRISE
+Email : company049@workwave.local
+Nom d'utilisateur : company049@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 51
+Nom complet : Carthage HealthTech Studio
+Role : ENTREPRISE
+Email : company050@workwave.local
+Nom d'utilisateur : company050@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 52
+Nom complet : Byte E-commerce Studio
+Role : ENTREPRISE
+Email : company051@workwave.local
+Nom d'utilisateur : company051@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 53
+Nom complet : Olive Education Studio
+Role : ENTREPRISE
+Email : company052@workwave.local
+Nom d'utilisateur : company052@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 54
+Nom complet : Atlas Marketing Studio
+Role : ENTREPRISE
+Email : company053@workwave.local
+Nom d'utilisateur : company053@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 55
+Nom complet : Blue Cybersecurity Studio
+Role : ENTREPRISE
+Email : company054@workwave.local
+Nom d'utilisateur : company054@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 56
+Nom complet : Spark Design Studio
+Role : ENTREPRISE
+Email : company055@workwave.local
+Nom d'utilisateur : company055@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 57
+Nom complet : Nova Software Studio
+Role : ENTREPRISE
+Email : company056@workwave.local
+Nom d'utilisateur : company056@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 58
+Nom complet : Dar FinTech Studio
+Role : ENTREPRISE
+Email : company057@workwave.local
+Nom d'utilisateur : company057@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 59
+Nom complet : Vertex HealthTech Studio
+Role : ENTREPRISE
+Email : company058@workwave.local
+Nom d'utilisateur : company058@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 60
+Nom complet : Wave E-commerce Studio
+Role : ENTREPRISE
+Email : company059@workwave.local
+Nom d'utilisateur : company059@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 61
+Nom complet : Smart Education Studio
+Role : ENTREPRISE
+Email : company060@workwave.local
+Nom d'utilisateur : company060@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 62
+Nom complet : Cloud Marketing Studio
+Role : ENTREPRISE
+Email : company061@workwave.local
+Nom d'utilisateur : company061@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 63
+Nom complet : Pixel Cybersecurity Studio
+Role : ENTREPRISE
+Email : company062@workwave.local
+Nom d'utilisateur : company062@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 64
+Nom complet : Trust Design Studio
+Role : ENTREPRISE
+Email : company063@workwave.local
+Nom d'utilisateur : company063@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 65
+Nom complet : Nexa Software Studio
+Role : ENTREPRISE
+Email : company064@workwave.local
+Nom d'utilisateur : company064@workwave.local
+Mot de passe : Workwave@2026
+--------------------------------------------------
+ID : 66
+Nom complet : Maya Trabelsi
+Role : FREELANCER
+Email : freelancer001@workwave.local
+Nom d'utilisateur : freelancer001@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=f6a3455459c5ff5273d1c94793b8986c
+--------------------------------------------------
+ID : 67
+Nom complet : Yassine Mansour
+Role : FREELANCER
+Email : freelancer002@workwave.local
+Nom d'utilisateur : freelancer002@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=55ea10bfb23c0ba5e4ccb1625654fd01
+--------------------------------------------------
+ID : 68
+Nom complet : Nour Haddad
+Role : FREELANCER
+Email : freelancer003@workwave.local
+Nom d'utilisateur : freelancer003@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=2162adb5ac51350e4a3b050dd071076d
+--------------------------------------------------
+ID : 69
+Nom complet : Sami Chaabane
+Role : FREELANCER
+Email : freelancer004@workwave.local
+Nom d'utilisateur : freelancer004@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=28c4fcac9e31598ebacb7e127a0ec6e5
+--------------------------------------------------
+ID : 70
+Nom complet : Ines Gharbi
+Role : FREELANCER
+Email : freelancer005@workwave.local
+Nom d'utilisateur : freelancer005@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=0aa803ef26c133ce6bd6ce97f24b10a7
+--------------------------------------------------
+ID : 71
+Nom complet : Malek Jaziri
+Role : FREELANCER
+Email : freelancer006@workwave.local
+Nom d'utilisateur : freelancer006@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=c6e1d89f741f0d4177996873b9a3aabe
+--------------------------------------------------
+ID : 72
+Nom complet : Rania Mejri
+Role : FREELANCER
+Email : freelancer007@workwave.local
+Nom d'utilisateur : freelancer007@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=36877e5a57a4f97da0540a48c95d3f4c
+--------------------------------------------------
+ID : 73
+Nom complet : Omar Ayari
+Role : FREELANCER
+Email : freelancer008@workwave.local
+Nom d'utilisateur : freelancer008@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=79bf8dd4072b0a3b9884b5127fa54f44
+--------------------------------------------------
+ID : 74
+Nom complet : Lina Kacem
+Role : FREELANCER
+Email : freelancer009@workwave.local
+Nom d'utilisateur : freelancer009@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=de8fe17454c7d1dec53eb9755420d503
+--------------------------------------------------
+ID : 75
+Nom complet : Karim Mabrouk
+Role : FREELANCER
+Email : freelancer010@workwave.local
+Nom d'utilisateur : freelancer010@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=6822e736a980b3b9a4a80f9f11a3502d
+--------------------------------------------------
+ID : 76
+Nom complet : Sarra Saidi
+Role : FREELANCER
+Email : freelancer011@workwave.local
+Nom d'utilisateur : freelancer011@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=96418db7e0e9ed5fccf70e4b9e8bbc25
+--------------------------------------------------
+ID : 77
+Nom complet : Adam Ben Ali
+Role : FREELANCER
+Email : freelancer012@workwave.local
+Nom d'utilisateur : freelancer012@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=a18723c516a885a496fc6e20bad39ed1
+--------------------------------------------------
+ID : 78
+Nom complet : Yosra Trabelsi
+Role : FREELANCER
+Email : freelancer013@workwave.local
+Nom d'utilisateur : freelancer013@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=56af2b7e65878f5640f3e4be642fd662
+--------------------------------------------------
+ID : 79
+Nom complet : Mehdi Mansour
+Role : FREELANCER
+Email : freelancer014@workwave.local
+Nom d'utilisateur : freelancer014@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=ddf95240575ab8b7db836798fd0a3537
+--------------------------------------------------
+ID : 80
+Nom complet : Hiba Haddad
+Role : FREELANCER
+Email : freelancer015@workwave.local
+Nom d'utilisateur : freelancer015@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=b018322fe8f3eb274f1bdbd0a15bf166
+--------------------------------------------------
+ID : 81
+Nom complet : Amir Chaabane
+Role : FREELANCER
+Email : freelancer016@workwave.local
+Nom d'utilisateur : freelancer016@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=398f9806b0fb05edce88a5a54b048732
+--------------------------------------------------
+ID : 82
+Nom complet : Maya Gharbi
+Role : FREELANCER
+Email : freelancer017@workwave.local
+Nom d'utilisateur : freelancer017@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=a8de8b26a8c0010537d87993af1710b2
+--------------------------------------------------
+ID : 83
+Nom complet : Yassine Jaziri
+Role : FREELANCER
+Email : freelancer018@workwave.local
+Nom d'utilisateur : freelancer018@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e79bc1ef4d0d200aa4666dc40a8156fb
+--------------------------------------------------
+ID : 84
+Nom complet : Nour Mejri
+Role : FREELANCER
+Email : freelancer019@workwave.local
+Nom d'utilisateur : freelancer019@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=786d318452830c33018b789a48e2e783
+--------------------------------------------------
+ID : 85
+Nom complet : Sami Ayari
+Role : FREELANCER
+Email : freelancer020@workwave.local
+Nom d'utilisateur : freelancer020@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=063aa319dfda07e64b23afda9c21332a
+--------------------------------------------------
+ID : 86
+Nom complet : Ines Kacem
+Role : FREELANCER
+Email : freelancer021@workwave.local
+Nom d'utilisateur : freelancer021@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=f2e83aea2a7782899a02ebc1b423d932
+--------------------------------------------------
+ID : 87
+Nom complet : Malek Mabrouk
+Role : FREELANCER
+Email : freelancer022@workwave.local
+Nom d'utilisateur : freelancer022@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=83e85a59180f00ef732ad9161220ca84
+--------------------------------------------------
+ID : 88
+Nom complet : Rania Saidi
+Role : FREELANCER
+Email : freelancer023@workwave.local
+Nom d'utilisateur : freelancer023@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=dc70e9e4b96d03c76901f21954244512
+--------------------------------------------------
+ID : 89
+Nom complet : Omar Ben Ali
+Role : FREELANCER
+Email : freelancer024@workwave.local
+Nom d'utilisateur : freelancer024@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=7276fdcb1741c90cbca9c8e55b117663
+--------------------------------------------------
+ID : 90
+Nom complet : Lina Trabelsi
+Role : FREELANCER
+Email : freelancer025@workwave.local
+Nom d'utilisateur : freelancer025@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=6cc50628695d771af13b2332741ab864
+--------------------------------------------------
+ID : 91
+Nom complet : Karim Mansour
+Role : FREELANCER
+Email : freelancer026@workwave.local
+Nom d'utilisateur : freelancer026@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=bf566ee3f7bc1a06f6aef9360a4f31a9
+--------------------------------------------------
+ID : 92
+Nom complet : Sarra Haddad
+Role : FREELANCER
+Email : freelancer027@workwave.local
+Nom d'utilisateur : freelancer027@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e8e937be718581a625dc52175ed9533a
+--------------------------------------------------
+ID : 93
+Nom complet : Adam Chaabane
+Role : FREELANCER
+Email : freelancer028@workwave.local
+Nom d'utilisateur : freelancer028@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=62eb6e4c1395735d1379665553874c61
+--------------------------------------------------
+ID : 94
+Nom complet : Yosra Gharbi
+Role : FREELANCER
+Email : freelancer029@workwave.local
+Nom d'utilisateur : freelancer029@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=0360a89da9966b501c51203870c6fc40
+--------------------------------------------------
+ID : 95
+Nom complet : Mehdi Jaziri
+Role : FREELANCER
+Email : freelancer030@workwave.local
+Nom d'utilisateur : freelancer030@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=ceb96ade5baedaa0f138573079b3b1e2
+--------------------------------------------------
+ID : 96
+Nom complet : Hiba Mejri
+Role : FREELANCER
+Email : freelancer031@workwave.local
+Nom d'utilisateur : freelancer031@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=b25595516c81ab5649ed1fe9582bdb8a
+--------------------------------------------------
+ID : 97
+Nom complet : Amir Ayari
+Role : FREELANCER
+Email : freelancer032@workwave.local
+Nom d'utilisateur : freelancer032@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=d7e9e0a581590ae88a21c00b28cae2af
+--------------------------------------------------
+ID : 98
+Nom complet : Maya Kacem
+Role : FREELANCER
+Email : freelancer033@workwave.local
+Nom d'utilisateur : freelancer033@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e9c7b8141ef8f63cd7088ad89a0d318e
+--------------------------------------------------
+ID : 99
+Nom complet : Yassine Mabrouk
+Role : FREELANCER
+Email : freelancer034@workwave.local
+Nom d'utilisateur : freelancer034@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=0ab00914b582e5140ae6770f6bd37a3b
+--------------------------------------------------
+ID : 100
+Nom complet : Nour Saidi
+Role : FREELANCER
+Email : freelancer035@workwave.local
+Nom d'utilisateur : freelancer035@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=dbc069af6b9f908a4a556cfeb5b23128
+--------------------------------------------------
+ID : 101
+Nom complet : Sami Ben Ali
+Role : FREELANCER
+Email : freelancer036@workwave.local
+Nom d'utilisateur : freelancer036@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=2e8936624d0780c5d9fed460a4a2269d
+--------------------------------------------------
+ID : 102
+Nom complet : Ines Trabelsi
+Role : FREELANCER
+Email : freelancer037@workwave.local
+Nom d'utilisateur : freelancer037@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=4ef9972f068f4e6ea0932efb9455abdb
+--------------------------------------------------
+ID : 103
+Nom complet : Malek Mansour
+Role : FREELANCER
+Email : freelancer038@workwave.local
+Nom d'utilisateur : freelancer038@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=a0484eaa0b1053fd03f6eac81b694a93
+--------------------------------------------------
+ID : 104
+Nom complet : Rania Haddad
+Role : FREELANCER
+Email : freelancer039@workwave.local
+Nom d'utilisateur : freelancer039@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=f014e8268c6057878b1566220f939f9f
+--------------------------------------------------
+ID : 105
+Nom complet : Omar Chaabane
+Role : FREELANCER
+Email : freelancer040@workwave.local
+Nom d'utilisateur : freelancer040@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e576f0fb4a04e48f4726d640435b7370
+--------------------------------------------------
+ID : 106
+Nom complet : Lina Gharbi
+Role : FREELANCER
+Email : freelancer041@workwave.local
+Nom d'utilisateur : freelancer041@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=ed8570dd7de0b0ef9b2e83bc40ede391
+--------------------------------------------------
+ID : 107
+Nom complet : Karim Jaziri
+Role : FREELANCER
+Email : freelancer042@workwave.local
+Nom d'utilisateur : freelancer042@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e81c7843d035c8d6cbd83a074d5c95ee
+--------------------------------------------------
+ID : 108
+Nom complet : Sarra Mejri
+Role : FREELANCER
+Email : freelancer043@workwave.local
+Nom d'utilisateur : freelancer043@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=9a15d966ec13c015926105adbe65fd29
+--------------------------------------------------
+ID : 109
+Nom complet : Adam Ayari
+Role : FREELANCER
+Email : freelancer044@workwave.local
+Nom d'utilisateur : freelancer044@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=de8c45a37d17ace906fdc7452c5a0e5e
+--------------------------------------------------
+ID : 110
+Nom complet : Yosra Kacem
+Role : FREELANCER
+Email : freelancer045@workwave.local
+Nom d'utilisateur : freelancer045@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=cdf058ad409b426f51b4b7b21c0f7098
+--------------------------------------------------
+ID : 111
+Nom complet : Mehdi Mabrouk
+Role : FREELANCER
+Email : freelancer046@workwave.local
+Nom d'utilisateur : freelancer046@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=43e3be5955acb98ee3ee66b84de4607e
+--------------------------------------------------
+ID : 112
+Nom complet : Hiba Saidi
+Role : FREELANCER
+Email : freelancer047@workwave.local
+Nom d'utilisateur : freelancer047@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=4776b9c33d482eb240af58333aa43996
+--------------------------------------------------
+ID : 113
+Nom complet : Amir Ben Ali
+Role : FREELANCER
+Email : freelancer048@workwave.local
+Nom d'utilisateur : freelancer048@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=52ef230584db243007a20f2aacdf3862
+--------------------------------------------------
+ID : 114
+Nom complet : Maya Trabelsi
+Role : FREELANCER
+Email : freelancer049@workwave.local
+Nom d'utilisateur : freelancer049@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=c867851cfab1b7bb6e1ff1ca77acc88f
+--------------------------------------------------
+ID : 115
+Nom complet : Yassine Mansour
+Role : FREELANCER
+Email : freelancer050@workwave.local
+Nom d'utilisateur : freelancer050@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=98bc014f7169c92f2a33d9eadbb9c037
+--------------------------------------------------
+ID : 116
+Nom complet : Nour Haddad
+Role : FREELANCER
+Email : freelancer051@workwave.local
+Nom d'utilisateur : freelancer051@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e275cbf46048a2a9897abfe910d1d066
+--------------------------------------------------
+ID : 117
+Nom complet : Sami Chaabane
+Role : FREELANCER
+Email : freelancer052@workwave.local
+Nom d'utilisateur : freelancer052@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=bd593d7a6b4451bc3645899f53e2ab3e
+--------------------------------------------------
+ID : 118
+Nom complet : Ines Gharbi
+Role : FREELANCER
+Email : freelancer053@workwave.local
+Nom d'utilisateur : freelancer053@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=bcf0901c8ca3c684224d686747ccfd70
+--------------------------------------------------
+ID : 119
+Nom complet : Malek Jaziri
+Role : FREELANCER
+Email : freelancer054@workwave.local
+Nom d'utilisateur : freelancer054@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=61e1f1294b0e796b36e69c2bbe9ff5db
+--------------------------------------------------
+ID : 120
+Nom complet : Rania Mejri
+Role : FREELANCER
+Email : freelancer055@workwave.local
+Nom d'utilisateur : freelancer055@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=8aeed5910875e1819b40a353886fa6aa
+--------------------------------------------------
+ID : 121
+Nom complet : Omar Ayari
+Role : FREELANCER
+Email : freelancer056@workwave.local
+Nom d'utilisateur : freelancer056@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=085c9b0dfb9aae594d141ef652250906
+--------------------------------------------------
+ID : 122
+Nom complet : Lina Kacem
+Role : FREELANCER
+Email : freelancer057@workwave.local
+Nom d'utilisateur : freelancer057@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=77b135aecd69fa4eb4f2ee3754dd2702
+--------------------------------------------------
+ID : 123
+Nom complet : Karim Mabrouk
+Role : FREELANCER
+Email : freelancer058@workwave.local
+Nom d'utilisateur : freelancer058@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=8c838c753c0d959c27396d29ad9db953
+--------------------------------------------------
+ID : 124
+Nom complet : Sarra Saidi
+Role : FREELANCER
+Email : freelancer059@workwave.local
+Nom d'utilisateur : freelancer059@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=a14aecec501552f14c7aad07218f9439
+--------------------------------------------------
+ID : 125
+Nom complet : Adam Ben Ali
+Role : FREELANCER
+Email : freelancer060@workwave.local
+Nom d'utilisateur : freelancer060@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=cba8e537e0d3dc98324564f734b641d0
+--------------------------------------------------
+ID : 126
+Nom complet : Yosra Trabelsi
+Role : FREELANCER
+Email : freelancer061@workwave.local
+Nom d'utilisateur : freelancer061@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=6aa25d8efe2915588a0d3d195743673e
+--------------------------------------------------
+ID : 127
+Nom complet : Mehdi Mansour
+Role : FREELANCER
+Email : freelancer062@workwave.local
+Nom d'utilisateur : freelancer062@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=08692a7d5628cbf64ec1c4b6231e9d6b
+--------------------------------------------------
+ID : 128
+Nom complet : Hiba Haddad
+Role : FREELANCER
+Email : freelancer063@workwave.local
+Nom d'utilisateur : freelancer063@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=337001b037b55be17b0b30005faee13d
+--------------------------------------------------
+ID : 129
+Nom complet : Amir Chaabane
+Role : FREELANCER
+Email : freelancer064@workwave.local
+Nom d'utilisateur : freelancer064@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=4fc98fcc95385d00bb3f239a5b2e6295
+--------------------------------------------------
+ID : 130
+Nom complet : Maya Gharbi
+Role : FREELANCER
+Email : freelancer065@workwave.local
+Nom d'utilisateur : freelancer065@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=6674fb9c814b804abda914cc866431ff
+--------------------------------------------------
+ID : 131
+Nom complet : Yassine Jaziri
+Role : FREELANCER
+Email : freelancer066@workwave.local
+Nom d'utilisateur : freelancer066@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=0b670b7777ea18255dbfaa601a11ecfe
+--------------------------------------------------
+ID : 132
+Nom complet : Nour Mejri
+Role : FREELANCER
+Email : freelancer067@workwave.local
+Nom d'utilisateur : freelancer067@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=c5dc6474399a99a65680e20cd68e073a
+--------------------------------------------------
+ID : 133
+Nom complet : Sami Ayari
+Role : FREELANCER
+Email : freelancer068@workwave.local
+Nom d'utilisateur : freelancer068@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=c7a159444252cbc61b4e606ef304c8e1
+--------------------------------------------------
+ID : 134
+Nom complet : Ines Kacem
+Role : FREELANCER
+Email : freelancer069@workwave.local
+Nom d'utilisateur : freelancer069@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=8d3e2389f6c386aafbcf9d6d46980cf4
+--------------------------------------------------
+ID : 135
+Nom complet : Malek Mabrouk
+Role : FREELANCER
+Email : freelancer070@workwave.local
+Nom d'utilisateur : freelancer070@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=70cb71d44e20095d31038b5e23205a53
+--------------------------------------------------
+ID : 136
+Nom complet : Rania Saidi
+Role : FREELANCER
+Email : freelancer071@workwave.local
+Nom d'utilisateur : freelancer071@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=b2c6ab464d80266d2d73fc2f2033872f
+--------------------------------------------------
+ID : 137
+Nom complet : Omar Ben Ali
+Role : FREELANCER
+Email : freelancer072@workwave.local
+Nom d'utilisateur : freelancer072@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=291c3854a2ee29d069cdd534555b203e
+--------------------------------------------------
+ID : 138
+Nom complet : Lina Trabelsi
+Role : FREELANCER
+Email : freelancer073@workwave.local
+Nom d'utilisateur : freelancer073@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=de07dbf6c96fcd23890391c537d323e3
+--------------------------------------------------
+ID : 139
+Nom complet : Karim Mansour
+Role : FREELANCER
+Email : freelancer074@workwave.local
+Nom d'utilisateur : freelancer074@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=1dbf9adc331d5e9af1f27226f6a46f7d
+--------------------------------------------------
+ID : 140
+Nom complet : Sarra Haddad
+Role : FREELANCER
+Email : freelancer075@workwave.local
+Nom d'utilisateur : freelancer075@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=246a3515daec5f214def0ef04ee4a360
+--------------------------------------------------
+ID : 141
+Nom complet : Adam Chaabane
+Role : FREELANCER
+Email : freelancer076@workwave.local
+Nom d'utilisateur : freelancer076@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=b902399040ac4c1a071288bd95ebfec2
+--------------------------------------------------
+ID : 142
+Nom complet : Yosra Gharbi
+Role : FREELANCER
+Email : freelancer077@workwave.local
+Nom d'utilisateur : freelancer077@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=91661a3d004c3ed014bb4ca2479af9d9
+--------------------------------------------------
+ID : 143
+Nom complet : Mehdi Jaziri
+Role : FREELANCER
+Email : freelancer078@workwave.local
+Nom d'utilisateur : freelancer078@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e7faec1272bf40a1863fcdc3fb7d3fde
+--------------------------------------------------
+ID : 144
+Nom complet : Hiba Mejri
+Role : FREELANCER
+Email : freelancer079@workwave.local
+Nom d'utilisateur : freelancer079@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=cbb3035d98bdca8e2af853d57d0e0c5b
+--------------------------------------------------
+ID : 145
+Nom complet : Amir Ayari
+Role : FREELANCER
+Email : freelancer080@workwave.local
+Nom d'utilisateur : freelancer080@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=832eb0f9ed77f25d29c4921fd32cd254
+--------------------------------------------------
+ID : 146
+Nom complet : Maya Kacem
+Role : FREELANCER
+Email : freelancer081@workwave.local
+Nom d'utilisateur : freelancer081@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=54772f84172b2a816543c7309d0142ac
+--------------------------------------------------
+ID : 147
+Nom complet : Yassine Mabrouk
+Role : FREELANCER
+Email : freelancer082@workwave.local
+Nom d'utilisateur : freelancer082@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=84a2f4087928becfe6fa7f250fc22d82
+--------------------------------------------------
+ID : 148
+Nom complet : Nour Saidi
+Role : FREELANCER
+Email : freelancer083@workwave.local
+Nom d'utilisateur : freelancer083@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=9d933bbadc5c525624a3015a900182aa
+--------------------------------------------------
+ID : 149
+Nom complet : Sami Ben Ali
+Role : FREELANCER
+Email : freelancer084@workwave.local
+Nom d'utilisateur : freelancer084@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=b3d04fbb4c9587699acc745b87a14d67
+--------------------------------------------------
+ID : 150
+Nom complet : Ines Trabelsi
+Role : FREELANCER
+Email : freelancer085@workwave.local
+Nom d'utilisateur : freelancer085@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=2ba7180a95ba713c333dafe0a5bbbd74
+--------------------------------------------------
+ID : 151
+Nom complet : Malek Mansour
+Role : FREELANCER
+Email : freelancer086@workwave.local
+Nom d'utilisateur : freelancer086@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=24e75a0e15f77d34eed39d83fc7107d1
+--------------------------------------------------
+ID : 152
+Nom complet : Rania Haddad
+Role : FREELANCER
+Email : freelancer087@workwave.local
+Nom d'utilisateur : freelancer087@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=817c70f1d6082c76526e9b19da0a2ece
+--------------------------------------------------
+ID : 153
+Nom complet : Omar Chaabane
+Role : FREELANCER
+Email : freelancer088@workwave.local
+Nom d'utilisateur : freelancer088@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=8c1e876a00d97e50507abf4a99f635a1
+--------------------------------------------------
+ID : 154
+Nom complet : Lina Gharbi
+Role : FREELANCER
+Email : freelancer089@workwave.local
+Nom d'utilisateur : freelancer089@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=85c3e143658b2fb72fe5df8e78bea249
+--------------------------------------------------
+ID : 155
+Nom complet : Karim Jaziri
+Role : FREELANCER
+Email : freelancer090@workwave.local
+Nom d'utilisateur : freelancer090@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=53c5038b70d57a4a90687683b3686dc4
+--------------------------------------------------
+ID : 156
+Nom complet : Sarra Mejri
+Role : FREELANCER
+Email : freelancer091@workwave.local
+Nom d'utilisateur : freelancer091@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=c8990dd9bdd2a7716999903ab2c1f8d2
+--------------------------------------------------
+ID : 157
+Nom complet : Adam Ayari
+Role : FREELANCER
+Email : freelancer092@workwave.local
+Nom d'utilisateur : freelancer092@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=242c6fbe9e252ec0b94614644fcb9351
+--------------------------------------------------
+ID : 158
+Nom complet : Yosra Kacem
+Role : FREELANCER
+Email : freelancer093@workwave.local
+Nom d'utilisateur : freelancer093@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=82ddaacb675c19b339fbd9e599bc2131
+--------------------------------------------------
+ID : 159
+Nom complet : Mehdi Mabrouk
+Role : FREELANCER
+Email : freelancer094@workwave.local
+Nom d'utilisateur : freelancer094@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e343ae7b75756d737aa710cce4f74214
+--------------------------------------------------
+ID : 160
+Nom complet : Hiba Saidi
+Role : FREELANCER
+Email : freelancer095@workwave.local
+Nom d'utilisateur : freelancer095@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=601d1e92fceb3735962c31d2160bfd5a
+--------------------------------------------------
+ID : 161
+Nom complet : Amir Ben Ali
+Role : FREELANCER
+Email : freelancer096@workwave.local
+Nom d'utilisateur : freelancer096@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=113db40a3225ec01b0d9ed11743dd4d4
+--------------------------------------------------
+ID : 162
+Nom complet : Maya Trabelsi
+Role : FREELANCER
+Email : freelancer097@workwave.local
+Nom d'utilisateur : freelancer097@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=397f40c8c91e9a46fcdc9ab6dddc95a5
+--------------------------------------------------
+ID : 163
+Nom complet : Yassine Mansour
+Role : FREELANCER
+Email : freelancer098@workwave.local
+Nom d'utilisateur : freelancer098@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=8710248a514fcb337185b5a0c3fba652
+--------------------------------------------------
+ID : 164
+Nom complet : Nour Haddad
+Role : FREELANCER
+Email : freelancer099@workwave.local
+Nom d'utilisateur : freelancer099@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=f15dc711728e630445322a6b5fcf5307
+--------------------------------------------------
+ID : 165
+Nom complet : Sami Chaabane
+Role : FREELANCER
+Email : freelancer100@workwave.local
+Nom d'utilisateur : freelancer100@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e59f56965e0a604858f292cb1d3db3be
+--------------------------------------------------
+ID : 166
+Nom complet : Ines Gharbi
+Role : FREELANCER
+Email : freelancer101@workwave.local
+Nom d'utilisateur : freelancer101@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=4ec336e680169244e1c9dbcb9f258cf3
+--------------------------------------------------
+ID : 167
+Nom complet : Malek Jaziri
+Role : FREELANCER
+Email : freelancer102@workwave.local
+Nom d'utilisateur : freelancer102@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=366625e1709d48def39ac092f385315b
+--------------------------------------------------
+ID : 168
+Nom complet : Rania Mejri
+Role : FREELANCER
+Email : freelancer103@workwave.local
+Nom d'utilisateur : freelancer103@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=defbd66367dc8c08bbf49d79bddf082f
+--------------------------------------------------
+ID : 169
+Nom complet : Omar Ayari
+Role : FREELANCER
+Email : freelancer104@workwave.local
+Nom d'utilisateur : freelancer104@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=283c5aa2f8fa7c1ca2524927847711a1
+--------------------------------------------------
+ID : 170
+Nom complet : Lina Kacem
+Role : FREELANCER
+Email : freelancer105@workwave.local
+Nom d'utilisateur : freelancer105@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=2d26cd07a9e5b31815ed9e61ea499e76
+--------------------------------------------------
+ID : 171
+Nom complet : Karim Mabrouk
+Role : FREELANCER
+Email : freelancer106@workwave.local
+Nom d'utilisateur : freelancer106@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=edd0376d5989e194ae36a1a57ac1f933
+--------------------------------------------------
+ID : 172
+Nom complet : Sarra Saidi
+Role : FREELANCER
+Email : freelancer107@workwave.local
+Nom d'utilisateur : freelancer107@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=35adbadb6e7537eafea0a01cfeab2bc0
+--------------------------------------------------
+ID : 173
+Nom complet : Adam Ben Ali
+Role : FREELANCER
+Email : freelancer108@workwave.local
+Nom d'utilisateur : freelancer108@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=d325274ed4786292853cda2b35a2d30d
+--------------------------------------------------
+ID : 174
+Nom complet : Yosra Trabelsi
+Role : FREELANCER
+Email : freelancer109@workwave.local
+Nom d'utilisateur : freelancer109@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=4669b1d863657673f3f52ce67c37ece9
+--------------------------------------------------
+ID : 175
+Nom complet : Mehdi Mansour
+Role : FREELANCER
+Email : freelancer110@workwave.local
+Nom d'utilisateur : freelancer110@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e6d87cb121a6ec1046f58fd81b582aa4
+--------------------------------------------------
+ID : 176
+Nom complet : Hiba Haddad
+Role : FREELANCER
+Email : freelancer111@workwave.local
+Nom d'utilisateur : freelancer111@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=0e286f3bf8c8785ee222df0bafa5363d
+--------------------------------------------------
+ID : 177
+Nom complet : Amir Chaabane
+Role : FREELANCER
+Email : freelancer112@workwave.local
+Nom d'utilisateur : freelancer112@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=6601b3a0db0f875cf039de50e30ffa44
+--------------------------------------------------
+ID : 178
+Nom complet : Maya Gharbi
+Role : FREELANCER
+Email : freelancer113@workwave.local
+Nom d'utilisateur : freelancer113@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=3dcf41e0a4904cbae36a148cd912a66b
+--------------------------------------------------
+ID : 179
+Nom complet : Yassine Jaziri
+Role : FREELANCER
+Email : freelancer114@workwave.local
+Nom d'utilisateur : freelancer114@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=79bb124bea402c26049ac8e3f5b73178
+--------------------------------------------------
+ID : 180
+Nom complet : Nour Mejri
+Role : FREELANCER
+Email : freelancer115@workwave.local
+Nom d'utilisateur : freelancer115@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=9d4c56029f6281263d198b9d43b9611c
+--------------------------------------------------
+ID : 181
+Nom complet : Sami Ayari
+Role : FREELANCER
+Email : freelancer116@workwave.local
+Nom d'utilisateur : freelancer116@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e86e8d47e9e57f85aa6c4fe7a5c7bf9c
+--------------------------------------------------
+ID : 182
+Nom complet : Ines Kacem
+Role : FREELANCER
+Email : freelancer117@workwave.local
+Nom d'utilisateur : freelancer117@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=a29c064ff33bad4cac74c9e0c23b764a
+--------------------------------------------------
+ID : 183
+Nom complet : Malek Mabrouk
+Role : FREELANCER
+Email : freelancer118@workwave.local
+Nom d'utilisateur : freelancer118@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=86724f9b4988a5a8263a3fbc281e54af
+--------------------------------------------------
+ID : 184
+Nom complet : Rania Saidi
+Role : FREELANCER
+Email : freelancer119@workwave.local
+Nom d'utilisateur : freelancer119@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=d1daf01d4dbef2f6648f8f4a5dfc3f1a
+--------------------------------------------------
+ID : 185
+Nom complet : Omar Ben Ali
+Role : FREELANCER
+Email : freelancer120@workwave.local
+Nom d'utilisateur : freelancer120@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=5fa28c09dcd12d47eabd0dccf9ae69a6
+--------------------------------------------------
+ID : 186
+Nom complet : Lina Trabelsi
+Role : FREELANCER
+Email : freelancer121@workwave.local
+Nom d'utilisateur : freelancer121@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=d1b2142e787c7ff03531e2ca9128795a
+--------------------------------------------------
+ID : 187
+Nom complet : Karim Mansour
+Role : FREELANCER
+Email : freelancer122@workwave.local
+Nom d'utilisateur : freelancer122@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=24b6d4fd583e4494005ccdf2e72750aa
+--------------------------------------------------
+ID : 188
+Nom complet : Sarra Haddad
+Role : FREELANCER
+Email : freelancer123@workwave.local
+Nom d'utilisateur : freelancer123@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=9c0da4551e239000e2ec4042f39e7bb7
+--------------------------------------------------
+ID : 189
+Nom complet : Adam Chaabane
+Role : FREELANCER
+Email : freelancer124@workwave.local
+Nom d'utilisateur : freelancer124@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=27047f7b1ff2f9a203b25e9d4c55d222
+--------------------------------------------------
+ID : 190
+Nom complet : Yosra Gharbi
+Role : FREELANCER
+Email : freelancer125@workwave.local
+Nom d'utilisateur : freelancer125@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=2b599eb84c561240d8523bfb7b6a3be7
+--------------------------------------------------
+ID : 191
+Nom complet : Mehdi Jaziri
+Role : FREELANCER
+Email : freelancer126@workwave.local
+Nom d'utilisateur : freelancer126@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=e6c4883535984740bda2d953f1a1c5e7
+--------------------------------------------------
+ID : 192
+Nom complet : Hiba Mejri
+Role : FREELANCER
+Email : freelancer127@workwave.local
+Nom d'utilisateur : freelancer127@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=da3b1ccd0767dcb4c67830f0644474b2
+--------------------------------------------------
+ID : 193
+Nom complet : Amir Ayari
+Role : FREELANCER
+Email : freelancer128@workwave.local
+Nom d'utilisateur : freelancer128@workwave.local
+Mot de passe : Workwave@2026
+Lien portfolio / QR : http://localhost/workwave6.0/controller/index.php?r=p&token=21270cfd4516f7ecfa33818a3be559de
+--------------------------------------------------
