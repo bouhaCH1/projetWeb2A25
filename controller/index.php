@@ -5,6 +5,7 @@ session_start();
 require_once __DIR__ . '/UserController.php';
 require_once __DIR__ . '/missionController.php';
 require_once __DIR__ . '/ManagerController.php';
+require_once __DIR__ . '/PortfolioController.php';
 if (file_exists(__DIR__ . '/ClientController.php')) {
     require_once __DIR__ . '/ClientController.php';
 }
@@ -13,6 +14,9 @@ $action = $_GET['action'] ?? 'home';
 $controller = new UserController();
 
 switch ($action) {
+    case 'portfolio':
+        (new PortfolioController())->handle($_GET['r'] ?? 'home');
+        break;
 
     case 'register':
         $controller->showRegister();

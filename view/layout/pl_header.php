@@ -141,6 +141,7 @@
             </a>
             <ul class="nav-links">
                 <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
+                <li><a href="/workwave/Controller/index.php?action=portfolio" class="<?= ($_GET['action'] ?? '') === 'portfolio' ? 'active' : '' ?>">Portfolio</a></li>
                 <?php if (!empty($_SESSION['user_id'])): ?>
                     <li><a href="/workwave/Controller/index.php?action=profile" class="<?= ($_GET['action'] ?? '') === 'profile' ? 'active' : '' ?>">Mon Profil</a></li>
                     <?php if (($_SESSION['user_role'] ?? '') === 'job_seeker'): ?>
@@ -162,6 +163,7 @@
         </div>
         <ul class="nav-links-mobile" id="navLinksMobile">
             <li><a href="/workwave/Controller/index.php" class="<?= (empty($_GET['action']) || $_GET['action'] === 'home') ? 'active' : '' ?>">Accueil</a></li>
+            <li><a href="/workwave/Controller/index.php?action=portfolio" class="<?= ($_GET['action'] ?? '') === 'portfolio' ? 'active' : '' ?>">Portfolio</a></li>
             <?php if (!empty($_SESSION['user_id'])): ?>
                 <li><a href="/workwave/Controller/index.php?action=profile">Mon Profil</a></li>
                 <?php if (($_SESSION['user_role'] ?? '') === 'job_seeker'): ?>
