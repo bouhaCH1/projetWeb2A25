@@ -59,7 +59,7 @@
 <div class="listing-item">
   <div class="left-image">
     <?php if ($f['image_path']): ?>
-      <img src="<?= $base ?>vues/public/<?= htmlspecialchars($f['image_path']) ?>" alt="">
+      <img src="<?= $base ?>View/public/<?= htmlspecialchars($f['image_path']) ?>" alt="">
     <?php else: ?>
       <i class="fa fa-book placeholder-icon"></i>
     <?php endif; ?>

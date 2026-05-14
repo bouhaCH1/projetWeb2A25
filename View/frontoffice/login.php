@@ -9,10 +9,10 @@ $error = $error ?? null;
     <title>FormationPHP &mdash; Connexion</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="vues/public/css/fontawesome.css">
-    <link rel="stylesheet" href="vues/public/css/templatemo-plot-listing.css">
-    <link rel="stylesheet" href="vues/public/css/app.css">
-    <link rel="stylesheet" href="vues/public/css/theme-graph.css">
+    <link rel="stylesheet" href="../public/css/fontawesome.css">
+    <link rel="stylesheet" href="../public/css/templatemo-plot-listing.css">
+    <link rel="stylesheet" href="../public/css/app.css">
+    <link rel="stylesheet" href="../public/css/theme-graph.css">
 </head>
 <body>
 

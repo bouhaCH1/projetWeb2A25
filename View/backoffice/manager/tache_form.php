@@ -56,7 +56,7 @@ require __DIR__ . '/../layout/header.php';
         <p>Cliquer pour uploader (JPG, PNG, WEBP — max 5 Mo)</p>
       </div>
       <?php if (!empty($tache['image_path'])): ?>
-      <div class="media-preview-thumb"><img src="<?= $base ?>vues/public/<?= htmlspecialchars($tache['image_path']) ?>" alt="Image actuelle"></div>
+      <div class="media-preview-thumb"><img src="<?= $base ?>View/public/<?= htmlspecialchars($tache['image_path']) ?>" alt="Image actuelle"></div>
       <?php endif; ?>
       <div class="media-preview-thumb" id="tacheImgPrev"></div>
     </div>
@@ -70,7 +70,7 @@ require __DIR__ . '/../layout/header.php';
       </div>
       <?php if (!empty($video_path)): ?>
       <div class="media-preview-thumb" style="margin-top:8px">
-        <video src="<?= $base ?>vues/public/<?= htmlspecialchars($video_path) ?>" controls style="max-width:100%;max-height:180px;border-radius:7px"></video>
+        <video src="<?= $base ?>View/public/<?= htmlspecialchars($video_path) ?>" controls style="max-width:100%;max-height:180px;border-radius:7px"></video>
       </div>
       <?php endif; ?>
       <div class="media-preview-thumb" id="vidPrevTache"></div>

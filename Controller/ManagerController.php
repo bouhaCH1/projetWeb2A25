@@ -1,15 +1,15 @@
 <?php
-require_once __DIR__ . '/../models/repositories/FormationRepository.php';
-require_once __DIR__ . '/../models/repositories/TacheRepository.php';
-require_once __DIR__ . '/../models/repositories/ParticipantRepository.php';
-require_once __DIR__ . '/../models/repositories/CommentaireRepository.php';
-require_once __DIR__ . '/../models/services/EmailService.php';
-require_once __DIR__ . '/../models/services/TranslationService.php';
-require_once __DIR__ . '/../models/services/WeatherService.php';
-require_once __DIR__ . '/../models/services/Paginator.php';
-require_once __DIR__ . '/../models/services/GeminiService.php';
-require_once __DIR__ . '/../models/services/OpenAIService.php';
-require_once __DIR__ . '/../models/services/BadWordsService.php';
+require_once __DIR__ . '/../Model/repositories/FormationRepository.php';
+require_once __DIR__ . '/../Model/repositories/TacheRepository.php';
+require_once __DIR__ . '/../Model/repositories/ParticipantRepository.php';
+require_once __DIR__ . '/../Model/repositories/CommentaireRepository.php';
+require_once __DIR__ . '/../Model/services/EmailService.php';
+require_once __DIR__ . '/../Model/services/TranslationService.php';
+require_once __DIR__ . '/../Model/services/WeatherService.php';
+require_once __DIR__ . '/../Model/services/Paginator.php';
+require_once __DIR__ . '/../Model/services/GeminiService.php';
+require_once __DIR__ . '/../Model/services/OpenAIService.php';
+require_once __DIR__ . '/../Model/services/BadWordsService.php';
 
 class ManagerController {
     private FormationRepository $fm;
@@ -466,7 +466,7 @@ class ManagerController {
         if ($file['size'] > 100 * 1024 * 1024) return null;
 
         $filename = uniqid() . '.' . $ext;
-        $destDir  = __DIR__ . "/../vues/public/uploads/{$subdir}/";
+        $destDir  = __DIR__ . "/../View/public/uploads/{$subdir}/";
         if (!is_dir($destDir)) mkdir($destDir, 0755, true);
         $dest = $destDir . $filename;
         if (move_uploaded_file($file['tmp_name'], $dest)) {
@@ -483,7 +483,7 @@ class ManagerController {
         $error   = $_SESSION['flash_error']   ?? null;
         $langs   = $this->translator->getSupportedLanguages();
         unset($_SESSION['flash_success'], $_SESSION['flash_error']);
-        require __DIR__ . '/../vues/backoffice/' . $view . '.php';
+        require __DIR__ . '/../View/backoffice/' . $view . '.php';
     }
 
     private function redirect(string $action, ?string $success = null, ?string $error = null, array $extra = []): void {

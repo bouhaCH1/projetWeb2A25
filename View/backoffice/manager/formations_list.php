@@ -52,7 +52,7 @@
 <div class="listing-item">
   <div class="left-image">
     <?php if ($f['image_path']): ?>
-      <img src="<?= $base ?>vues/public/<?= htmlspecialchars($f['image_path']) ?>" alt="">
+      <img src="<?= $base ?>View/public/<?= htmlspecialchars($f['image_path']) ?>" alt="">
     <?php else: ?>
       <i class="fa fa-book placeholder-icon"></i>
     <?php endif; ?>
@@ -67,7 +67,7 @@
       <?php if ($f['capacite_max'] > 0): ?><span class="meta-item"><i class="fa fa-users"></i> Max <?= $f['capacite_max'] ?></span><?php endif; ?>
     </div>
     <?php if ($f['video_url']): ?>
-    <div class="video-embed"><video src="<?= $base ?>vues/public/<?= htmlspecialchars($f['video_url']) ?>" controls></video></div>
+    <div class="video-embed"><video src="<?= $base ?>View/public/<?= htmlspecialchars($f['video_url']) ?>" controls></video></div>
     <?php endif; ?>
     <div class="listing-stats">
       <span class="listing-stat"><i class="fa fa-users"></i> <?= $f['nb_participants'] ?> participants</span>

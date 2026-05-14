@@ -57,9 +57,9 @@ if (!empty($_SESSION['role']) && !empty($_SESSION['user_id'])) {
 function showLogin(): void {
     $error = $_SESSION['login_error'] ?? null;
     unset($_SESSION['login_error']);
-    require __DIR__ . '/vues/frontoffice/login.php';
+    require __DIR__ . '/View/frontoffice/login.php';
 }
 
 function showRegister(): void {
-    require __DIR__ . '/vues/frontoffice/register.php';
+    require __DIR__ . '/View/frontoffice/register.php';
 }

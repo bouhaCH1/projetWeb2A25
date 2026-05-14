@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__ . '/../models/repositories/FormationRepository.php';
-require_once __DIR__ . '/../models/repositories/TacheRepository.php';
-require_once __DIR__ . '/../models/repositories/ParticipantRepository.php';
-require_once __DIR__ . '/../models/repositories/ClientTacheStatutRepository.php';
-require_once __DIR__ . '/../models/repositories/CommentaireRepository.php';
-require_once __DIR__ . '/../models/services/TranslationService.php';
-require_once __DIR__ . '/../models/services/WeatherService.php';
-require_once __DIR__ . '/../models/services/BadWordsService.php';
+require_once __DIR__ . '/../Model/repositories/FormationRepository.php';
+require_once __DIR__ . '/../Model/repositories/TacheRepository.php';
+require_once __DIR__ . '/../Model/repositories/ParticipantRepository.php';
+require_once __DIR__ . '/../Model/repositories/ClientTacheStatutRepository.php';
+require_once __DIR__ . '/../Model/repositories/CommentaireRepository.php';
+require_once __DIR__ . '/../Model/services/TranslationService.php';
+require_once __DIR__ . '/../Model/services/WeatherService.php';
+require_once __DIR__ . '/../Model/services/BadWordsService.php';
 
 class ClientController {
     private FormationRepository $fm;
