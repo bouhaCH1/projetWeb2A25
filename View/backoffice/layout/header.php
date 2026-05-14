@@ -10,10 +10,10 @@ $base = '';
   <title><?= htmlspecialchars($pageTitle ?? 'FormationPHP') ?></title>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= $base ?>vues/public/css/fontawesome.css">
-  <link rel="stylesheet" href="<?= $base ?>vues/public/css/templatemo-plot-listing.css">
-  <link rel="stylesheet" href="<?= $base ?>vues/public/css/app.css">
-  <link rel="stylesheet" href="<?= $base ?>vues/public/css/theme-graph.css">
+<link rel="stylesheet" href="/workwave/View/public/css/fontawesome.css">
+<link rel="stylesheet" href="/workwave/View/public/css/templatemo-plot-listing.css">
+<link rel="stylesheet" href="/workwave/View/public/css/app.css">
+<link rel="stylesheet" href="/workwave/View/public/css/theme-graph.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
