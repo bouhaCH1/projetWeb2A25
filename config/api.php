@@ -22,7 +22,7 @@ return [
     ],
 
     'gemini' => [
-        'key'   => 'AIzaSyDcLozxAykj0fTyveTVcgrb40x7NHcbjZk',
+        'key'   => 'AIzaSyDN40b62Azmsp6kmM2L8dNJ-VOHNQAogFQ',
         'model' => 'gemini-flash-latest',
         /** XAMPP/Windows : true seulement en local si erreur SSL (deconseille en production) */
         'skip_ssl_verify' => false,
