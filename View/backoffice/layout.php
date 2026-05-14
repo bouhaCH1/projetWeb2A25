@@ -869,6 +869,9 @@
                     <a href="index.php?action=candidatures" class="nav-item nav-link <?= (isset($activePage) && $activePage === 'candidatures') ? 'active' : '' ?>">
                         <i class="fa fa-user-check me-2"></i>Candidatures
                     </a>
+                    <a href="/workwave/workwave6.0/controller/index.php" class="nav-item nav-link">
+                        <i class="fa fa-folder-open me-2"></i>Portfolio
+                    </a>
                     <a href="index.php?action=missions" class="nav-link-front">
                         <i class="fa fa-globe"></i>Retour au FrontOffice
                     </a>

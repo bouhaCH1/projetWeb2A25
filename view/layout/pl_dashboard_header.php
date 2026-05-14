@@ -425,6 +425,9 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
         <a href="/workwave/Controller/index.php?action=security" class="<?= $action === 'security' ? 'active' : '' ?>">
             <i class="fa fa-shield-alt"></i> Sécurité & 2FA
         </a>
+        <a href="/workwave/Controller/index.php?action=portfolio" class="<?= in_array($action, ['portfolio','portfolio_add','portfolio_edit','portfolio_delete']) ? 'active' : '' ?>">
+            <i class="fa fa-folder-open"></i> Portfolio
+        </a>
         <a href="/workwave/Controller/index.php" class="<?= ($action === '' || $action === 'home') ? 'active' : '' ?>">
             <i class="fa fa-globe"></i> Site public
         </a>

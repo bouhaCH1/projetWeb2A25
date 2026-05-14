@@ -1,65 +1,36 @@
-# WorkWave - Next Generation Recruitment & Freelance Platform
+# WorkWave - Plateforme Freelance & Offres d'Emploi
 
-![WorkWave Banner](https://via.placeholder.com/1200x300.png?text=WorkWave+-+Advanced+AI+Job+Platform)
+WorkWave est une application web PHP orientée MVC permettant de connecter des freelances (Job Seekers) et des entreprises (Employers). Elle intègre la gestion de missions, d'événements, d'un portfolio complet et de candidatures, avec des fonctionnalités avancées basées sur l'IA.
 
-**WorkWave** is a comprehensive, AI-powered web platform designed to seamlessly connect job seekers, freelancers, and employers. Built natively in PHP with a robust, custom **MVC architecture**, WorkWave entirely bypasses legacy database drivers (strictly utilizing `PDO`) to ensure maximum security, modularity, and academic excellence.
+## Structure du Projet (MVC)
 
----
+Le projet suit une architecture Model-View-Controller :
 
-## 🌟 Key Features (Métiers Avancés)
+- **`/Controller`** : Contient tous les contrôleurs de l'application (ex: `UserController.php`, `PortfolioController.php`, `missionController.php`). Le fichier `index.php` sert de routeur principal.
+- **`/Model`** : Contient les classes pour l'interaction avec la base de données (`Database.php`, `User.php`, etc.).
+- **`/View`** : Contient toutes les vues (HTML/PHP). Elles sont divisées par entités (`/missions`, `/portfolio`, `/user`, `/layout`).
 
-WorkWave goes beyond standard CRUD operations by integrating advanced, real-world technologies:
+## Fonctionnalités Principales
 
-- 🧠 **AI Profile Analysis**: Integrates the **HuggingFace API** for zero-shot text classification, automatically analyzing candidate profiles and predicting optimal job categories.
-- 🆔 **Automated KYC (OCR)**: Uses the **OCR.space API** to automatically read uploaded ID cards (CIN) and instantly verify user identities.
-- 💬 **Smart NLP Chatbot**: A custom-built AJAX chatbot capable of guiding users through complex platform features (Missions, 2FA, Payments, AI Analysis).
-- 📅 **Google Calendar Integration**: Direct API payload generation allowing users to add registered events directly to their personal Google Calendar.
-- 💳 **Stripe-Style Payment Gateway**: A front-end simulated secure payment workflow for premium events and services.
-- 🔒 **Two-Factor Authentication (2FA)**: High-security authentication utilizing automated SMTP email verification codes.
-- 📄 **Native PDF Export**: Custom CSS print media integration allowing Admins to export comprehensive user tables, and Seekers to export their AI-analyzed CVs.
+- **Authentification & Rôles** : Gestion sécurisée des sessions avec séparation stricte des rôles (Admin, Employer, Job Seeker).
+- **Missions & Candidatures** : Publication de missions par les entreprises, candidatures par les freelances avec statut en temps réel.
+- **Portfolio & CV** : Chaque utilisateur peut présenter ses réalisations, diplômes, certifications et compétences.
+- **Carte des Talents** : Géolocalisation dynamique pour trouver des entreprises ou des talents à proximité.
+- **Événements & Réservations** : Gestion et participation à des événements professionnels.
+- **Assistants IA** : Intégration d'outils intelligents pour l'analyse de CV et le coaching d'entretien.
 
----
+## Installation
 
-## 🏗️ Architecture
+1. Cloner le repository dans votre dossier serveur (`htdocs` ou `/var/www/html`).
+2. Créer une base de données MySQL nommée `job_platform`.
+3. Importer le schéma de la base de données.
+4. Assurez-vous que le fichier `Model/Database.php` contient vos accès locaux (root / sans mot de passe par défaut).
+5. Lancer l'application via `http://localhost/WorkWave/Controller/index.php`.
 
-The project strictly adheres to the **Model-View-Controller (MVC)** design pattern, built entirely without external PHP frameworks. 
+## Technologies
 
-- **Model (`/Model`)**: Contains entity classes (`User`, `Mission`, `Event`, `Resource`, `AdminStats`). Database interactions are exclusively handled via PDO Prepared Statements to prevent SQL Injection. `MySQLi` is strictly forbidden across the entire codebase.
-- **View (`/View`)**: Clean, responsive interfaces built with HTML5, CSS3, and modern UI libraries. Role-based layouts are split dynamically (Admin Dashboard vs. User Dashboard).
-- **Controller (`/Controller`)**: Features a centralized Front-Controller (`index.php`) that securely routes all incoming HTTP requests to their appropriate class methods.
-
----
-
-## 👥 Role Management & Security
-
-The platform supports a robust 3-tier access control system:
-
-1. **Job Seekers (Candidats)**: Can browse missions, apply, view events, and utilize AI profile enhancement.
-2. **Employers (Employeurs)**: Can publish missions, manage applications, and create/manage custom company events and resource logistics. Ownership tracking ensures Employers can only modify their own data.
-3. **Administrators**: Have access to a comprehensive real-time dashboard featuring SQL-joined KPIs, Chart.js analytics, and full CRUD authority over the entire platform.
-
----
-
-## 🚀 Installation & Setup
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/workwave.git
-   ```
-2. **Environment Setup:**
-   Ensure you are running an environment with PHP 8.x and MySQL (e.g., XAMPP, WAMP).
-3. **Database Import:**
-   Import the `Model/create_tables.sql` file into your MySQL database to build the schema.
-4. **Configuration:**
-   Update the PDO connection string in `Model/Database.php` with your local database credentials.
-5. **Run the Application:**
-   Navigate to the project root directory via your local server (e.g., `http://localhost/workwave/Controller/index.php`).
-
----
-
-## 📈 Git & Integration Status
-
-This repository reflects the final integrated state of the project. All feature branches (Events, APIs, Missions, Users) have been successfully merged into the master branch with a continuous Git commit history spanning over 30 days, demonstrating consistent teamwork and Agile integration practices.
-
----
-*Developed as a final academic project. Demonstrates strict adherence to security protocols, MVC design patterns, and modern API integration.*
+- **Backend** : PHP 8+ (PDO, MVC natif)
+- **Base de données** : MySQL
+- **Frontend** : HTML5, CSS3, JavaScript (Vanilla), Bootstrap 5, FontAwesome
+- **Cartographie** : Leaflet.js
+- **Graphiques** : Chart.js

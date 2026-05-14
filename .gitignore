@@ -1,2 +1,33 @@
-# Ignore sensitive API keys
-Model/api_keys.php
+# Environnements et IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Dépendances (si utilisation future de Composer)
+vendor/
+composer.phar
+
+# Fichiers de configuration locaux sensibles
+.env
+.env.local
+config.local.php
+
+# Fichiers temporaires ou logs
+*.log
+logs/
+error_log
+access_log
+
+# Fichiers uploadés par les utilisateurs (images de portfolio, CV, avatars)
+View/uploads/
+# Si jamais vous voulez garder le dossier lui-même mais ignorer le contenu :
+# !View/uploads/.gitkeep
+
+# Caches éventuels
+cache/
+tmp/
+*.tmp
+*.bak

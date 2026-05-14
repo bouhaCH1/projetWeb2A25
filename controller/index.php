@@ -5,6 +5,7 @@ session_start();
 require_once __DIR__ . '/UserController.php';
 require_once __DIR__ . '/missionController.php';
 require_once __DIR__ . '/ManagerController.php';
+require_once __DIR__ . '/PortfolioController.php';
 if (file_exists(__DIR__ . '/ClientController.php')) {
     require_once __DIR__ . '/ClientController.php';
 }
@@ -244,6 +245,19 @@ switch ($action) {
         $controller->adminToggleVerification();
         break;
 
+    // --- Portfolio Routes ---
+    case 'portfolio':
+    case 'portfolio_add':
+    case 'portfolio_edit':
+    case 'portfolio_delete':
+    case 'portfolio_map':
+    case 'portfolio_cv':
+    case 'portfolio_cv_add':
+    case 'portfolio_cv_del':
+    case 'portfolio_admin':
+        (new PortfolioController())->handle($action);
+        break;
+
     // --- Admin Mission Routes ---
     case 'admin_missions':
         $missionController = new MissionController();
@@ -323,10 +337,23 @@ switch ($action) {
         }
 
         $msgLower = mb_strtolower($msg, 'UTF-8');
-        $reply = "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Je peux vous aider avec votre **profil**, la **2FA**, les **Missions**, les **Candidatures**, les **Événements**, le **Matériel**, ou l'**Analyse IA**.";
+        $reply = "Je ne suis pas sûr de comprendre. Pouvez-vous reformuler ? Je peux vous aider avec votre **profil**, la **2FA**, les **Missions**, les **Candidatures**, les **Événements**, le **Matériel**, les **Formations**, le **Portfolio**, ou l'**Analyse IA**.";
+
+        // ===== FORMATIONS & PARTICIPATIONS =====
+        if (preg_match('/\b(formation|formations|apprendre|cours|participation|participer)\b/i', $msgLower)) {
+            $reply = "La section **Formations & Participations** vous permet d'enrichir vos connaissances :\n- Vous y trouverez une liste des cours et formations disponibles.\n- Si vous êtes **Admin** ou **Employeur**, vous pouvez ajouter, modifier ou supprimer des formations.\n- Les **Candidats** peuvent s'inscrire pour participer et développer de nouvelles compétences ! 🎓";
+        
+        // ===== PORTFOLIO & CV =====
+        } elseif (preg_match('/\b(portfolio|projet|projets|réalisations|realisations)\b/i', $msgLower)) {
+            $reply = "La section **Portfolio** met en valeur vos réalisations :\n- Vous pouvez **Ajouter un projet** (titre, description, technologies, lien GitHub, démo et image).\n- C'est un excellent moyen de montrer votre savoir-faire aux entreprises !\n- Depuis la page Portfolio, vous pouvez également accéder à votre **CV** ou à la **Carte des Talents**. 📁";
+        } elseif (preg_match('/\b(cv|compétence|competence|diplôme|diplome|certificat|certification)\b/i', $msgLower) && !preg_match('/\b(mission)\b/i', $msgLower)) {
+            $reply = "Dans la section **Mon CV** (accessible via le bouton sur la page Portfolio) :\n- Vous pouvez lister vos **Compétences** avec leur niveau (1 à 5 étoiles).\n- Ajouter vos **Diplômes** (école, année).\n- Uploader vos **Certifications** (en PDF ou image).\nCela enrichit considérablement votre profil visible par les recruteurs ! 📝";
+        } elseif (preg_match('/\b(carte|map|talents|réseau|reseau|proximité|proximite|freelance|entreprise)\b/i', $msgLower) && !preg_match('/\b(mission)\b/i', $msgLower)) {
+            $reply = "La **Carte des Talents** (bouton sur la page Portfolio) utilise la géolocalisation pour :\n- Trouver des **Freelances** et des **Entreprises** près de chez vous.\n- Vous pouvez ajuster la latitude, la longitude et le rayon de recherche.\n- Les résultats s'affichent sur la carte interactive avec les distances précises ! 🗺️";
+        }
 
         // ===== MISSIONS =====
-        if (preg_match('/\b(créer|creer|publier|nouvelle|ajouter|poster).*(mission)/i', $msgLower) ||
+        elseif (preg_match('/\b(créer|creer|publier|nouvelle|ajouter|poster).*(mission)/i', $msgLower) ||
             preg_match('/\b(mission).*(créer|creer|publier|nouvelle|ajouter|poster)/i', $msgLower)) {
             $reply = "Pour **publier une mission** :\n1. Allez dans **'Missions'** dans le menu de gauche.\n2. Cliquez sur le bouton **'Publier'** (icône +).\n3. Remplissez le titre, la description, le budget, les dates et les compétences requises.\n4. Utilisez le bouton **'Analyser avec l'IA'** pour détecter automatiquement la catégorie, le niveau et les compétences ! 🤖\n5. Cliquez sur **'Enregistrer'** pour publier votre mission.";
         } elseif (preg_match('/\b(postuler|candidater|appliquer|apply).*(mission)?/i', $msgLower) ||
@@ -363,7 +390,7 @@ switch ($action) {
         } elseif (preg_match('/\b(cin|identité|vérification|ocr|document)\b/i', $msgLower)) {
             $reply = "Pour avoir le **Badge Vérifié** :\n1. Allez dans **'Vérifier CIN'**.\n2. Uploadez une photo de votre pièce d'identité.\n3. Notre IA OCR extraira votre nom et validera instantanément votre compte si les noms correspondent.";
         } elseif (preg_match('/\b(bonjour|salut|hello|coucou)\b/i', $msgLower)) {
-            $reply = "Bonjour ! 👋 Je suis l'assistant WorkWave. Je peux vous aider avec :\n- 📋 Les **Missions** (créer, postuler, gérer)\n- 👤 Votre **Profil**\n- 🔒 La **Sécurité & 2FA**\n- 🤖 L'**Analyse IA**\n\nQue puis-je faire pour vous ?";
+            $reply = "Bonjour ! 👋 Je suis l'assistant WorkWave. Je peux vous aider avec :\n- 📋 Les **Missions** et le **Portfolio**\n- 🎓 Les **Formations** et **Événements**\n- 👤 Votre **Profil & CV**\n- 🔒 La **Sécurité & 2FA**\n- 🤖 L'**Analyse IA**\n\nQue puis-je faire pour vous ?";
         } elseif (preg_match('/\b(merci|thanks)\b/i', $msgLower)) {
             $reply = "Avec plaisir ! N'hésitez pas si vous avez d'autres questions. 😊";
         

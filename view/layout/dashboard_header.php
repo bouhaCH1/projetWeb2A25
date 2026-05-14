@@ -199,6 +199,7 @@ $userPicPath = !empty($userPic) ? '/workwave/' . htmlspecialchars($userPic) : '/
                         <a href="/workwave/Controller/index.php?action=ai_analyze" class="nav-item nav-link <?= $action === 'ai_analyze' ? 'active' : '' ?>" style="color:<?= $action === 'ai_analyze' ? '' : '#00b3ff' ?>;"><i class="fa fa-brain me-2"></i>Analyse IA</a>
                         <a href="/workwave/Controller/index.php?action=ai_interview_coach" class="nav-item nav-link <?= $action === 'ai_interview_coach' ? 'active' : '' ?>" style="color:<?= $action === 'ai_interview_coach' ? '' : '#a855f7' ?>;"><i class="fa fa-microphone me-2"></i>Interview Coach</a>
                     <?php endif; ?>
+                    <a href="/workwave/Controller/index.php?action=portfolio" class="nav-item nav-link <?= in_array($action, ['portfolio','portfolio_add','portfolio_edit','portfolio_delete','portfolio_admin']) ? 'active' : '' ?>"><i class="fa fa-folder-open me-2"></i>Portfolio</a>
                     <a href="/workwave/Controller/index.php" class="nav-item nav-link"><i class="fa fa-home me-2"></i>Site public</a>
                 </div>
             </nav>
