@@ -407,7 +407,7 @@ $dashAction  = ($role === 'employer') ? 'dashboard_employer' : 'dashboard_seeker
         <a href="/workwave/Controller/index.php?action=user_events" class="<?= $action === 'user_events' ? 'active' : '' ?>" style="color:#ffcc00;">
             <i class="fa fa-calendar-alt"></i> Events & Booking
         </a>
-        <a href="/workwave/index.php" class="<?= $action === 'user_events' ? 'active' : '' ?>" style="color:#ffcc00;">
+        <a href="/workwave/index.php?action=formation" class="<?= $action === 'formation' ? 'active' : '' ?>" style="color:#ffcc00;">
             <i class="fa fa-calendar-alt"></i> Formations & Participations
         </a>
         <div class="ww-sb-section" style="margin-top:10px;">Outils IA</div>
